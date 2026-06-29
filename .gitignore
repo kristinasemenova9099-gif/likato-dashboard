@@ -1,0 +1,25 @@
+# Python скрипты (содержат токены API)
+*.py
+__pycache__/
+
+# Личные и рабочие файлы
+*.xlsx
+*.docx
+*.jpg
+*.png
+*.csv
+*.txt
+*.skill
+*.docx
+
+# Временные и служебные файлы
+funnel_temp.json
+novosti_temp.json
+dist_from_sheet.json
+dnevnik.csv
+todo.md
+todo_processed_meetings.json
+combined_bot/
+giveaway-reporter/
+wb-position-bot/
+.claude/
