@@ -2309,6 +2309,8 @@ function loadNovinkaJson() {
       novinkaList = data;
       pfBuildMonthFilter();
       renderPriceTable();
+      // Перерисовываем Плановые новинки — теперь с РРЦ/МРЦ из листа
+      if (window.rawData) renderNovosti(window.rawData);
     })
     .catch(() => console.warn('novinka.json не найден'));
 }
@@ -2327,6 +2329,7 @@ function loadData() {
     .then(r => r.json())
     .then(data => {
     rawData = data;
+    window.rawData = data;
     // Инициализируем даты: весь диапазон из данных
     if (data.products?.[0]?.days?.length) {
       const allDays = data.products[0].days;
