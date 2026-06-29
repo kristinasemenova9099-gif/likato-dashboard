@@ -431,19 +431,6 @@
       </div>
     </div>
 
-    <!-- PRICES -->
-    <div class="section">
-      <div class="section-header"><div class="section-title">&#128176; Контроль цен (РРЦ / МРЦ)</div></div>
-      <div class="section-body">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Товар</th><th>Артикул</th><th>РРЦ, &#8381;</th><th>МРЦ, &#8381;</th><th>Текущая цена, &#8381;</th><th>Статус</th></tr></thead>
-            <tbody id="priceTable"><tr><td colspan="6" style="color:var(--text2)">Загрузка...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
     <!-- DIST EFFECTIVENESS -->
     <div class="section">
       <div class="section-header">
@@ -497,99 +484,86 @@
       <div class="section-body"><div id="novosti-table"></div></div>
     </div>
 
+    <!-- === PRICE MONITOR === -->
     <div class="section">
-      <div class="section-header"><div class="section-title">&#128316; Новинки — ежедневный статус-контроль</div></div>
+      <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div class="section-title">&#128178; Мониторинг цен на новинки</div>
+        <div id="priceStats" style="font-size:12px;color:var(--text2)"></div>
+      </div>
+      <div style="display:flex;gap:10px;padding:10px 16px 0;flex-wrap:wrap">
+        <select id="pfMonthFilter" onchange="pfFilterMonth=this.value;renderPriceTable()" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;cursor:pointer">
+          <option value="all">Все месяцы</option>
+        </select>
+        <input id="pfSearchInput" placeholder="🔍 Поиск по названию или артикулу..." oninput="pfSearch=this.value;renderPriceTable()" style="flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px">
+      </div>
       <div class="section-body">
+        <!-- Форма добавления/редактирования -->
+        <div id="priceForm" style="display:none;background:var(--surface2);border-radius:8px;padding:16px;margin-bottom:14px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px" id="priceFormTitle">Новый товар</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+            <div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Название товара</div>
+              <input id="pf_name" placeholder="Сыворотка Keratin Pro" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Артикул WB</div>
+              <input id="pf_nm" placeholder="1009001122" type="number" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">РРЦ, ₽ <span style="color:var(--accent);font-size:10px">← из листа</span></div>
+              <div id="pf_rrc_display" style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text2);font-size:12px">—</div>
+              <input id="pf_rrc" type="hidden">
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">МРЦ, ₽ <span style="color:var(--accent);font-size:10px">← из листа</span></div>
+              <div id="pf_mrc_display" style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text2);font-size:12px">—</div>
+              <input id="pf_mrc" type="hidden">
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Текущая цена, ₽</div>
+              <input id="pf_price" placeholder="1390" type="number" oninput="pfUpdateStatus()" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Дата запуска</div>
+              <input id="pf_date" type="date" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
+            </div>
+            <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:4px">
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Статус цены</div>
+              <div id="pf_status_preview" style="font-size:12px;padding:5px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--border);color:var(--text2)">—</div>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Заметка</div>
+            <input id="pf_note" placeholder="Любая заметка..." style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px">
+            <button onclick="pfSave()" style="background:var(--accent);border:none;padding:8px 20px;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;color:#fff">Сохранить</button>
+            <button onclick="closePriceForm()" style="background:var(--surface);border:1px solid var(--border);padding:8px 16px;font-size:12px;border-radius:6px;cursor:pointer;color:var(--text2)">Отмена</button>
+          </div>
+        </div>
+
+        <!-- Таблица товаров -->
         <div class="table-wrap">
-          <table>
+          <table id="priceTable">
             <thead>
               <tr>
-                <th>Новинка (артикул)</th><th>Выкуп</th><th>РК</th><th>Акция</th>
-                <th>ДРР по РК</th><th>РРЦ, &#8381;</th><th>МРЦ, &#8381;</th><th>Цена, &#8381;</th>
-                <th>Статус цены</th><th>Заказы</th><th>Прогресс</th><th>Решение</th><th>Заметка</th>
+                <th>Товар / Артикул</th>
+                <th style="text-align:right">РРЦ, ₽</th>
+                <th style="text-align:right">МРЦ, ₽</th>
+                <th style="text-align:right">Текущая цена, ₽</th>
+                <th style="text-align:center">Статус</th>
+                <th style="text-align:center">До РРЦ</th>
+                <th>Заметка</th>
+                <th></th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><b>Сыворотка Keratin Pro</b><br><small style="color:var(--text2)">1009001122</small></td>
-                <td><span class="badge badge-green">&#10003; Выполнен</span></td>
-                <td><span class="badge badge-green">&#9654; Запущена</span></td>
-                <td><span class="badge badge-blue">&#10003; Да</span></td>
-                <td><span class="val-green">24.8%</span></td>
-                <td>1 490</td><td>1 190</td><td>1 390</td>
-                <td><span class="badge badge-green">OK</span></td>
-                <td>124</td>
-                <td><div class="progress-bar-bg" style="width:80px"><div class="progress-bar-fill prog-green" style="width:65%"></div></div></td>
-                <td>Продолжать</td><td>Хорошая динамика</td>
-              </tr>
-              <tr>
-                <td><b>Маска Honey&amp;Milk 300мл</b><br><small style="color:var(--text2)">1009003340</small></td>
-                <td><span class="badge badge-yellow">&#8987; В процессе</span></td>
-                <td><span class="badge badge-green">&#9654; Запущена</span></td>
-                <td><span class="badge badge-gray">&#10007; Нет</span></td>
-                <td><span class="val-yellow">33.2%</span></td>
-                <td>890</td><td>720</td><td>840</td>
-                <td><span class="badge badge-green">OK</span></td>
-                <td>86</td>
-                <td><div class="progress-bar-bg" style="width:80px"><div class="progress-bar-fill prog-yellow" style="width:40%"></div></div></td>
-                <td>Снизить ставку</td><td>ДРР выше 30%</td>
-              </tr>
-              <tr>
-                <td><b>Спрей термозащита 250мл</b><br><small style="color:var(--text2)">1009005511</small></td>
-                <td><span class="badge badge-green">&#10003; Выполнен</span></td>
-                <td><span class="badge badge-yellow">&#9646; На паузе</span></td>
-                <td><span class="badge badge-blue">&#10003; Да</span></td>
-                <td><span class="val-red">—</span></td>
-                <td>690</td><td>580</td><td>580</td>
-                <td><span class="badge badge-yellow">&#9888; На МРЦ</span></td>
-                <td>42</td>
-                <td><div class="progress-bar-bg" style="width:80px"><div class="progress-bar-fill prog-yellow" style="width:30%"></div></div></td>
-                <td>Перезапустить РК</td><td>РК на паузе 2 дня</td>
-              </tr>
-              <tr>
-                <td><b>Шампунь Volume Boost</b><br><small style="color:var(--text2)">1009008820</small></td>
-                <td><span class="badge badge-gray">— Не начато</span></td>
-                <td><span class="badge badge-green">&#9654; Запущена</span></td>
-                <td><span class="badge badge-gray">&#10007; Нет</span></td>
-                <td><span class="val-red">41.0%</span></td>
-                <td>1 190</td><td>990</td><td>890</td>
-                <td><span class="badge badge-red">&#9940; Нарушение</span></td>
-                <td>31</td>
-                <td><div class="progress-bar-bg" style="width:80px"><div class="progress-bar-fill prog-red" style="width:20%"></div></div></td>
-                <td>Срочно: цену вверх</td><td>Цена ниже МРЦ!</td>
-              </tr>
-              <tr>
-                <td><b>Бальзам-ополаскиватель</b><br><small style="color:var(--text2)">1009011230</small></td>
-                <td><span class="badge badge-green">&#10003; Выполнен</span></td>
-                <td><span class="badge badge-green">&#9654; Запущена</span></td>
-                <td><span class="badge badge-gray">&#10007; Нет</span></td>
-                <td><span class="val-green">28.1%</span></td>
-                <td>790</td><td>650</td><td>749</td>
-                <td><span class="badge badge-green">OK</span></td>
-                <td>98</td>
-                <td><div class="progress-bar-bg" style="width:80px"><div class="progress-bar-fill prog-green" style="width:55%"></div></div></td>
-                <td>Поднять бюджет</td><td>Хорошо конвертит</td>
-              </tr>
+            <tbody id="priceTableBody">
+              <tr><td colspan="9" style="text-align:center;color:var(--text2);padding:30px">Нажмите «+ Добавить товар» чтобы начать</td></tr>
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-header"><div class="section-title">&#128227; Ежедневный статус РК по новинкам</div></div>
-      <div class="section-body">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Новинка</th><th>Кампания</th><th>Статус</th><th>Показы</th><th>Клики</th><th>CTR</th><th>Расход, &#8381;</th><th>Заказы</th><th>ДРР</th><th>CR</th><th>Изменения</th></tr></thead>
-            <tbody>
-              <tr><td>Сыворотка Keratin Pro</td><td>#RK-50011</td><td><span class="badge badge-green">&#9654; Активна</span></td><td>18 400</td><td>552</td><td>3.0%</td><td>6 624</td><td>47</td><td><span class="badge badge-green">24.8%</span></td><td>8.5%</td><td>—</td></tr>
-              <tr><td>Маска Honey&amp;Milk</td><td>#RK-50022</td><td><span class="badge badge-green">&#9654; Активна</span></td><td>14 200</td><td>369</td><td>2.6%</td><td>7 749</td><td>34</td><td><span class="badge badge-red">33.2%</span></td><td>9.2%</td><td>&#8595; Ставка -10%</td></tr>
-              <tr><td>Спрей термозащита</td><td>#RK-50033</td><td><span class="badge badge-yellow">&#9646; Пауза</span></td><td>0</td><td>0</td><td>—</td><td>0</td><td>0</td><td><span class="badge badge-gray">—</span></td><td>—</td><td>Остановлена 24.06</td></tr>
-              <tr><td>Шампунь Volume Boost</td><td>#RK-50044</td><td><span class="badge badge-green">&#9654; Активна</span></td><td>9 800</td><td>245</td><td>2.5%</td><td>5 880</td><td>18</td><td><span class="badge badge-red">41.0%</span></td><td>7.3%</td><td>&#9888; Алерт: ДРР &gt; 30%</td></tr>
-              <tr><td>Бальзам-ополаскиватель</td><td>#RK-50055</td><td><span class="badge badge-green">&#9654; Активна</span></td><td>16 100</td><td>451</td><td>2.8%</td><td>5 412</td><td>38</td><td><span class="badge badge-green">28.1%</span></td><td>8.4%</td><td>&#8593; Бюджет +5 000 &#8381;</td></tr>
-            </tbody>
-          </table>
+        <div style="margin-top:8px;font-size:11px;color:var(--text2)">
+          🟢 OK — цена в диапазоне МРЦ–РРЦ &nbsp;|&nbsp; 🟡 На МРЦ — цена равна или ниже МРЦ на ≤5% &nbsp;|&nbsp; 🔴 Нарушение — цена ниже МРЦ &nbsp;|&nbsp; ⬆️ Выше РРЦ
         </div>
       </div>
     </div>
@@ -907,24 +881,6 @@ function renderDashboard(data) {
     }).join('');
   }
 
-  // Таблица цен
-  const priceBody = document.getElementById('priceTable');
-  if (priceBody) {
-    priceBody.innerHTML = prods.map(p => {
-      const ok = p.price_status === 'OK';
-      const badge = ok ? 'badge-green' : 'badge-red';
-      const label = ok ? '&#10003; OK' : '&#9940; Нарушение';
-      const price = p.current_price > 0 ? p.current_price + ' ₽' : '—';
-      return `<tr>
-        <td>${p.name}</td>
-        <td>${p.nmId}</td>
-        <td>${p.rrc} ₽</td>
-        <td>${p.mrc} ₽</td>
-        <td>${price}</td>
-        <td><span class="badge ${badge}">${label}</span></td>
-      </tr>`;
-    }).join('');
-  }
 
   renderAlerts(data);
   renderPlanForecast(data);
@@ -1092,15 +1048,18 @@ function renderNovosti(data) {
       const drrCell = drr === null ? '—'
         : `<span class="badge ${drr>30?'badge-red':drr>20?'badge-yellow':'badge-green'}">${drr}%</span>`;
 
-      // Цены
-      const rrts = prod?.rrts || '—';
-      const mrts = prod?.mrts || '—';
+      // Цены — РРЦ/МРЦ из novinkaList (Google Sheets), текущая цена из WB API
+      const novinkaRef = nm ? novinkaList.find(n => n.nm === nm) : null;
+      const rrcVal = novinkaRef?.rrc || prod?.rrts || null;
+      const mrcVal = novinkaRef?.mrc || prod?.mrts || null;
+      const rrts = rrcVal ? rrcVal.toLocaleString('ru') : '—';
+      const mrts = mrcVal ? mrcVal.toLocaleString('ru') : '—';
       const price = prod?.price || '—';
       let priceStatus = '<span style="color:var(--text2)">—</span>';
-      if (prod?.price && prod?.mrts) {
-        if (prod.price < prod.mrts) priceStatus = '<span class="badge badge-red">⛔ Нарушение</span>';
-        else if (prod.price === prod.mrts) priceStatus = '<span class="badge badge-yellow">⚠ На МРЦ</span>';
-        else priceStatus = '<span class="badge badge-green">OK</span>';
+      if (prod?.price && mrcVal) {
+        if (prod.price < mrcVal) priceStatus = '<span class="badge badge-red">⛔ Нарушение</span>';
+        else if (prod.price <= mrcVal * 1.02) priceStatus = '<span class="badge badge-yellow">⚠ На МРЦ</span>';
+        else priceStatus = '<span class="badge badge-green">✓ OK</span>';
       }
 
       // Заказы
@@ -1154,6 +1113,30 @@ function renderStocks(data) {
   if (!el) return;
   const products = data.products || [];
 
+  const kwAll = data.keywords || {};
+
+  // Проверка падения позиции для товара
+  function getPosAlert(nmId) {
+    const kwList = (kwAll[String(nmId)] || {}).keywords || [];
+    let worst = null;
+    for (const kw of kwList) {
+      const hist = kw.history || {};
+      const dates = Object.keys(hist).sort();
+      if (dates.length < 2) continue;
+      const last = hist[dates[dates.length - 1]];
+      const prev = hist[dates[dates.length - 2]];
+      if (!last || !prev || last === 0 || prev === 0) continue;
+      const drop = last - prev;
+      if (drop >= 5) {
+        if (!worst || drop > worst.drop)
+          worst = { drop, kw: kw.q, from: prev, to: last, level: 'red' };
+      } else if (drop >= 3 && (!worst || worst.level !== 'red')) {
+        worst = { drop, kw: kw.q, from: prev, to: last, level: 'yellow' };
+      }
+    }
+    return worst;
+  }
+
   const rows = products.map(p => {
     const hist = p.stock_history || {};
     const dates = Object.keys(hist).sort();
@@ -1163,6 +1146,9 @@ function renderStocks(data) {
 
     const critical = current === 0 || (dos !== null && dos <= 14);
     const warn     = !critical && dos !== null && dos <= 30;
+
+    // Флаг падения позиции
+    const posAlert = getPosAlert(p.nmId);
 
     // Цвет строки
     const rowBg = critical ? 'background:rgba(239,68,68,.08)' : warn ? 'background:rgba(245,158,11,.06)' : '';
@@ -1209,11 +1195,37 @@ function renderStocks(data) {
       dosBadge = `<span style="color:var(--green);font-size:12px">${dosText}</span>`;
     }
 
+    const posFlag = posAlert
+      ? posAlert.level === 'red'
+        ? `<span title="Позиция «${posAlert.kw}» упала с ${posAlert.from} до ${posAlert.to} за 2 дня — пора запускать раздачу!" style="margin-left:6px;cursor:help;font-size:14px">🚩</span>`
+        : `<span title="Позиция «${posAlert.kw}» снизилась с ${posAlert.from} до ${posAlert.to}" style="margin-left:6px;cursor:help;font-size:13px">⚠️</span>`
+      : '';
+
+    // Доступно для раздачи = остаток − страховой запас (14 дней × продажи/день)
+    const INSURANCE_DAYS = 14;
+    const insurance = Math.round(avgOrd * INSURANCE_DAYS);
+    const availForDist = Math.max(0, current - insurance);
+    let availBadge;
+    if (current === 0) {
+      availBadge = '<span style="color:var(--text2)">—</span>';
+    } else if (availForDist === 0) {
+      availBadge = '<span style="color:var(--red);font-weight:600">0 шт<br><span style="font-size:10px;font-weight:400">нет запаса</span></span>';
+    } else {
+      const pct = Math.round(availForDist / current * 100);
+      const color = availForDist < insurance ? 'var(--yellow)' : 'var(--green)';
+      availBadge = `<span style="color:${color};font-weight:600">${availForDist.toLocaleString('ru')} шт</span><br><span style="font-size:10px;color:var(--text2)">${pct}% от остатка</span>`;
+    }
+
     return `<tr style="${rowBg}">
-      <td style="font-weight:500">${p.name}</td>
+      <td style="font-weight:500">${p.name}${posFlag}</td>
       <td style="text-align:center">${sparkline}</td>
       ${histCells}
-      <td style="text-align:right;font-weight:600;color:${dosColor}">${current.toLocaleString('ru')}</td>
+      <td style="text-align:right;line-height:1.6">
+        <div style="font-weight:600;color:${dosColor}">${current.toLocaleString('ru')}</div>
+        ${availForDist > 0
+          ? `<div style="font-size:10px;color:${availForDist < insurance ? 'var(--yellow)' : 'var(--green)'}">▶ раздача: ${availForDist.toLocaleString('ru')}</div>`
+          : current > 0 ? `<div style="font-size:10px;color:var(--red)">▶ раздача: 0</div>` : ''}
+      </td>
       <td style="text-align:center">${dosBadge}</td>
       <td style="text-align:right;color:var(--text2);font-size:11px">${avgOrd > 0 ? avgOrd+'/день' : '—'}</td>
     </tr>`;
@@ -1231,11 +1243,12 @@ function renderStocks(data) {
         <th style="text-align:right">Остаток</th>
         <th style="text-align:center">Запас</th>
         <th style="text-align:right">Продажи</th>
+        <th style="text-align:right">Для раздачи</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>
     <div style="font-size:10px;color:var(--text2);margin-top:8px">
-      Запас = остаток ÷ среднее заказов/день · Красный — менее 14 дней · Жёлтый — менее 30 дней
+      Запас = остаток ÷ среднее заказов/день · Красный — менее 14 дней · Жёлтый — менее 30 дней · Для раздачи = остаток − (14 дней × продажи/день)
     </div>
   </div>`;
 
@@ -2145,6 +2158,162 @@ function calcRun() {
 }
 // ─────────────────────────────────────────────────────────────
 
+// ─── PRICE MONITOR ───────────────────────────────────────────
+const PRICE_OVERRIDES_KEY = 'likato_price_overrides'; // {nm: {rrc,mrc,price,note}}
+let priceOverrides = JSON.parse(localStorage.getItem(PRICE_OVERRIDES_KEY) || '{}');
+let novinkaList = []; // loaded from novinka.json
+let pfEditNm = null;  // nm of item being edited
+let pfFilterMonth = 'all';
+let pfSearch = '';
+
+function priceStatus(price, rrc, mrc) {
+  if (!price || !mrc) return {label:'—', cls:'', color:'var(--text2)'};
+  if (price < mrc * 0.95) return {label:'🔴 Нарушение', cls:'badge-red', color:'var(--red)'};
+  if (price <= mrc)       return {label:'🟡 На МРЦ',    cls:'badge-yellow', color:'var(--yellow)'};
+  if (rrc && price > rrc) return {label:'⬆️ Выше РРЦ', cls:'badge-blue', color:'#60a5fa'};
+  return {label:'🟢 OK', cls:'badge-green', color:'var(--green)'};
+}
+
+function renderPriceTable() {
+  const tbody = document.getElementById('priceTableBody');
+  if (!tbody) return;
+
+  // Сборка данных: rrc/mrc из novinka.json, текущая цена+заметка из localStorage
+  let items = novinkaList.map(n => {
+    const ov = priceOverrides[n.nm] || {};
+    return {...n, rrc: n.rrc||0, mrc: n.mrc||0, price: ov.price||0, note: ov.note||''};
+  });
+
+  // Фильтр по месяцу
+  if (pfFilterMonth !== 'all') items = items.filter(it => it.month === pfFilterMonth);
+  // Поиск
+  if (pfSearch) {
+    const q = pfSearch.toLowerCase();
+    items = items.filter(it => it.name.toLowerCase().includes(q) || it.nm.includes(q));
+  }
+
+  if (!items.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text2);padding:30px">Нет товаров</td></tr>';
+    return;
+  }
+
+  // Счётчики статусов
+  let cntOk=0, cntMrc=0, cntVio=0, cntAbove=0, cntNo=0;
+  items.forEach(it => {
+    const st = priceStatus(it.price, it.rrc, it.mrc);
+    if (st.label.includes('OK')) cntOk++;
+    else if (st.label.includes('МРЦ')) cntMrc++;
+    else if (st.label.includes('Нарушение')) cntVio++;
+    else if (st.label.includes('Выше')) cntAbove++;
+    else cntNo++;
+  });
+  const statsEl = document.getElementById('priceStats');
+  if (statsEl) statsEl.innerHTML =
+    `<span style="color:var(--green)">🟢 OK: ${cntOk}</span> &nbsp;
+     <span style="color:var(--yellow)">🟡 На МРЦ: ${cntMrc}</span> &nbsp;
+     <span style="color:var(--red)">🔴 Нарушение: ${cntVio}</span> &nbsp;
+     <span style="color:#60a5fa">⬆️ Выше РРЦ: ${cntAbove}</span> &nbsp;
+     <span style="color:var(--text2)">— Без цены: ${cntNo}</span>`;
+
+  tbody.innerHTML = items.map(it => {
+    const st = priceStatus(it.price, it.rrc, it.mrc);
+    const diffToRRC = it.rrc && it.price ? it.rrc - it.price : null;
+    const diffStr = diffToRRC === null ? '<span style="color:var(--text2)">—</span>'
+      : diffToRRC > 0 ? `<span style="color:var(--text2)">−${diffToRRC.toLocaleString('ru')} ₽</span>`
+      : diffToRRC === 0 ? '<span style="color:var(--green)">= РРЦ</span>'
+      : `<span style="color:#60a5fa">+${Math.abs(diffToRRC).toLocaleString('ru')} ₽</span>`;
+    const priceColor = !it.price ? 'var(--text2)'
+      : it.price < (it.mrc||0) ? 'var(--red)'
+      : it.price > (it.rrc||0) && it.rrc ? '#60a5fa'
+      : 'var(--green)';
+    const hasOverride = !!priceOverrides[it.nm];
+    return `<tr style="${hasOverride ? '' : 'opacity:0.75'}">
+      <td>
+        <div style="font-weight:600;font-size:12px">${it.name}</div>
+        <div style="font-size:11px;color:var(--text2)">${it.nm} &nbsp;·&nbsp; ${it.month}</div>
+      </td>
+      <td style="text-align:right;color:var(--text2)">${it.rrc ? it.rrc.toLocaleString('ru') : '<span style="color:var(--text2);opacity:.5">—</span>'}</td>
+      <td style="text-align:right;color:var(--text2)">${it.mrc ? it.mrc.toLocaleString('ru') : '<span style="color:var(--text2);opacity:.5">—</span>'}</td>
+      <td style="text-align:right;font-weight:700;color:${priceColor}">${it.price ? it.price.toLocaleString('ru') : '<span style="color:var(--text2);opacity:.5">—</span>'}</td>
+      <td style="text-align:center"><span class="badge ${st.cls}" style="font-size:11px">${st.label}</span></td>
+      <td style="text-align:center;font-size:12px">${diffStr}</td>
+      <td style="font-size:11px;color:var(--text2);max-width:150px;white-space:normal">${it.note || ''}</td>
+      <td style="white-space:nowrap">
+        <button onclick="pfEdit('${it.nm}')" style="background:none;border:1px solid var(--border);border-radius:4px;padding:3px 8px;cursor:pointer;color:var(--text2);font-size:11px">✏️ Цены</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function pfBuildMonthFilter() {
+  const months = [...new Set(novinkaList.map(n => n.month))].sort();
+  const sel = document.getElementById('pfMonthFilter');
+  if (!sel) return;
+  sel.innerHTML = '<option value="all">Все месяцы</option>'
+    + months.map(m => `<option value="${m}">${m}</option>`).join('');
+}
+
+function openPriceForm(nm) {
+  pfEditNm = nm;
+  const it = novinkaList.find(n => n.nm === nm) || {};
+  const ov = priceOverrides[nm] || {};
+  const form = document.getElementById('priceForm');
+  form.style.display = 'block';
+  document.getElementById('priceFormTitle').textContent = it.name || 'Товар';
+  document.getElementById('pf_name').value  = it.name  || '';
+  document.getElementById('pf_nm').value    = nm;
+  document.getElementById('pf_rrc').value   = it.rrc   || '';
+  document.getElementById('pf_mrc').value   = it.mrc   || '';
+  document.getElementById('pf_rrc_display').textContent = it.rrc ? it.rrc.toLocaleString('ru') + ' ₽' : '—';
+  document.getElementById('pf_mrc_display').textContent = it.mrc ? it.mrc.toLocaleString('ru') + ' ₽' : '—';
+  document.getElementById('pf_price').value = ov.price || '';
+  document.getElementById('pf_date').value  = ov.date  || '';
+  document.getElementById('pf_note').value  = ov.note  || '';
+  pfUpdateStatus();
+  form.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function closePriceForm() {
+  document.getElementById('priceForm').style.display = 'none';
+  pfEditNm = null;
+}
+
+function pfUpdateStatus() {
+  const rrc   = parseFloat(document.getElementById('pf_rrc').value)   || 0;
+  const mrc   = parseFloat(document.getElementById('pf_mrc').value)   || 0;
+  const price = parseFloat(document.getElementById('pf_price').value) || 0;
+  const st = priceStatus(price, rrc, mrc);
+  const el = document.getElementById('pf_status_preview');
+  if (el) { el.textContent = st.label || '—'; el.style.color = st.color; }
+}
+
+function pfSave() {
+  const nm = document.getElementById('pf_nm').value.trim();
+  if (!nm) return;
+  priceOverrides[nm] = {
+    price: parseFloat(document.getElementById('pf_price').value) || 0,
+    date:  document.getElementById('pf_date').value,
+    note:  document.getElementById('pf_note').value.trim(),
+  };
+  localStorage.setItem(PRICE_OVERRIDES_KEY, JSON.stringify(priceOverrides));
+  closePriceForm();
+  renderPriceTable();
+}
+
+function pfEdit(nm) { openPriceForm(nm); }
+
+function loadNovinkaJson() {
+  fetch('novinka.json?v=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      novinkaList = data;
+      pfBuildMonthFilter();
+      renderPriceTable();
+    })
+    .catch(() => console.warn('novinka.json не найден'));
+}
+// ─────────────────────────────────────────────────────────────
+
 function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
@@ -2166,9 +2335,11 @@ function loadData() {
     }
     renderDashboard(data);
     renderStaticCharts();
+    loadNovinkaJson();
   })
   .catch(() => {
     renderStaticCharts();
+    loadNovinkaJson();
     console.warn('data.json не найден, используются демо-данные');
   });
 }
