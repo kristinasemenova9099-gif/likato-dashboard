@@ -421,11 +421,11 @@
         <div class="table-wrap">
           <table style="font-size:12px">
             <thead><tr>
-              <th>#</th><th>Артикул</th><th>Товар</th><th>РК</th>
+              <th>#</th><th>Артикул</th><th>Товар</th>
               <th>Показы</th><th>Клики</th><th>CTR</th><th>CPC, &#8381;</th>
               <th>Расход, &#8381;</th><th>Заказы</th><th>CR</th>
             </tr></thead>
-            <tbody id="adsBody"><tr><td colspan="11" style="color:var(--text2);text-align:center;padding:16px">Загрузка...</td></tr></tbody>
+            <tbody id="adsBody"><tr><td colspan="10" style="color:var(--text2);text-align:center;padding:16px">Загрузка...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -692,46 +692,60 @@ function renderDashboard(data) {
     renderKW();
   }
 
-  // ── РК из Google Sheets (сгруппировано по товару) ───────────
-  const ads = data.ads || [];
+  // ── РК ТОП-4: 4 строки по товарам из nm_ads ─────────────────
+  const nmAds   = data.nm_ads || {};
   const adsBody = document.getElementById('adsBody');
   const adsKpi  = document.getElementById('adsKpi');
+  // Строим 4 строки из data.products (только ТОП-4)
+  const topProds = (data.products || []).filter(p => p.is_top !== false);
+  const topRows  = topProds.map(p => {
+    const a = nmAds[String(p.nmId)] || {};
+    return {
+      nmId:   p.nmId,
+      name:   p.name || p.product_name || 'Артикул ' + p.nmId,
+      spend:  a.spend  || 0,
+      shows:  a.shows  || 0,
+      clicks: a.clicks || 0,
+      orders: a.orders || 0,
+      status: a.status || 0,
+      ctr:    a.shows  ? (a.clicks / a.shows * 100).toFixed(2) : 0,
+      cpc:    a.clicks ? (a.spend / a.clicks).toFixed(1) : 0,
+      cr:     a.clicks ? (a.orders / a.clicks * 100).toFixed(2) : 0,
+    };
+  });
+
+  const totalSpend  = topRows.reduce((s,a) => s + a.spend, 0);
+  const totalShows  = topRows.reduce((s,a) => s + a.shows, 0);
+  const totalClicks = topRows.reduce((s,a) => s + a.clicks, 0);
+  const totalOrders = topRows.reduce((s,a) => s + a.orders, 0);
+  const avgCtr = totalShows  ? (totalClicks / totalShows  * 100).toFixed(2) : 0;
+  const avgCpc = totalClicks ? (totalSpend  / totalClicks).toFixed(1) : 0;
+
+  if (adsKpi) adsKpi.innerHTML = `
+    <div class="kpi-card purple"><div class="kpi-label">Товаров в рекламе</div><div class="kpi-val">${topRows.filter(a=>a.spend>0).length}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Расход, ₽</div><div class="kpi-val">${Math.round(totalSpend).toLocaleString('ru')}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Показы</div><div class="kpi-val">${totalShows.toLocaleString('ru')}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Клики</div><div class="kpi-val">${totalClicks.toLocaleString('ru')}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Ср. CTR</div><div class="kpi-val">${avgCtr}%</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Ср. CPC, ₽</div><div class="kpi-val">${avgCpc}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Заказы с РК</div><div class="kpi-val">${totalOrders.toLocaleString('ru')}</div></div>
+  `;
+
   if (adsBody) {
-    if (!ads.length) {
-      adsBody.innerHTML = '<tr><td colspan="11" style="color:var(--text2);text-align:center;padding:20px">Нет данных — загрузите выгрузку из кабинета WB в Google Sheets</td></tr>';
+    if (!topRows.length) {
+      adsBody.innerHTML = '<tr><td colspan="10" style="color:var(--text2);text-align:center;padding:20px">Нет данных</td></tr>';
     } else {
-      const tops    = ads.filter(a => a.is_top);
-      const novinka = [];
-      const totalSpend  = tops.reduce((s,a) => s + a.spend, 0);
-      const totalShows  = tops.reduce((s,a) => s + a.shows, 0);
-      const totalClicks = tops.reduce((s,a) => s + a.clicks, 0);
-      const totalOrders = tops.reduce((s,a) => s + (a.orders||0), 0);
-      const totalCamps  = tops.reduce((s,a) => s + (a.camps||0), 0);
-      const avgCtr = totalShows ? (totalClicks/totalShows*100).toFixed(2) : 0;
-      const avgCpc = totalClicks ? (totalSpend/totalClicks).toFixed(1) : 0;
-
-      if (adsKpi) adsKpi.innerHTML = `
-        <div class="kpi-card purple"><div class="kpi-label">Товаров в рекламе</div><div class="kpi-val">${ads.length}</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Кампаний</div><div class="kpi-val">${totalCamps}</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Расход, ₽</div><div class="kpi-val">${Math.round(totalSpend).toLocaleString('ru')}</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Показы</div><div class="kpi-val">${totalShows.toLocaleString('ru')}</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Клики</div><div class="kpi-val">${totalClicks.toLocaleString('ru')}</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Ср. CTR</div><div class="kpi-val">${avgCtr}%</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Ср. CPC, ₽</div><div class="kpi-val">${avgCpc}</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Заказы с РК</div><div class="kpi-val">${totalOrders.toLocaleString('ru')}</div></div>
-      `;
-
-      const renderRow = (a, i) => {
+      adsBody.innerHTML = topRows.map((a, i) => {
         const ctrColor = a.ctr >= 5 ? '#22c55e' : a.ctr >= 2 ? '#f59e0b' : '#ef4444';
         const crColor  = a.cr  >= 10 ? '#22c55e' : a.cr  >= 5  ? '#f59e0b' : 'var(--text2)';
-        const badge = a.is_top
-          ? `<span style="background:#7c3aed;color:#fff;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:4px">ТОП</span>`
-          : `<span style="background:#0e7490;color:#fff;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:4px">НОВ</span>`;
-        return `<tr${a.is_top ? ' style="background:rgba(124,58,237,0.06)"' : ''}>
+        const rkBadge  = a.status === 9  ? '<span class="badge badge-green" style="margin-left:4px">▶ Акт</span>'
+                       : a.status === 11 ? '<span class="badge badge-yellow" style="margin-left:4px">⏸ Пауза</span>'
+                       : a.spend > 0     ? '<span class="badge" style="margin-left:4px;background:#444">Есть</span>'
+                       : '';
+        return `<tr style="background:rgba(124,58,237,0.06)">
           <td style="color:var(--text2)">${i+1}</td>
           <td style="color:var(--text2);font-size:11px">${a.nmId}</td>
-          <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.name}">${a.name}${badge}</td>
-          <td style="text-align:center;color:var(--text2)">${a.camps||1}</td>
+          <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.name}">${a.name}${rkBadge}</td>
           <td style="text-align:right">${(a.shows||0).toLocaleString('ru')}</td>
           <td style="text-align:right">${(a.clicks||0).toLocaleString('ru')}</td>
           <td style="text-align:right;color:${ctrColor};font-weight:600">${a.ctr}%</td>
@@ -740,14 +754,7 @@ function renderDashboard(data) {
           <td style="text-align:right">${a.orders||0}</td>
           <td style="text-align:right;color:${crColor}">${a.cr}%</td>
         </tr>`;
-      };
-
-      const sepRow = label => `<tr><td colspan="11" style="background:var(--bg2);color:var(--text2);font-size:11px;font-weight:600;padding:4px 8px;letter-spacing:.5px">${label}</td></tr>`;
-
-      let rows = '';
-      if (tops.length)    rows += sepRow(`▶ ТОП-4 товары (${tops.length})`) + tops.map((a,i) => renderRow(a, i+1)).join('');
-      if (novinka.length) rows += sepRow(`▶ Новинки (${novinka.length} товаров)`) + novinka.map((a,i) => renderRow(a, tops.length+i+1)).join('');
-      adsBody.innerHTML = rows;
+      }).join('');
     }
   }
   // KPI карточки РК
@@ -908,7 +915,6 @@ function openBestCards() {
   document.body.style.overflow = 'hidden';
 
   const data = rawData || {};
-  const ads = data.ads || [];
   const novosti = data.novosti || [];
 
   // Индекс новинок по nmId
@@ -918,16 +924,24 @@ function openBestCards() {
   // Только nmId из загруженных новинок
   const novNmIds = new Set(Object.keys(novByNm));
 
-  // Группируем кампании только по новинкам из нашего листа
+  // Берём РК из nm_ads (агрегация по товару) или fallback из data.ads
   const byNm = {};
-  ads.filter(a => a.nmId && novNmIds.has(String(a.nmId))).forEach(a => {
-    const k = String(a.nmId);
-    if (!byNm[k]) byNm[k] = { nmId: a.nmId, name: a.name || '', spend: 0, orders: 0, shows: 0, campaigns: 0 };
-    byNm[k].spend    += a.spend    || 0;
-    byNm[k].orders   += a.orders   || 0;
-    byNm[k].shows    += a.shows    || 0;
-    byNm[k].campaigns++;
-  });
+  if (data.nm_ads) {
+    Object.entries(data.nm_ads).forEach(([k, a]) => {
+      if (!novNmIds.has(k)) return;
+      byNm[k] = { nmId: a.nmId, name: '', spend: a.spend || 0, orders: a.orders || 0, shows: a.shows || 0, campaigns: 1 };
+    });
+  } else {
+    const ads = data.ads || [];
+    ads.filter(a => a.nmId && novNmIds.has(String(a.nmId))).forEach(a => {
+      const k = String(a.nmId);
+      if (!byNm[k]) byNm[k] = { nmId: a.nmId, name: a.name || '', spend: 0, orders: 0, shows: 0, campaigns: 0 };
+      byNm[k].spend    += a.spend    || 0;
+      byNm[k].orders   += a.orders   || 0;
+      byNm[k].shows    += a.shows    || 0;
+      byNm[k].campaigns++;
+    });
+  }
 
   // Считаем ДРР: расход / (заказы × ср. цена). Используем средн. цену 1000 если нет данных
   const cards = Object.values(byNm)
@@ -998,9 +1012,13 @@ function renderNovosti(data) {
     return;
   }
 
-  // Индекс данных из WB по nmId
+  // Индекс РК по nmId — предпочитаем nm_ads (агрегация по товару), иначе fallback
   const adsByNm = {};
-  (data.ads || []).forEach(a => { if (a.nmId) adsByNm[String(a.nmId)] = a; });
+  if (data.nm_ads) {
+    Object.assign(adsByNm, data.nm_ads);
+  } else {
+    (data.ads || []).forEach(a => { if (a.nmId) adsByNm[String(a.nmId)] = a; });
+  }
   const pricesByNm = {};
   (data.products || []).forEach(p => { if (p.nmId) pricesByNm[String(p.nmId)] = p; });
 
