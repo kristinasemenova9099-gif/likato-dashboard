@@ -757,14 +757,11 @@ function renderDashboard(data) {
       }).join('');
     }
   }
-  // KPI карточки РК
-  const topAds = ads.filter(a => a.is_top);
-  const totalAdSpend  = topAds.reduce((s,a) => s + a.spend, 0);
-  const totalAdOrders = topAds.reduce((s,a) => s + (a.orders||0), 0);
+  // KPI карточки РК (топ-уровень)
   const el = id => document.getElementById(id);
-  if (el('kpi-ad-spend'))  el('kpi-ad-spend').textContent  = Math.round(totalAdSpend).toLocaleString('ru') + ' ₽';
-  if (el('kpi-ad-orders')) el('kpi-ad-orders').textContent = totalAdOrders.toLocaleString('ru');
-  if (el('kpi-ads-count')) el('kpi-ads-count').textContent = ads.filter(a=>a.is_top).length + ' ТОП + ' + ads.filter(a=>!a.is_top).length + ' НОВ';
+  if (el('kpi-ad-spend'))  el('kpi-ad-spend').textContent  = Math.round(totalSpend).toLocaleString('ru') + ' ₽';
+  if (el('kpi-ad-orders')) el('kpi-ad-orders').textContent = totalOrders.toLocaleString('ru');
+  if (el('kpi-ads-count')) el('kpi-ads-count').textContent = topRows.filter(a=>a.spend>0).length + ' из 4';
 
   // Прогресс-бары раздач — из data.json (дневник) или localStorage
   sheetDistData = prods.map(p => ({
