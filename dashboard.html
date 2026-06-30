@@ -759,8 +759,8 @@ function renderDashboard(data) {
   }
   // KPI карточки РК (топ-уровень)
   const el = id => document.getElementById(id);
-  if (el('kpi-ad-spend'))  el('kpi-ad-spend').textContent  = Math.round(totalSpend).toLocaleString('ru') + ' ₽';
-  if (el('kpi-ad-orders')) el('kpi-ad-orders').textContent = totalOrders.toLocaleString('ru');
+  if (el('kpi-ad-spend'))  el('kpi-ad-spend').textContent  = Math.round(rkSpend).toLocaleString('ru') + ' ₽';
+  if (el('kpi-ad-orders')) el('kpi-ad-orders').textContent = rkOrders.toLocaleString('ru');
   if (el('kpi-ads-count')) el('kpi-ads-count').textContent = topRows.filter(a=>a.spend>0).length + ' из 4';
 
   // Прогресс-бары раздач — из data.json (дневник) или localStorage
