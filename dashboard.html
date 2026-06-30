@@ -1006,9 +1006,13 @@ function renderNovosti(data) {
 
   if (countEl) countEl.textContent = items.length + ' товаров';
 
-  const monthOrder = ['июл..2026', 'авг..2026', 'сен..2026'];
+  // Товары с артикулом WB — отдельная группа наверху
+  const withNm = items.filter(i => i.nm);
+  const withoutNm = items.filter(i => !i.nm);
+
+  const monthOrder = ['июн.2026', 'июл..2026', 'авг..2026', 'сен..2026'];
   const byMonth = {};
-  items.forEach(i => {
+  withoutNm.forEach(i => {
     const m = i.month || 'Без месяца';
     if (!byMonth[m]) byMonth[m] = [];
     byMonth[m].push(i);
@@ -1029,30 +1033,21 @@ function renderNovosti(data) {
     <th>РК</th><th>Заказы</th><th>Заметка</th>
   </tr></thead>`;
 
-  container.innerHTML = months.map(month => {
-    const rows = byMonth[month];
-    const label = month.replace('июл..','Июль ').replace('авг..','Август ').replace('сен..','Сентябрь ');
-
-    const trows = rows.map((r, idx) => {
+  function buildRows(rows) {
+    return rows.map((r, idx) => {
       const key = r.barcode || r.name.slice(0,40);
       const nm = r.nm ? String(r.nm) : null;
       const ad = nm ? adsByNm[nm] : null;
       const prod = nm ? pricesByNm[nm] : null;
       const note = notes[key] || {};
-
-      // РК
       const rkBadge = !ad ? '<span style="color:var(--text2)">—</span>'
         : ad.status === 9 ? '<span class="badge badge-green">▶ Активна</span>'
         : ad.status === 11 ? '<span class="badge badge-yellow">⏸ Пауза</span>'
         : '<span class="badge" style="background:#444">Нет</span>';
-
-      // ДРР
       const drr = ad && ad.spend > 0 && ad.orders > 0
         ? Math.round(ad.spend / (ad.orders * (prod?.price || 1000)) * 100) : null;
       const drrCell = drr === null ? '—'
         : `<span class="badge ${drr>30?'badge-red':drr>20?'badge-yellow':'badge-green'}">${drr}%</span>`;
-
-      // Цены — РРЦ/МРЦ из novinkaList (Google Sheets), текущая цена из WB API
       const novinkaRef = nm ? novinkaList.find(n => n.nm === nm) : null;
       const rrcVal = novinkaRef?.rrc || prod?.rrts || null;
       const mrcVal = novinkaRef?.mrc || prod?.mrts || null;
@@ -1065,14 +1060,8 @@ function renderNovosti(data) {
         else if (prod.price <= mrcVal * 1.02) priceStatus = '<span class="badge badge-yellow">⚠ На МРЦ</span>';
         else priceStatus = '<span class="badge badge-green">✓ OK</span>';
       }
-
-      // Заказы
       const orders = prod ? (prod.total_orders || '—') : '—';
-
-      // Редактируемые поля
-      const decision = note.decision || '';
       const noteText = note.note || '';
-
       const rowBg = idx % 2 === 0 ? '' : 'background:rgba(255,255,255,0.02)';
       const priceHighlight = prod?.price && mrcVal && prod.price < mrcVal ? 'color:var(--red);font-weight:700' : 'font-weight:600';
       const shortName = r.name.length > 40 ? r.name.slice(0, 40).trim() + '…' : r.name;
@@ -1098,11 +1087,21 @@ function renderNovosti(data) {
         </td>
       </tr>`;
     }).join('');
+  }
+
+  const withNmBlock = withNm.length ? `<div style="margin-bottom:20px">
+    <div style="font-size:13px;font-weight:700;color:var(--green);padding:6px 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px">✅ Уже на WB — ${withNm.length} позиций</div>
+    <div class="table-wrap"><table style="font-size:12px;width:100%">${thead}<tbody>${buildRows(withNm)}</tbody></table></div>
+  </div>` : '';
+
+  container.innerHTML = withNmBlock + months.map(month => {
+    const rows = byMonth[month];
+    const label = month.replace('июн.','Июнь ').replace('июл..','Июль ').replace('авг..','Август ').replace('сен..','Сентябрь ');
 
     return `<div style="margin-bottom:20px">
       <div style="font-size:13px;font-weight:700;color:var(--accent);padding:6px 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px">${label} — ${rows.length} позиций</div>
       <div class="table-wrap">
-        <table style="font-size:12px;width:100%">${thead}<tbody>${trows}</tbody></table>
+        <table style="font-size:12px;width:100%">${thead}<tbody>${buildRows(rows)}</tbody></table>
       </div>
     </div>`;
   }).join('');
