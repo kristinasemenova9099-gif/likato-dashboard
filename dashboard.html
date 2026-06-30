@@ -1004,6 +1004,7 @@ function renderNovosti(data) {
   const countEl = document.getElementById('novosti-count');
   if (!container) return;
   const items = (data.novosti || []).filter(i => i.name);
+  console.log('[novosti] items:', items.length, '| novinkaList:', novinkaList.length, '| nm_ads keys:', Object.keys(data.nm_ads||{}).length);
   if (!items.length) {
     container.innerHTML = '<p style="color:var(--text2);padding:12px">Нет данных — запустите wb_fetch.py</p>';
     return;
