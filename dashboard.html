@@ -714,21 +714,21 @@ function renderDashboard(data) {
     };
   });
 
-  const totalSpend  = topRows.reduce((s,a) => s + a.spend, 0);
-  const totalShows  = topRows.reduce((s,a) => s + a.shows, 0);
-  const totalClicks = topRows.reduce((s,a) => s + a.clicks, 0);
-  const totalOrders = topRows.reduce((s,a) => s + a.orders, 0);
-  const avgCtr = totalShows  ? (totalClicks / totalShows  * 100).toFixed(2) : 0;
-  const avgCpc = totalClicks ? (totalSpend  / totalClicks).toFixed(1) : 0;
+  const rkSpend  = topRows.reduce((s,a) => s + a.spend, 0);
+  const rkShows  = topRows.reduce((s,a) => s + a.shows, 0);
+  const rkClicks = topRows.reduce((s,a) => s + a.clicks, 0);
+  const rkOrders = topRows.reduce((s,a) => s + a.orders, 0);
+  const rkCtr = rkShows  ? (rkClicks / rkShows  * 100).toFixed(2) : 0;
+  const rkCpc = rkClicks ? (rkSpend  / rkClicks).toFixed(1) : 0;
 
   if (adsKpi) adsKpi.innerHTML = `
     <div class="kpi-card purple"><div class="kpi-label">Товаров в рекламе</div><div class="kpi-val">${topRows.filter(a=>a.spend>0).length}</div></div>
-    <div class="kpi-card purple"><div class="kpi-label">Расход, ₽</div><div class="kpi-val">${Math.round(totalSpend).toLocaleString('ru')}</div></div>
-    <div class="kpi-card purple"><div class="kpi-label">Показы</div><div class="kpi-val">${totalShows.toLocaleString('ru')}</div></div>
-    <div class="kpi-card purple"><div class="kpi-label">Клики</div><div class="kpi-val">${totalClicks.toLocaleString('ru')}</div></div>
-    <div class="kpi-card purple"><div class="kpi-label">Ср. CTR</div><div class="kpi-val">${avgCtr}%</div></div>
-    <div class="kpi-card purple"><div class="kpi-label">Ср. CPC, ₽</div><div class="kpi-val">${avgCpc}</div></div>
-    <div class="kpi-card purple"><div class="kpi-label">Заказы с РК</div><div class="kpi-val">${totalOrders.toLocaleString('ru')}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Расход, ₽</div><div class="kpi-val">${Math.round(rkSpend).toLocaleString('ru')}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Показы</div><div class="kpi-val">${rkShows.toLocaleString('ru')}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Клики</div><div class="kpi-val">${rkClicks.toLocaleString('ru')}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Ср. CTR</div><div class="kpi-val">${rkCtr}%</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Ср. CPC, ₽</div><div class="kpi-val">${rkCpc}</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">Заказы с РК</div><div class="kpi-val">${rkOrders.toLocaleString('ru')}</div></div>
   `;
 
   if (adsBody) {
