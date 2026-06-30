@@ -1053,17 +1053,18 @@ function renderNovosti(data) {
       const mrcVal = novinkaRef?.mrc || prod?.mrts || null;
       const rrts = rrcVal ? rrcVal.toLocaleString('ru') : '—';
       const mrts = mrcVal ? mrcVal.toLocaleString('ru') : '—';
-      const price = prod?.price || '—';
+      // Цена: сначала из novosti (WB API батч), потом из products (топ-4)
+      const price = r.price || prod?.price || null;
       let priceStatus = '<span style="color:var(--text2)">—</span>';
-      if (prod?.price && mrcVal) {
-        if (prod.price < mrcVal) priceStatus = '<span class="badge badge-red">⛔ Нарушение</span>';
-        else if (prod.price <= mrcVal * 1.02) priceStatus = '<span class="badge badge-yellow">⚠ На МРЦ</span>';
+      if (price && mrcVal) {
+        if (price < mrcVal) priceStatus = '<span class="badge badge-red">⛔ Нарушение</span>';
+        else if (price <= mrcVal * 1.02) priceStatus = '<span class="badge badge-yellow">⚠ На МРЦ</span>';
         else priceStatus = '<span class="badge badge-green">✓ OK</span>';
       }
       const orders = prod ? (prod.total_orders || '—') : '—';
       const noteText = note.note || '';
       const rowBg = idx % 2 === 0 ? '' : 'background:rgba(255,255,255,0.02)';
-      const priceHighlight = prod?.price && mrcVal && prod.price < mrcVal ? 'color:var(--red);font-weight:700' : 'font-weight:600';
+      const priceHighlight = price && mrcVal && price < mrcVal ? 'color:var(--red);font-weight:700' : 'font-weight:600';
       const shortName = r.name.length > 40 ? r.name.slice(0, 40).trim() + '…' : r.name;
       return `<tr style="${rowBg}">
         <td style="padding:6px 10px;max-width:180px">
@@ -1073,7 +1074,7 @@ function renderNovosti(data) {
         <td style="text-align:center;font-size:11px;color:var(--text2)">${nm || '—'}</td>
         <td style="text-align:center;background:rgba(96,165,250,0.05);font-weight:600">${rrts}</td>
         <td style="text-align:center;background:rgba(96,165,250,0.05);font-weight:600">${mrts}</td>
-        <td style="text-align:center;background:rgba(96,165,250,0.05);${priceHighlight}">${price !== '—' ? Number(price).toLocaleString('ru') : '—'}</td>
+        <td style="text-align:center;background:rgba(96,165,250,0.05);${priceHighlight}">${price ? Number(price).toLocaleString('ru') : '—'}</td>
         <td style="text-align:center;background:rgba(96,165,250,0.05)">${priceStatus}</td>
         <td style="text-align:center;background:rgba(251,191,36,0.05)">${drrCell}</td>
         <td style="text-align:center">${rkBadge}</td>
