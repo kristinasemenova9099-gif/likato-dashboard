@@ -476,6 +476,8 @@
       </div>
     </div>
 
+    <div id="novinkaDebug" style="font-size:11px;color:var(--text2);padding:4px 0 8px;opacity:0.6"></div>
+
     <div class="section">
       <div class="section-header">
         <div class="section-title">&#128230; Плановые новинки к поставке</div>
@@ -2311,6 +2313,12 @@ function loadNovinkaJson() {
       renderPriceTable();
       // Перерисовываем Плановые новинки — теперь с РРЦ/МРЦ из листа
       if (window.rawData) renderNovosti(window.rawData);
+      // Диагностика: показываем сколько загружено
+      const diagEl = document.getElementById('novinkaDebug');
+      if (diagEl) {
+        const withRrc = novinkaList.filter(n => n.rrc).length;
+        diagEl.textContent = `novinka.json: ${novinkaList.length} позиций, ${withRrc} с РРЦ/МРЦ`;
+      }
     })
     .catch(() => console.warn('novinka.json не найден'));
 }
