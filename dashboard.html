@@ -773,25 +773,27 @@ function renderDashboard(data) {
 
   // Графики заказов по дням (план/факт)
   prods.forEach((p, i) => {
-    const ctx = document.getElementById('chartDist' + i);
-    if (!ctx) return;
-    const labels = p.days.map(d => d.label);
-    const orders = p.days.map(d => d.orders);
-    const cumOrders = cumsum(orders);
-    const planPerDay = Math.round(p.plan / data.sprint_days);
-    const planCum = labels.map((_, j) => planPerDay * (j + 1));
-    if (charts['dist'+i]) charts['dist'+i].destroy();
-    charts['dist'+i] = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          { label: 'План', data: planCum, borderColor: '#8b93b0', borderDash:[4,3], borderWidth:1.5, pointRadius:0, tension:.3, fill:false },
-          { label: 'Заказы (накопл.)', data: cumOrders, borderColor: colors[i], backgroundColor: colors[i]+'22', borderWidth:2, pointRadius:3, tension:.3, fill:true },
-        ]
-      },
-      options: baseOpts
-    });
+    try {
+      const ctx = document.getElementById('chartDist' + i);
+      if (!ctx) return;
+      const labels = p.days.map(d => d.label);
+      const orders = p.days.map(d => d.orders);
+      const cumOrders = cumsum(orders);
+      const planPerDay = Math.round(p.plan / data.sprint_days);
+      const planCum = labels.map((_, j) => planPerDay * (j + 1));
+      if (charts['dist'+i]) charts['dist'+i].destroy();
+      charts['dist'+i] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'План', data: planCum, borderColor: '#8b93b0', borderDash:[4,3], borderWidth:1.5, pointRadius:0, tension:.3, fill:false },
+            { label: 'Заказы (накопл.)', data: cumOrders, borderColor: colors[i], backgroundColor: colors[i]+'22', borderWidth:2, pointRadius:3, tension:.3, fill:true },
+          ]
+        },
+        options: baseOpts
+      });
+    } catch(e) { console.warn('chart dist'+i+' error:', e.message); }
   });
 
   // Таблица по дням (заказы WB + план/факт раздач)
@@ -2360,8 +2362,8 @@ function loadData() {
       document.getElementById('dateFrom').value = allDays[0].date;
       document.getElementById('dateTo').value   = allDays[allDays.length-1].date;
     }
-    renderDashboard(data);
-    renderStaticCharts();
+    try { renderDashboard(data); } catch(e) { console.error('renderDashboard error:', e); }
+    try { renderStaticCharts(); } catch(e) { console.error('renderStaticCharts error:', e); }
     loadNovinkaJson();
   })
   .catch(() => {
