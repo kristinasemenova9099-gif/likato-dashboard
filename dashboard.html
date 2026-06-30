@@ -1019,10 +1019,13 @@ function renderNovosti(data) {
   });
 
   const thead = `<thead><tr>
-    <th style="min-width:220px">Новинка (ШК / Арт WB)</th>
-    <th>РК</th><th>ДРР</th>
-    <th>РРЦ, ₽</th><th>МРЦ, ₽</th><th>Цена, ₽</th><th>Статус цены</th>
-    <th>Заказы</th><th>Решение</th><th>Заметка</th>
+    <th style="min-width:220px">Новинка</th>
+    <th style="background:rgba(96,165,250,0.08)">РРЦ, ₽</th>
+    <th style="background:rgba(96,165,250,0.08)">МРЦ, ₽</th>
+    <th style="background:rgba(96,165,250,0.08)">Цена сейчас, ₽</th>
+    <th style="background:rgba(96,165,250,0.08)">Статус цены</th>
+    <th style="background:rgba(251,191,36,0.08)">ДРР</th>
+    <th>РК</th><th>Заказы</th><th>Заметка</th>
   </tr></thead>`;
 
   container.innerHTML = months.map(month => {
@@ -1070,25 +1073,19 @@ function renderNovosti(data) {
       const noteText = note.note || '';
 
       const rowBg = idx % 2 === 0 ? '' : 'background:rgba(255,255,255,0.02)';
+      const priceHighlight = prod?.price && mrcVal && prod.price < mrcVal ? 'color:var(--red);font-weight:700' : 'font-weight:600';
       return `<tr style="${rowBg}">
         <td style="padding:6px 10px">
           <div style="font-size:12px;font-weight:600;line-height:1.3">${r.name}</div>
           <div style="font-size:10px;color:var(--text2);margin-top:2px">${r.barcode ? 'ШК: '+r.barcode : ''}${nm ? ' · Арт: '+nm : ''}</div>
         </td>
+        <td style="text-align:center;background:rgba(96,165,250,0.05);font-weight:600">${rrts}</td>
+        <td style="text-align:center;background:rgba(96,165,250,0.05);font-weight:600">${mrts}</td>
+        <td style="text-align:center;background:rgba(96,165,250,0.05);${priceHighlight}">${price !== '—' ? Number(price).toLocaleString('ru') : '—'}</td>
+        <td style="text-align:center;background:rgba(96,165,250,0.05)">${priceStatus}</td>
+        <td style="text-align:center;background:rgba(251,191,36,0.05)">${drrCell}</td>
         <td style="text-align:center">${rkBadge}</td>
-        <td style="text-align:center">${drrCell}</td>
-        <td style="text-align:center">${rrts}</td>
-        <td style="text-align:center">${mrts}</td>
-        <td style="text-align:center">${price}</td>
-        <td style="text-align:center">${priceStatus}</td>
         <td style="text-align:center">${orders}</td>
-        <td style="padding:4px 8px">
-          <span contenteditable="true"
-            style="display:block;min-width:80px;padding:2px 4px;border-radius:3px;border:1px dashed var(--border);font-size:11px;cursor:text;color:${decision?'var(--text)':'var(--text2)'}"
-            onblur="saveNovostiNote('${key.replace(/'/g,"\\'")}','decision',this.textContent.trim())"
-            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
-          >${decision || 'Решение...'}</span>
-        </td>
         <td style="padding:4px 8px">
           <span contenteditable="true"
             style="display:block;min-width:100px;padding:2px 4px;border-radius:3px;border:1px dashed var(--border);font-size:11px;cursor:text;color:${noteText?'var(--text)':'var(--text2)'}"
