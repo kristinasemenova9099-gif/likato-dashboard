@@ -57,11 +57,17 @@
   .val-yellow { color: var(--yellow); }
   .val-red { color: var(--red); }
 
-  .alerts { display: flex; flex-wrap: wrap; gap: 8px; }
-  .alert { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 500; }
-  .alert.red { background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; }
-  .alert.yellow { background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.3); color: #fcd34d; }
-  .alert.green { background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.3); color: #86efac; }
+  .alerts { display: flex; flex-direction: column; gap: 4px; }
+  .alert { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; border-radius: 6px; font-size: 12px; line-height: 1.4; }
+  .alert-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .alert-body { flex: 1; }
+  .alert-product { font-weight: 700; margin-right: 4px; }
+  .alert-msg { opacity: 0.85; }
+  .alert.red { background: rgba(239,68,68,.12); border-left: 3px solid #ef4444; color: #fca5a5; }
+  .alert.yellow { background: rgba(245,158,11,.12); border-left: 3px solid #f59e0b; color: #fcd34d; }
+  .alert.green { background: rgba(34,197,94,.10); border-left: 3px solid #22c55e; color: #86efac; }
+  .alerts-toggle { font-size: 11px; color: var(--text2); cursor: pointer; padding: 4px 0; text-decoration: underline; text-underline-offset: 2px; }
+  .alerts-toggle:hover { color: var(--text); }
 
   .section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
   .section-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
@@ -308,7 +314,10 @@
   <!-- === TOP PRODUCTS === -->
   <div class="page active" id="page-top">
 
-    <div class="alerts" id="dynamicAlerts"></div>
+    <div style="margin-bottom:4px">
+      <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">⚡ Что сейчас требует внимания</div>
+      <div class="alerts" id="dynamicAlerts"></div>
+    </div>
 
     <div class="kpi-grid">
       <div class="kpi-card blue"><div class="kpi-label">Товаров в работе</div><div class="kpi-val">4</div><div class="kpi-sub">ТОП-товары</div></div>
@@ -1299,13 +1308,13 @@ function renderAlerts(data) {
       const last  = hist[dates[dates.length - 1]];
       const prev  = hist[dates[dates.length - 2]];
       if (!last || !prev || last === 0 || prev === 0) return;
-      const drop = last - prev; // положительное = позиция упала (число выросло)
+      const drop = last - prev;
       if (drop >= 5) {
-        alerts.push({ type: 'red', text: `🚩 ${p.name}: позиция «${kw.q}» упала с ${prev} до ${last} за 2 дня — пора запускать раздачу` });
+        alerts.push({ type: 'red', icon: '🚩', product: p.name, msg: `позиция «${kw.q}» упала с ${prev} до ${last} за 2 дня — запустить раздачу` });
       } else if (drop >= 3) {
-        alerts.push({ type: 'yellow', text: `⚠ ${p.name}: позиция «${kw.q}» снизилась с ${prev} до ${last}` });
+        alerts.push({ type: 'yellow', icon: '⚠️', product: p.name, msg: `позиция «${kw.q}» снизилась с ${prev} до ${last}` });
       } else if (drop < 0 && Math.abs(drop) >= 3) {
-        alerts.push({ type: 'green', text: `✓ ${p.name}: позиция «${kw.q}» улучшилась с ${prev} до ${last} (+${Math.abs(drop)} мест)` });
+        alerts.push({ type: 'green', icon: '✅', product: p.name, msg: `позиция «${kw.q}» улучшилась с ${prev} до ${last} (+${Math.abs(drop)} мест)` });
       }
     });
 
@@ -1313,9 +1322,9 @@ function renderAlerts(data) {
     const days = p.days_of_stock;
     if (days !== null && days !== undefined) {
       if (days <= 7 && days > 0) {
-        alerts.push({ type: 'red', text: `🚩 ${p.name}: остаток на ${days} дн — срочно пополнить склад` });
+        alerts.push({ type: 'red', icon: '📦', product: p.name, msg: `остаток на ${days} дн — срочно пополнить склад` });
       } else if (days <= 14) {
-        alerts.push({ type: 'yellow', text: `⚠ ${p.name}: остаток на ${days} дн — запланировать поставку` });
+        alerts.push({ type: 'yellow', icon: '📦', product: p.name, msg: `остаток на ${days} дн — запланировать поставку` });
       }
     }
 
@@ -1325,21 +1334,38 @@ function renderAlerts(data) {
     if (distPlan > 0) {
       const distPct = Math.round(distFact / distPlan * 100);
       if (distPct < 70) {
-        alerts.push({ type: 'red', text: `🚩 ${p.name}: раздачи выполнены на ${distPct}% от плана (${distFact} из ${distPlan} шт)` });
+        alerts.push({ type: 'red', icon: '🎁', product: p.name, msg: `раздачи выполнены на ${distPct}% от плана (${distFact} из ${distPlan} шт)` });
       } else if (distPct < 90) {
-        alerts.push({ type: 'yellow', text: `⚠ ${p.name}: раздачи выполнены на ${distPct}% от плана` });
+        alerts.push({ type: 'yellow', icon: '🎁', product: p.name, msg: `раздачи выполнены на ${distPct}% от плана (${distFact} из ${distPlan} шт)` });
       }
     }
   });
 
+  const order = { red: 0, yellow: 1, green: 2 };
+  alerts.sort((a, b) => order[a.type] - order[b.type]);
+
+  const renderAlert = a =>
+    `<div class="alert ${a.type}"><span class="alert-icon">${a.icon}</span><span class="alert-body"><span class="alert-product">${a.product}</span><span class="alert-msg">${a.msg}</span></span></div>`;
+
   if (alerts.length === 0) {
-    el.innerHTML = '<div class="alert green">✓ Всё в норме — критичных отклонений не обнаружено</div>';
-  } else {
-    // Сортировка: красные → жёлтые → зелёные
-    const order = { red: 0, yellow: 1, green: 2 };
-    alerts.sort((a, b) => order[a.type] - order[b.type]);
-    el.innerHTML = alerts.map(a => `<div class="alert ${a.type}">${a.text}</div>`).join('');
+    el.innerHTML = '<div class="alert green"><span class="alert-icon">✅</span><span class="alert-body"><span class="alert-msg">Всё в норме — критичных отклонений не обнаружено</span></span></div>';
+    return;
   }
+
+  const urgent = alerts.filter(a => a.type !== 'green');
+  const good   = alerts.filter(a => a.type === 'green');
+
+  let html = urgent.map(renderAlert).join('');
+  if (good.length) {
+    html += `<div id="alertsGoodToggle" class="alerts-toggle" onclick="
+      const b = document.getElementById('alertsGoodBlock');
+      const t = document.getElementById('alertsGoodToggle');
+      if(b.style.display==='none'){b.style.display='flex';t.textContent='▲ Скрыть хорошие новости (${good.length})'}
+      else{b.style.display='none';t.textContent='▼ Показать хорошие новости (${good.length})'}
+    ">▼ Показать хорошие новости (${good.length})</div>`;
+    html += `<div id="alertsGoodBlock" style="display:none;flex-direction:column;gap:4px">${good.map(renderAlert).join('')}</div>`;
+  }
+  el.innerHTML = html;
 }
 
 function renderPlanForecast(data) {
