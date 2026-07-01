@@ -466,14 +466,14 @@
       <button class="btn" onclick="openBestCards(20)" style="background:linear-gradient(135deg,#22c55e,#16a34a);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
         &#11088; ДРР ≤ 20%
       </button>
-      <button class="btn" onclick="openBestCards(30)" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        ДРР ≤ 30%
+      <button class="btn" onclick="openBestCards(21,30)" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
+        ДРР 21–30%
       </button>
-      <button class="btn" onclick="openBestCards(40)" style="background:linear-gradient(135deg,#f59e0b,#d97706);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        ДРР ≤ 40%
+      <button class="btn" onclick="openBestCards(31,40)" style="background:linear-gradient(135deg,#f59e0b,#d97706);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
+        ДРР 31–40%
       </button>
-      <button class="btn" onclick="openBestCards(50)" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        ДРР ≤ 50%
+      <button class="btn" onclick="openBestCards(41,50)" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
+        ДРР 41–50%
       </button>
     </div>
 
@@ -925,15 +925,15 @@ function saveNovostiNote(key, field, val) {
   localStorage.setItem(NOVOSTI_NOTES_KEY, JSON.stringify(n));
 }
 
-function openBestCards(maxDrr) {
-  maxDrr = maxDrr || 20;
+function openBestCards(minDrr, maxDrr) {
+  if (maxDrr === undefined) { maxDrr = minDrr || 20; minDrr = 0; }
   document.getElementById('bestCardsModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
 
-  // Заголовок модала
   const emoji = maxDrr <= 20 ? '⭐' : maxDrr <= 30 ? '📊' : maxDrr <= 40 ? '📈' : '📉';
-  document.getElementById('bestCardsTitle').textContent = emoji + ' Карточки с ДРР ≤ ' + maxDrr + '%';
-  document.getElementById('bestCardsSubtitle').textContent = 'Новинки с ДРР ≤ ' + maxDrr + '% — отсортированы по эффективности';
+  const rangeLabel = minDrr > 0 ? (minDrr + '–' + maxDrr + '%') : ('≤ ' + maxDrr + '%');
+  document.getElementById('bestCardsTitle').textContent = emoji + ' Карточки с ДРР ' + rangeLabel;
+  document.getElementById('bestCardsSubtitle').textContent = 'Новинки с ДРР ' + rangeLabel + ' — отсортированы по эффективности';
 
   const data = rawData || {};
   const novosti = data.novosti || [];
@@ -969,7 +969,7 @@ function openBestCards(maxDrr) {
       const drr = Math.round(c.spend / revenue * 100);
       return { ...c, name, drr, price };
     })
-    .filter(c => c.drr <= maxDrr)
+    .filter(c => c.drr >= minDrr && c.drr <= maxDrr)
     .sort((a, b) => a.drr - b.drr);
 
   const grid = document.getElementById('bestCardsGrid');
