@@ -463,8 +463,17 @@
   <div class="page" id="page-novinka">
 
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-      <button class="btn" onclick="openBestCards()" style="background:linear-gradient(135deg,#22c55e,#16a34a);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        &#11088; Лучшие карточки (ДРР ≤ 20%)
+      <button class="btn" onclick="openBestCards(20)" style="background:linear-gradient(135deg,#22c55e,#16a34a);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
+        &#11088; ДРР ≤ 20%
+      </button>
+      <button class="btn" onclick="openBestCards(30)" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
+        ДРР ≤ 30%
+      </button>
+      <button class="btn" onclick="openBestCards(40)" style="background:linear-gradient(135deg,#f59e0b,#d97706);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
+        ДРР ≤ 40%
+      </button>
+      <button class="btn" onclick="openBestCards(50)" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
+        ДРР ≤ 50%
       </button>
     </div>
 
@@ -473,8 +482,8 @@
       <div style="max-width:1100px;margin:0 auto;background:var(--surface);border-radius:16px;padding:28px;position:relative">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
           <div>
-            <div style="font-size:18px;font-weight:700">&#11088; Лучшие карточки</div>
-            <div style="font-size:12px;color:var(--text2);margin-top:4px">Новинки с ДРР ≤ 20% — эффективные рекламные кампании</div>
+            <div style="font-size:18px;font-weight:700" id="bestCardsTitle">&#11088; Лучшие карточки</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px" id="bestCardsSubtitle">Новинки с ДРР ≤ 20% — эффективные рекламные кампании</div>
           </div>
           <button onclick="closeBestCards()" style="background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px 8px">✕</button>
         </div>
@@ -916,21 +925,23 @@ function saveNovostiNote(key, field, val) {
   localStorage.setItem(NOVOSTI_NOTES_KEY, JSON.stringify(n));
 }
 
-function openBestCards() {
+function openBestCards(maxDrr) {
+  maxDrr = maxDrr || 20;
   document.getElementById('bestCardsModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
+
+  // Заголовок модала
+  const emoji = maxDrr <= 20 ? '⭐' : maxDrr <= 30 ? '📊' : maxDrr <= 40 ? '📈' : '📉';
+  document.getElementById('bestCardsTitle').textContent = emoji + ' Карточки с ДРР ≤ ' + maxDrr + '%';
+  document.getElementById('bestCardsSubtitle').textContent = 'Новинки с ДРР ≤ ' + maxDrr + '% — отсортированы по эффективности';
 
   const data = rawData || {};
   const novosti = data.novosti || [];
 
-  // Индекс новинок по nmId
   const novByNm = {};
   novosti.forEach(n => { if (n.nm) novByNm[String(n.nm)] = n; });
-
-  // Только nmId из загруженных новинок
   const novNmIds = new Set(Object.keys(novByNm));
 
-  // Берём РК из nm_ads (агрегация по товару) или fallback из data.ads
   const byNm = {};
   if (data.nm_ads) {
     Object.entries(data.nm_ads).forEach(([k, a]) => {
@@ -938,8 +949,7 @@ function openBestCards() {
       byNm[k] = { nmId: a.nmId, name: '', spend: a.spend || 0, orders: a.orders || 0, shows: a.shows || 0, campaigns: 1 };
     });
   } else {
-    const ads = data.ads || [];
-    ads.filter(a => a.nmId && novNmIds.has(String(a.nmId))).forEach(a => {
+    (data.ads || []).filter(a => a.nmId && novNmIds.has(String(a.nmId))).forEach(a => {
       const k = String(a.nmId);
       if (!byNm[k]) byNm[k] = { nmId: a.nmId, name: a.name || '', spend: 0, orders: 0, shows: 0, campaigns: 0 };
       byNm[k].spend    += a.spend    || 0;
@@ -949,18 +959,17 @@ function openBestCards() {
     });
   }
 
-  // Считаем ДРР: расход / (заказы × ср. цена). Используем средн. цену 1000 если нет данных
   const cards = Object.values(byNm)
     .filter(c => c.orders > 0 && c.spend > 0)
     .map(c => {
       const nov = novByNm[String(c.nmId)];
       const name = nov?.name || c.name || 'Артикул ' + c.nmId;
-      const avgPrice = 1000; // fallback; заменится когда будут цены
-      const revenue = c.orders * avgPrice;
+      const price = nov?.price || nov?.rrc || 1000;
+      const revenue = c.orders * price;
       const drr = Math.round(c.spend / revenue * 100);
-      return { ...c, name, drr };
+      return { ...c, name, drr, price };
     })
-    .filter(c => c.drr <= 20)
+    .filter(c => c.drr <= maxDrr)
     .sort((a, b) => a.drr - b.drr);
 
   const grid = document.getElementById('bestCardsGrid');
@@ -969,21 +978,20 @@ function openBestCards() {
   if (!cards.length) {
     grid.innerHTML = '';
     empty.style.display = 'block';
+    empty.textContent = 'Нет кампаний с ДРР ≤ ' + maxDrr + '% — данные обновятся после следующего запуска скрипта';
     return;
   }
   empty.style.display = 'none';
 
   grid.innerHTML = cards.map(c => {
-    const drrColor = c.drr <= 10 ? '#22c55e' : c.drr <= 15 ? '#86efac' : '#fbbf24';
-    const efficiency = c.drr <= 10 ? '🔥 Топ результат' : c.drr <= 15 ? '✅ Отлично' : '⭐ Хорошо';
-    const ctr = c.shows > 0 ? (c.orders / c.shows * 100).toFixed(2) : '—';
+    const drrColor = c.drr <= 20 ? '#22c55e' : c.drr <= 30 ? '#86efac' : c.drr <= 40 ? '#fbbf24' : '#f97316';
+    const efficiency = c.drr <= 10 ? '🔥 Топ результат' : c.drr <= 20 ? '✅ Отлично' : c.drr <= 30 ? '⭐ Хорошо' : c.drr <= 40 ? '📊 Умеренно' : '📉 Высокий ДРР';
     return `
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative;overflow:hidden">
         <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${drrColor}"></div>
         <div style="font-size:11px;color:${drrColor};font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">${efficiency}</div>
         <div style="font-size:13px;font-weight:600;line-height:1.4;margin-bottom:4px;color:var(--text)">${c.name}</div>
-        <div style="font-size:11px;color:var(--text2);margin-bottom:14px">Арт: ${c.nmId} · ${c.campaigns} РК</div>
-
+        <div style="font-size:11px;color:var(--text2);margin-bottom:14px">Арт: ${c.nmId} · ${c.campaigns} РК · цена ${c.price.toLocaleString('ru')} ₽</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
           <div style="background:rgba(34,197,94,.1);border-radius:8px;padding:10px;text-align:center">
             <div style="font-size:22px;font-weight:800;color:${drrColor}">${c.drr}%</div>
@@ -994,7 +1002,6 @@ function openBestCards() {
             <div style="font-size:10px;color:var(--text2)">Заказов</div>
           </div>
         </div>
-
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);padding-top:10px;border-top:1px solid var(--border)">
           <span>Расход: <b style="color:var(--text)">${c.spend.toLocaleString('ru')} ₽</b></span>
           <span>Показы: <b style="color:var(--text)">${c.shows.toLocaleString('ru')}</b></span>
