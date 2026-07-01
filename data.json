@@ -1,5 +1,5 @@
 {
-  "updated_at": "01.07.2026, 12:05",
+  "updated_at": "01.07.2026, 12:40",
   "sprint_start": "17.06.2026",
   "sprint_days": 14,
   "products": [
@@ -17,7 +17,7 @@
       "total_payout": 0.0,
       "orders_period": "",
       "dist_plan": 715,
-      "dist_fact": 416,
+      "dist_fact": 453,
       "stock_total": 2463,
       "stock_warehouses": 1,
       "stock_history": {
@@ -303,7 +303,7 @@
           "orders": 0,
           "revenue": 0,
           "dist_plan": 65,
-          "dist_fact": null,
+          "dist_fact": 37,
           "shows": 27859,
           "ctr": 4.0,
           "visits": 1049,
@@ -331,7 +331,7 @@
       "total_payout": 0.0,
       "orders_period": "",
       "dist_plan": 215,
-      "dist_fact": 41,
+      "dist_fact": 90,
       "stock_total": 7127,
       "stock_warehouses": 1,
       "stock_history": {
@@ -617,7 +617,7 @@
           "orders": 0,
           "revenue": 0,
           "dist_plan": 65,
-          "dist_fact": null,
+          "dist_fact": 49,
           "shows": 34972,
           "ctr": 3.0,
           "visits": 972,
@@ -1267,14 +1267,14 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 2312126,
-      "clicks": 50656,
+      "shows": 2316435,
+      "clicks": 50737,
       "ctr": 2.19,
       "cpc": 11.3,
-      "spend": 573594.0,
-      "orders": 3013,
-      "revenue": 3616348,
-      "drr": 15.9,
+      "spend": 574255.0,
+      "orders": 3019,
+      "revenue": 3623704,
+      "drr": 15.8,
       "cr": 5.95
     },
     {
@@ -1283,15 +1283,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 155877,
-      "clicks": 26004,
+      "shows": 156149,
+      "clicks": 26052,
       "ctr": 16.68,
       "cpc": 20.8,
-      "spend": 540599.0,
-      "orders": 7131,
-      "revenue": 3609012,
+      "spend": 541502.0,
+      "orders": 7151,
+      "revenue": 3618972,
       "drr": 15.0,
-      "cr": 27.42
+      "cr": 27.45
     },
     {
       "id": 35734410,
@@ -1299,15 +1299,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 1514606,
-      "clicks": 35301,
+      "shows": 1516147,
+      "clicks": 35327,
       "ctr": 2.33,
       "cpc": 8.5,
-      "spend": 300062.0,
-      "orders": 2400,
-      "revenue": 2693121,
+      "spend": 300264.0,
+      "orders": 2405,
+      "revenue": 2698460,
       "drr": 11.1,
-      "cr": 6.8
+      "cr": 6.81
     },
     {
       "id": 28892678,
@@ -1315,15 +1315,31 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 1063387,
-      "clicks": 14876,
+      "shows": 1064555,
+      "clicks": 14898,
       "ctr": 1.4,
       "cpc": 15.9,
-      "spend": 236658.0,
+      "spend": 236820.0,
       "orders": 789,
       "revenue": 1206129,
       "drr": 19.6,
       "cr": 5.3
+    },
+    {
+      "id": 23435090,
+      "nmId": 0,
+      "is_top": true,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 73852,
+      "clicks": 5399,
+      "ctr": 7.31,
+      "cpc": 41.6,
+      "spend": 224379.0,
+      "orders": 1875,
+      "revenue": 1508184,
+      "drr": 14.9,
+      "cr": 34.73
     },
     {
       "id": 25456159,
@@ -1331,14 +1347,14 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 115270,
-      "clicks": 11463,
+      "shows": 115448,
+      "clicks": 11481,
       "ctr": 9.94,
       "cpc": 17.8,
-      "spend": 204140.0,
-      "orders": 2155,
-      "revenue": 1255870,
-      "drr": 16.3,
+      "spend": 204447.0,
+      "orders": 2159,
+      "revenue": 1258840,
+      "drr": 16.2,
       "cr": 18.8
     },
     {
@@ -1347,15 +1363,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 141605,
-      "clicks": 6345,
+      "shows": 141872,
+      "clicks": 6358,
       "ctr": 4.48,
       "cpc": 27.9,
-      "spend": 177187.0,
-      "orders": 545,
-      "revenue": 1061388,
-      "drr": 16.7,
-      "cr": 8.59
+      "spend": 177490.0,
+      "orders": 547,
+      "revenue": 1066166,
+      "drr": 16.6,
+      "cr": 8.6
     },
     {
       "id": 30520123,
@@ -1363,15 +1379,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 1045546,
-      "clicks": 17659,
+      "shows": 1047934,
+      "clicks": 17696,
       "ctr": 1.69,
       "cpc": 9.9,
-      "spend": 175554.0,
-      "orders": 1328,
-      "revenue": 1063888,
+      "spend": 175925.0,
+      "orders": 1335,
+      "revenue": 1069174,
       "drr": 16.5,
-      "cr": 7.52
+      "cr": 7.54
     },
     {
       "id": 32837664,
@@ -1379,31 +1395,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 59083,
-      "clicks": 1298,
+      "shows": 59216,
+      "clicks": 1300,
       "ctr": 2.2,
-      "cpc": 102.3,
-      "spend": 132830.0,
+      "cpc": 102.4,
+      "spend": 133138.0,
       "orders": 100,
       "revenue": 106491,
-      "drr": 124.7,
-      "cr": 7.7
-    },
-    {
-      "id": 21615865,
-      "nmId": 0,
-      "is_top": true,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 41806,
-      "clicks": 4286,
-      "ctr": 10.25,
-      "cpc": 31.0,
-      "spend": 132683.0,
-      "orders": 984,
-      "revenue": 489199,
-      "drr": 27.1,
-      "cr": 22.96
+      "drr": 125.0,
+      "cr": 7.69
     },
     {
       "id": 28326403,
@@ -1411,15 +1411,31 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 76296,
-      "clicks": 3730,
+      "shows": 76425,
+      "clicks": 3736,
       "ctr": 4.89,
       "cpc": 24.2,
-      "spend": 90147.0,
-      "orders": 659,
-      "revenue": 501535,
+      "spend": 90314.0,
+      "orders": 660,
+      "revenue": 502433,
       "drr": 18.0,
       "cr": 17.67
+    },
+    {
+      "id": 18664916,
+      "nmId": 0,
+      "is_top": true,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 458145,
+      "clicks": 6622,
+      "ctr": 1.45,
+      "cpc": 13.3,
+      "spend": 88336.0,
+      "orders": 797,
+      "revenue": 396617,
+      "drr": 22.3,
+      "cr": 12.04
     },
     {
       "id": 35734743,
@@ -1427,15 +1443,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 93929,
-      "clicks": 4294,
+      "shows": 94113,
+      "clicks": 4302,
       "ctr": 4.57,
       "cpc": 18.8,
-      "spend": 80619.0,
+      "spend": 80809.0,
       "orders": 537,
       "revenue": 326199,
-      "drr": 24.7,
-      "cr": 12.51
+      "drr": 24.8,
+      "cr": 12.48
     },
     {
       "id": 24614179,
@@ -1443,15 +1459,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 93702,
-      "clicks": 3243,
+      "shows": 93845,
+      "clicks": 3247,
       "ctr": 3.46,
       "cpc": 23.9,
-      "spend": 77620.0,
-      "orders": 379,
-      "revenue": 238480,
+      "spend": 77757.0,
+      "orders": 380,
+      "revenue": 239298,
       "drr": 32.5,
-      "cr": 11.69
+      "cr": 11.7
     },
     {
       "id": 23109283,
@@ -1459,31 +1475,31 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 35435,
-      "clicks": 3906,
-      "ctr": 11.02,
+      "shows": 35442,
+      "clicks": 3908,
+      "ctr": 11.03,
       "cpc": 19.7,
-      "spend": 76952.0,
-      "orders": 936,
-      "revenue": 579503,
-      "drr": 13.3,
-      "cr": 23.96
+      "spend": 76971.0,
+      "orders": 941,
+      "revenue": 582677,
+      "drr": 13.2,
+      "cr": 24.08
     },
     {
       "id": 26483528,
       "nmId": 0,
       "is_top": false,
-      "status": 11,
+      "status": 9,
       "name": "Мультитовар",
-      "shows": 40304,
-      "clicks": 1194,
+      "shows": 40483,
+      "clicks": 1199,
       "ctr": 2.96,
       "cpc": 63.9,
-      "spend": 76289.0,
+      "spend": 76663.0,
       "orders": 186,
       "revenue": 95550,
-      "drr": 79.8,
-      "cr": 15.58
+      "drr": 80.2,
+      "cr": 15.51
     },
     {
       "id": 28896888,
@@ -1491,15 +1507,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 327878,
-      "clicks": 4611,
+      "shows": 328488,
+      "clicks": 4620,
       "ctr": 1.41,
       "cpc": 16.3,
-      "spend": 75206.0,
+      "spend": 75357.0,
       "orders": 433,
       "revenue": 436149,
-      "drr": 17.2,
-      "cr": 9.39
+      "drr": 17.3,
+      "cr": 9.37
     },
     {
       "id": 32957150,
@@ -1507,15 +1523,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 82682,
-      "clicks": 2189,
+      "shows": 82824,
+      "clicks": 2191,
       "ctr": 2.65,
       "cpc": 32.3,
-      "spend": 70690.0,
+      "spend": 70807.0,
       "orders": 156,
       "revenue": 189156,
       "drr": 37.4,
-      "cr": 7.13
+      "cr": 7.12
     },
     {
       "id": 19174735,
@@ -1523,15 +1539,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 338582,
-      "clicks": 4540,
+      "shows": 338776,
+      "clicks": 4543,
       "ctr": 1.34,
       "cpc": 15.5,
-      "spend": 70515.0,
-      "orders": 488,
-      "revenue": 189752,
-      "drr": 37.2,
-      "cr": 10.75
+      "spend": 70549.0,
+      "orders": 489,
+      "revenue": 190074,
+      "drr": 37.1,
+      "cr": 10.76
     },
     {
       "id": 37339408,
@@ -1539,11 +1555,11 @@
       "is_top": true,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 58662,
+      "shows": 58666,
       "clicks": 2245,
       "ctr": 3.83,
       "cpc": 30.7,
-      "spend": 68822.0,
+      "spend": 68829.0,
       "orders": 359,
       "revenue": 565306,
       "drr": 12.2,
@@ -1555,13 +1571,13 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 92645,
-      "clicks": 4998,
-      "ctr": 5.39,
+      "shows": 92783,
+      "clicks": 5007,
+      "ctr": 5.4,
       "cpc": 12.8,
-      "spend": 63857.0,
-      "orders": 912,
-      "revenue": 478629,
+      "spend": 63951.0,
+      "orders": 914,
+      "revenue": 479649,
       "drr": 13.3,
       "cr": 18.25
     },
@@ -1585,33 +1601,17 @@
       "id": 28325881,
       "nmId": 0,
       "is_top": false,
-      "status": 11,
+      "status": 9,
       "name": "Мультитовар",
-      "shows": 25427,
-      "clicks": 3426,
-      "ctr": 13.47,
+      "shows": 25505,
+      "clicks": 3437,
+      "ctr": 13.48,
       "cpc": 17.3,
-      "spend": 59115.0,
+      "spend": 59293.0,
       "orders": 649,
       "revenue": 321137,
-      "drr": 18.4,
-      "cr": 18.94
-    },
-    {
-      "id": 37047877,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 23266,
-      "clicks": 1155,
-      "ctr": 4.96,
-      "cpc": 50.3,
-      "spend": 58092.0,
-      "orders": 218,
-      "revenue": 161822,
-      "drr": 35.9,
-      "cr": 18.87
+      "drr": 18.5,
+      "cr": 18.88
     },
     {
       "id": 30252369,
@@ -1619,15 +1619,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 66778,
-      "clicks": 2205,
+      "shows": 66918,
+      "clicks": 2206,
       "ctr": 3.3,
-      "cpc": 25.1,
-      "spend": 55414.0,
+      "cpc": 25.2,
+      "spend": 55538.0,
       "orders": 226,
       "revenue": 183032,
       "drr": 30.3,
-      "cr": 10.25
+      "cr": 10.24
     },
     {
       "id": 20039387,
@@ -1635,15 +1635,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 72825,
-      "clicks": 4404,
+      "shows": 72967,
+      "clicks": 4413,
       "ctr": 6.05,
       "cpc": 12.1,
-      "spend": 53102.0,
-      "orders": 634,
-      "revenue": 407462,
+      "spend": 53223.0,
+      "orders": 636,
+      "revenue": 408746,
       "drr": 13.0,
-      "cr": 14.4
+      "cr": 14.41
     },
     {
       "id": 35800236,
@@ -1651,15 +1651,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 50402,
-      "clicks": 1626,
+      "shows": 50527,
+      "clicks": 1632,
       "ctr": 3.23,
-      "cpc": 31.8,
-      "spend": 51710.0,
+      "cpc": 31.7,
+      "spend": 51810.0,
       "orders": 115,
       "revenue": 165419,
       "drr": 31.3,
-      "cr": 7.07
+      "cr": 7.05
     },
     {
       "id": 37218596,
@@ -1667,11 +1667,11 @@
       "is_top": true,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 222331,
+      "shows": 222350,
       "clicks": 1687,
       "ctr": 0.76,
       "cpc": 29.9,
-      "spend": 50435.0,
+      "spend": 50446.0,
       "orders": 124,
       "revenue": 96016,
       "drr": 52.5,
@@ -1683,15 +1683,15 @@
       "is_top": true,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 39625,
+      "shows": 39627,
       "clicks": 2222,
       "ctr": 5.61,
       "cpc": 22.1,
-      "spend": 49002.0,
-      "orders": 305,
-      "revenue": 140095,
-      "drr": 35.0,
-      "cr": 13.73
+      "spend": 49003.0,
+      "orders": 306,
+      "revenue": 140603,
+      "drr": 34.9,
+      "cr": 13.77
     },
     {
       "id": 21809309,
@@ -1699,15 +1699,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 40632,
-      "clicks": 3174,
-      "ctr": 7.81,
+      "shows": 40729,
+      "clicks": 3178,
+      "ctr": 7.8,
       "cpc": 14.9,
-      "spend": 47281.0,
+      "spend": 47398.0,
       "orders": 588,
       "revenue": 305576,
       "drr": 15.5,
-      "cr": 18.53
+      "cr": 18.5
     },
     {
       "id": 34734296,
@@ -1715,14 +1715,14 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 75332,
+      "shows": 75459,
       "clicks": 1247,
-      "ctr": 1.66,
-      "cpc": 35.8,
-      "spend": 44644.0,
+      "ctr": 1.65,
+      "cpc": 35.9,
+      "spend": 44727.0,
       "orders": 66,
       "revenue": 82052,
-      "drr": 54.4,
+      "drr": 54.5,
       "cr": 5.29
     },
     {
@@ -1731,11 +1731,11 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 132181,
+      "shows": 132191,
       "clicks": 687,
       "ctr": 0.52,
-      "cpc": 63.9,
-      "spend": 43931.0,
+      "cpc": 64.0,
+      "spend": 43934.0,
       "orders": 36,
       "revenue": 21803,
       "drr": 201.5,
@@ -1747,15 +1747,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 41735,
-      "clicks": 1176,
+      "shows": 41800,
+      "clicks": 1179,
       "ctr": 2.82,
       "cpc": 35.4,
-      "spend": 41657.0,
+      "spend": 41714.0,
       "orders": 56,
       "revenue": 114627,
-      "drr": 36.3,
-      "cr": 4.76
+      "drr": 36.4,
+      "cr": 4.75
     },
     {
       "id": 33817003,
@@ -1763,15 +1763,47 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 51448,
+      "shows": 51504,
       "clicks": 671,
       "ctr": 1.3,
       "cpc": 55.5,
-      "spend": 37235.0,
+      "spend": 37271.0,
       "orders": 44,
       "revenue": 42706,
-      "drr": 87.2,
+      "drr": 87.3,
       "cr": 6.56
+    },
+    {
+      "id": 35407208,
+      "nmId": 0,
+      "is_top": false,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 27466,
+      "clicks": 1405,
+      "ctr": 5.12,
+      "cpc": 24.9,
+      "spend": 34968.0,
+      "orders": 78,
+      "revenue": 75321,
+      "drr": 46.4,
+      "cr": 5.55
+    },
+    {
+      "id": 33003176,
+      "nmId": 0,
+      "is_top": false,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 37774,
+      "clicks": 1070,
+      "ctr": 2.83,
+      "cpc": 30.1,
+      "spend": 32202.0,
+      "orders": 162,
+      "revenue": 96238,
+      "drr": 33.5,
+      "cr": 15.14
     },
     {
       "id": 33817109,
@@ -1790,36 +1822,20 @@
       "cr": 6.81
     },
     {
-      "id": 33003176,
-      "nmId": 0,
-      "is_top": false,
-      "status": 9,
-      "name": "Мультитовар",
-      "shows": 37657,
-      "clicks": 1065,
-      "ctr": 2.83,
-      "cpc": 30.1,
-      "spend": 32085.0,
-      "orders": 162,
-      "revenue": 96238,
-      "drr": 33.3,
-      "cr": 15.21
-    },
-    {
       "id": 35734362,
       "nmId": 0,
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 208645,
-      "clicks": 2328,
+      "shows": 209014,
+      "clicks": 2332,
       "ctr": 1.12,
       "cpc": 13.7,
-      "spend": 31870.0,
+      "spend": 31923.0,
       "orders": 245,
       "revenue": 164208,
       "drr": 19.4,
-      "cr": 10.52
+      "cr": 10.51
     },
     {
       "id": 37122156,
@@ -1832,10 +1848,10 @@
       "ctr": 5.54,
       "cpc": 30.1,
       "spend": 31787.0,
-      "orders": 128,
-      "revenue": 95427,
-      "drr": 33.3,
-      "cr": 12.11
+      "orders": 129,
+      "revenue": 95925,
+      "drr": 33.1,
+      "cr": 12.2
     },
     {
       "id": 24893591,
@@ -1843,15 +1859,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 49034,
-      "clicks": 480,
+      "shows": 49081,
+      "clicks": 481,
       "ctr": 0.98,
-      "cpc": 65.4,
-      "spend": 31393.0,
+      "cpc": 65.3,
+      "spend": 31427.0,
       "orders": 33,
       "revenue": 25975,
-      "drr": 120.9,
-      "cr": 6.88
+      "drr": 121.0,
+      "cr": 6.86
     },
     {
       "id": 26958829,
@@ -1875,14 +1891,14 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 23382,
+      "shows": 23422,
       "clicks": 717,
-      "ctr": 3.07,
-      "cpc": 40.4,
-      "spend": 28963.0,
+      "ctr": 3.06,
+      "cpc": 40.5,
+      "spend": 29015.0,
       "orders": 55,
       "revenue": 41180,
-      "drr": 70.3,
+      "drr": 70.5,
       "cr": 7.67
     },
     {
@@ -1891,15 +1907,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 37175,
-      "clicks": 1023,
+      "shows": 37248,
+      "clicks": 1026,
       "ctr": 2.75,
       "cpc": 28.0,
-      "spend": 28644.0,
-      "orders": 103,
-      "revenue": 112463,
-      "drr": 25.5,
-      "cr": 10.07
+      "spend": 28699.0,
+      "orders": 104,
+      "revenue": 113643,
+      "drr": 25.3,
+      "cr": 10.14
     },
     {
       "id": 30629840,
@@ -1907,11 +1923,11 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 135019,
-      "clicks": 1862,
+      "shows": 135347,
+      "clicks": 1863,
       "ctr": 1.38,
-      "cpc": 15.0,
-      "spend": 27970.0,
+      "cpc": 15.1,
+      "spend": 28043.0,
       "orders": 225,
       "revenue": 267292,
       "drr": 10.5,
@@ -1939,11 +1955,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 19128,
+      "shows": 19152,
       "clicks": 596,
-      "ctr": 3.12,
-      "cpc": 46.0,
-      "spend": 27438.0,
+      "ctr": 3.11,
+      "cpc": 46.1,
+      "spend": 27459.0,
       "orders": 74,
       "revenue": 45811,
       "drr": 59.9,
@@ -1955,15 +1971,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 52612,
-      "clicks": 759,
-      "ctr": 1.44,
+      "shows": 52658,
+      "clicks": 761,
+      "ctr": 1.45,
       "cpc": 36.0,
-      "spend": 27362.0,
-      "orders": 82,
-      "revenue": 62205,
-      "drr": 44.0,
-      "cr": 10.8
+      "spend": 27380.0,
+      "orders": 83,
+      "revenue": 62721,
+      "drr": 43.7,
+      "cr": 10.91
     },
     {
       "id": 31830278,
@@ -1971,15 +1987,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 45750,
-      "clicks": 1256,
+      "shows": 45846,
+      "clicks": 1262,
       "ctr": 2.75,
       "cpc": 21.7,
-      "spend": 27276.0,
-      "orders": 172,
-      "revenue": 149494,
-      "drr": 18.2,
-      "cr": 13.69
+      "spend": 27331.0,
+      "orders": 174,
+      "revenue": 151208,
+      "drr": 18.1,
+      "cr": 13.79
     },
     {
       "id": 37218681,
@@ -1987,11 +2003,11 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 126324,
+      "shows": 126331,
       "clicks": 1937,
       "ctr": 1.53,
       "cpc": 13.7,
-      "spend": 26579.0,
+      "spend": 26581.0,
       "orders": 201,
       "revenue": 106119,
       "drr": 25.0,
@@ -2003,31 +2019,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 16450,
+      "shows": 16485,
       "clicks": 500,
-      "ctr": 3.04,
+      "ctr": 3.03,
       "cpc": 52.6,
-      "spend": 26280.0,
+      "spend": 26314.0,
       "orders": 80,
       "revenue": 41415,
       "drr": 63.5,
       "cr": 16.0
-    },
-    {
-      "id": 37031271,
-      "nmId": 0,
-      "is_top": true,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 26097,
-      "clicks": 708,
-      "ctr": 2.71,
-      "cpc": 36.8,
-      "spend": 26049.0,
-      "orders": 64,
-      "revenue": 44080,
-      "drr": 59.1,
-      "cr": 9.04
     },
     {
       "id": 20031757,
@@ -2035,31 +2035,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 41923,
-      "clicks": 1571,
+      "shows": 41990,
+      "clicks": 1575,
       "ctr": 3.75,
       "cpc": 16.3,
-      "spend": 25657.0,
-      "orders": 264,
-      "revenue": 152533,
+      "spend": 25697.0,
+      "orders": 265,
+      "revenue": 153084,
       "drr": 16.8,
-      "cr": 16.8
-    },
-    {
-      "id": 37047759,
-      "nmId": 0,
-      "is_top": true,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 31158,
-      "clicks": 1170,
-      "ctr": 3.76,
-      "cpc": 20.8,
-      "spend": 24305.0,
-      "orders": 159,
-      "revenue": 91990,
-      "drr": 26.4,
-      "cr": 13.59
+      "cr": 16.83
     },
     {
       "id": 33607686,
@@ -2067,15 +2051,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 116942,
-      "clicks": 1395,
+      "shows": 117304,
+      "clicks": 1398,
       "ctr": 1.19,
       "cpc": 17.0,
-      "spend": 23748.0,
+      "spend": 23813.0,
       "orders": 100,
       "revenue": 81475,
-      "drr": 29.1,
-      "cr": 7.17
+      "drr": 29.2,
+      "cr": 7.15
     },
     {
       "id": 23631971,
@@ -2083,15 +2067,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 17264,
-      "clicks": 1886,
-      "ctr": 10.92,
+      "shows": 17311,
+      "clicks": 1892,
+      "ctr": 10.93,
       "cpc": 12.1,
-      "spend": 22887.0,
-      "orders": 259,
-      "revenue": 89601,
+      "spend": 22954.0,
+      "orders": 260,
+      "revenue": 89991,
       "drr": 25.5,
-      "cr": 13.73
+      "cr": 13.74
     },
     {
       "id": 35779867,
@@ -2099,15 +2083,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 131619,
-      "clicks": 1170,
+      "shows": 131966,
+      "clicks": 1175,
       "ctr": 0.89,
       "cpc": 19.2,
-      "spend": 22494.0,
+      "spend": 22546.0,
       "orders": 97,
       "revenue": 58024,
-      "drr": 38.8,
-      "cr": 8.29
+      "drr": 38.9,
+      "cr": 8.26
     },
     {
       "id": 37218750,
@@ -2115,15 +2099,15 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 90473,
+      "shows": 90476,
       "clicks": 1581,
       "ctr": 1.75,
       "cpc": 13.9,
-      "spend": 21914.0,
-      "orders": 183,
-      "revenue": 139024,
-      "drr": 15.8,
-      "cr": 11.57
+      "spend": 21916.0,
+      "orders": 184,
+      "revenue": 139845,
+      "drr": 15.7,
+      "cr": 11.64
     },
     {
       "id": 31830239,
@@ -2131,15 +2115,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 132957,
-      "clicks": 1739,
+      "shows": 133311,
+      "clicks": 1743,
       "ctr": 1.31,
       "cpc": 12.3,
-      "spend": 21310.0,
-      "orders": 173,
-      "revenue": 146773,
+      "spend": 21367.0,
+      "orders": 174,
+      "revenue": 147732,
       "drr": 14.5,
-      "cr": 9.95
+      "cr": 9.98
     },
     {
       "id": 31821107,
@@ -2147,15 +2131,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 18798,
-      "clicks": 1242,
-      "ctr": 6.61,
-      "cpc": 16.7,
-      "spend": 20700.0,
+      "shows": 18843,
+      "clicks": 1247,
+      "ctr": 6.62,
+      "cpc": 16.6,
+      "spend": 20748.0,
       "orders": 227,
       "revenue": 114183,
-      "drr": 18.1,
-      "cr": 18.28
+      "drr": 18.2,
+      "cr": 18.2
     },
     {
       "id": 37219062,
@@ -2163,11 +2147,11 @@
       "is_top": true,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 107380,
+      "shows": 107382,
       "clicks": 2494,
       "ctr": 2.32,
       "cpc": 8.1,
-      "spend": 20314.0,
+      "spend": 20315.0,
       "orders": 356,
       "revenue": 92911,
       "drr": 21.9,
@@ -2179,11 +2163,11 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 127608,
+      "shows": 127617,
       "clicks": 2523,
       "ctr": 1.98,
       "cpc": 7.7,
-      "spend": 19530.0,
+      "spend": 19534.0,
       "orders": 84,
       "revenue": 51653,
       "drr": 37.8,
@@ -2195,11 +2179,11 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 131091,
+      "shows": 131101,
       "clicks": 1365,
       "ctr": 1.04,
       "cpc": 13.8,
-      "spend": 18829.0,
+      "spend": 18832.0,
       "orders": 175,
       "revenue": 88524,
       "drr": 21.3,
@@ -2211,15 +2195,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 36387,
-      "clicks": 948,
+      "shows": 36471,
+      "clicks": 951,
       "ctr": 2.61,
-      "cpc": 19.6,
-      "spend": 18546.0,
+      "cpc": 19.5,
+      "spend": 18589.0,
       "orders": 161,
       "revenue": 106548,
       "drr": 17.4,
-      "cr": 16.98
+      "cr": 16.93
     },
     {
       "id": 31644360,
@@ -2227,15 +2211,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 18935,
-      "clicks": 1105,
+      "shows": 18972,
+      "clicks": 1108,
       "ctr": 5.84,
       "cpc": 16.6,
-      "spend": 18326.0,
+      "spend": 18364.0,
       "orders": 101,
       "revenue": 70572,
       "drr": 26.0,
-      "cr": 9.14
+      "cr": 9.12
     },
     {
       "id": 34666477,
@@ -2243,15 +2227,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 122210,
-      "clicks": 1389,
+      "shows": 122379,
+      "clicks": 1391,
       "ctr": 1.14,
       "cpc": 13.2,
-      "spend": 18293.0,
+      "spend": 18314.0,
       "orders": 99,
       "revenue": 123647,
       "drr": 14.8,
-      "cr": 7.13
+      "cr": 7.12
     },
     {
       "id": 34667536,
@@ -2259,11 +2243,11 @@
       "is_top": true,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 80808,
+      "shows": 80812,
       "clicks": 1757,
       "ctr": 2.17,
       "cpc": 10.4,
-      "spend": 18235.0,
+      "spend": 18236.0,
       "orders": 161,
       "revenue": 109946,
       "drr": 16.6,
@@ -2275,15 +2259,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 32204,
-      "clicks": 713,
+      "shows": 32244,
+      "clicks": 714,
       "ctr": 2.21,
       "cpc": 25.3,
-      "spend": 18010.0,
+      "spend": 18033.0,
       "orders": 56,
       "revenue": 65263,
       "drr": 27.6,
-      "cr": 7.85
+      "cr": 7.84
     },
     {
       "id": 37218964,
@@ -2291,11 +2275,11 @@
       "is_top": true,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 119739,
+      "shows": 119761,
       "clicks": 2153,
       "ctr": 1.8,
       "cpc": 8.3,
-      "spend": 17852.0,
+      "spend": 17859.0,
       "orders": 776,
       "revenue": 175221,
       "drr": 10.2,
@@ -2307,31 +2291,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 16447,
-      "clicks": 795,
-      "ctr": 4.83,
+      "shows": 16474,
+      "clicks": 797,
+      "ctr": 4.84,
       "cpc": 21.4,
-      "spend": 17039.0,
+      "spend": 17060.0,
       "orders": 129,
       "revenue": 65002,
       "drr": 26.2,
-      "cr": 16.23
-    },
-    {
-      "id": 32843378,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 17097,
-      "clicks": 743,
-      "ctr": 4.35,
-      "cpc": 22.7,
-      "spend": 16878.0,
-      "orders": 54,
-      "revenue": 36786,
-      "drr": 45.9,
-      "cr": 7.27
+      "cr": 16.19
     },
     {
       "id": 23253687,
@@ -2339,15 +2307,31 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 95920,
+      "shows": 96102,
       "clicks": 527,
       "ctr": 0.55,
-      "cpc": 32.0,
-      "spend": 16862.0,
+      "cpc": 32.1,
+      "spend": 16893.0,
       "orders": 29,
       "revenue": 36896,
-      "drr": 45.7,
+      "drr": 45.8,
       "cr": 5.5
+    },
+    {
+      "id": 27746162,
+      "nmId": 0,
+      "is_top": false,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 16385,
+      "clicks": 812,
+      "ctr": 4.96,
+      "cpc": 20.2,
+      "spend": 16403.0,
+      "orders": 104,
+      "revenue": 51763,
+      "drr": 31.7,
+      "cr": 12.81
     },
     {
       "id": 37748716,
@@ -2355,15 +2339,15 @@
       "is_top": true,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 81343,
+      "shows": 81355,
       "clicks": 2009,
       "ctr": 2.47,
       "cpc": 8.1,
-      "spend": 16180.0,
-      "orders": 191,
-      "revenue": 288868,
+      "spend": 16182.0,
+      "orders": 192,
+      "revenue": 290378,
       "drr": 5.6,
-      "cr": 9.51
+      "cr": 9.56
     },
     {
       "id": 32139570,
@@ -2371,15 +2355,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 88108,
-      "clicks": 2229,
+      "shows": 88252,
+      "clicks": 2235,
       "ctr": 2.53,
       "cpc": 7.2,
-      "spend": 16143.0,
-      "orders": 228,
-      "revenue": 196496,
+      "spend": 16169.0,
+      "orders": 229,
+      "revenue": 197334,
       "drr": 8.2,
-      "cr": 10.23
+      "cr": 10.25
     },
     {
       "id": 29666058,
@@ -2387,15 +2371,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 84274,
-      "clicks": 1665,
-      "ctr": 1.98,
-      "cpc": 9.4,
-      "spend": 15728.0,
+      "shows": 84525,
+      "clicks": 1667,
+      "ctr": 1.97,
+      "cpc": 9.5,
+      "spend": 15768.0,
       "orders": 367,
       "revenue": 115087,
       "drr": 13.7,
-      "cr": 22.04
+      "cr": 22.02
     },
     {
       "id": 26365923,
@@ -2403,15 +2387,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 31450,
-      "clicks": 1693,
+      "shows": 31489,
+      "clicks": 1694,
       "ctr": 5.38,
       "cpc": 9.3,
-      "spend": 15664.0,
+      "spend": 15683.0,
       "orders": 339,
       "revenue": 204027,
       "drr": 7.7,
-      "cr": 20.02
+      "cr": 20.01
     },
     {
       "id": 30127311,
@@ -2419,14 +2403,14 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 16357,
+      "shows": 16388,
       "clicks": 876,
-      "ctr": 5.36,
+      "ctr": 5.35,
       "cpc": 17.9,
-      "spend": 15645.0,
+      "spend": 15679.0,
       "orders": 61,
       "revenue": 45234,
-      "drr": 34.6,
+      "drr": 34.7,
       "cr": 6.96
     },
     {
@@ -2435,15 +2419,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 19817,
-      "clicks": 1494,
+      "shows": 19855,
+      "clicks": 1497,
       "ctr": 7.54,
       "cpc": 10.3,
-      "spend": 15409.0,
-      "orders": 212,
-      "revenue": 120105,
+      "spend": 15441.0,
+      "orders": 213,
+      "revenue": 120677,
       "drr": 12.8,
-      "cr": 14.19
+      "cr": 14.23
     },
     {
       "id": 30683241,
@@ -2451,15 +2435,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 18053,
-      "clicks": 1649,
-      "ctr": 9.13,
+      "shows": 18082,
+      "clicks": 1653,
+      "ctr": 9.14,
       "cpc": 9.1,
-      "spend": 14954.0,
+      "spend": 14978.0,
       "orders": 191,
       "revenue": 122816,
       "drr": 12.2,
-      "cr": 11.58
+      "cr": 11.55
     },
     {
       "id": 27444638,
@@ -2467,11 +2451,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 14249,
+      "shows": 14270,
       "clicks": 452,
       "ctr": 3.17,
       "cpc": 32.4,
-      "spend": 14630.0,
+      "spend": 14654.0,
       "orders": 56,
       "revenue": 38136,
       "drr": 38.4,
@@ -2483,15 +2467,31 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 15025,
-      "clicks": 802,
+      "shows": 15051,
+      "clicks": 803,
       "ctr": 5.34,
       "cpc": 18.2,
-      "spend": 14601.0,
-      "orders": 82,
-      "revenue": 82106,
-      "drr": 17.8,
-      "cr": 10.22
+      "spend": 14631.0,
+      "orders": 83,
+      "revenue": 83226,
+      "drr": 17.6,
+      "cr": 10.34
+    },
+    {
+      "id": 33818204,
+      "nmId": 0,
+      "is_top": true,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 17677,
+      "clicks": 731,
+      "ctr": 4.14,
+      "cpc": 19.7,
+      "spend": 14424.0,
+      "orders": 105,
+      "revenue": 65777,
+      "drr": 21.9,
+      "cr": 14.36
     },
     {
       "id": 36956136,
@@ -2499,14 +2499,14 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 27731,
+      "shows": 27733,
       "clicks": 699,
       "ctr": 2.52,
       "cpc": 20.6,
-      "spend": 14372.0,
+      "spend": 14378.0,
       "orders": 142,
       "revenue": 82856,
-      "drr": 17.3,
+      "drr": 17.4,
       "cr": 20.31
     },
     {
@@ -2531,15 +2531,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 13186,
-      "clicks": 384,
+      "shows": 13234,
+      "clicks": 385,
       "ctr": 2.91,
       "cpc": 35.0,
-      "spend": 13437.0,
+      "spend": 13485.0,
       "orders": 65,
       "revenue": 36761,
-      "drr": 36.6,
-      "cr": 16.93
+      "drr": 36.7,
+      "cr": 16.88
     },
     {
       "id": 31001766,
@@ -2547,11 +2547,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 70632,
-      "clicks": 1837,
+      "shows": 70770,
+      "clicks": 1839,
       "ctr": 2.6,
       "cpc": 7.1,
-      "spend": 13121.0,
+      "spend": 13145.0,
       "orders": 98,
       "revenue": 82431,
       "drr": 15.9,
@@ -2563,15 +2563,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 13490,
-      "clicks": 498,
-      "ctr": 3.69,
+      "shows": 13517,
+      "clicks": 500,
+      "ctr": 3.7,
       "cpc": 26.1,
-      "spend": 13015.0,
+      "spend": 13044.0,
       "orders": 68,
       "revenue": 47055,
       "drr": 27.7,
-      "cr": 13.65
+      "cr": 13.6
     },
     {
       "id": 32917102,
@@ -2579,11 +2579,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 72806,
+      "shows": 72854,
       "clicks": 1298,
       "ctr": 1.78,
       "cpc": 9.9,
-      "spend": 12877.0,
+      "spend": 12883.0,
       "orders": 100,
       "revenue": 66138,
       "drr": 19.5,
@@ -2595,14 +2595,14 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 10494,
+      "shows": 10522,
       "clicks": 303,
-      "ctr": 2.89,
-      "cpc": 41.8,
-      "spend": 12663.0,
+      "ctr": 2.88,
+      "cpc": 41.9,
+      "spend": 12695.0,
       "orders": 46,
       "revenue": 30176,
-      "drr": 42.0,
+      "drr": 42.1,
       "cr": 15.18
     },
     {
@@ -2611,15 +2611,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 14473,
-      "clicks": 1630,
-      "ctr": 11.26,
+      "shows": 14503,
+      "clicks": 1631,
+      "ctr": 11.25,
       "cpc": 7.6,
-      "spend": 12432.0,
+      "spend": 12464.0,
       "orders": 236,
       "revenue": 94640,
-      "drr": 13.1,
-      "cr": 14.48
+      "drr": 13.2,
+      "cr": 14.47
     },
     {
       "id": 26046340,
@@ -2627,15 +2627,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 74445,
-      "clicks": 1055,
+      "shows": 74660,
+      "clicks": 1057,
       "ctr": 1.42,
       "cpc": 11.6,
-      "spend": 12198.0,
-      "orders": 87,
-      "revenue": 39844,
-      "drr": 30.6,
-      "cr": 8.25
+      "spend": 12222.0,
+      "orders": 88,
+      "revenue": 40364,
+      "drr": 30.3,
+      "cr": 8.33
     },
     {
       "id": 19174571,
@@ -2643,15 +2643,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 67735,
-      "clicks": 1889,
+      "shows": 67847,
+      "clicks": 1893,
       "ctr": 2.79,
       "cpc": 6.4,
-      "spend": 12110.0,
-      "orders": 240,
-      "revenue": 123582,
+      "spend": 12128.0,
+      "orders": 241,
+      "revenue": 124087,
       "drr": 9.8,
-      "cr": 12.71
+      "cr": 12.73
     },
     {
       "id": 31354294,
@@ -2659,14 +2659,14 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 21570,
+      "shows": 21626,
       "clicks": 325,
-      "ctr": 1.51,
-      "cpc": 36.2,
-      "spend": 11762.0,
+      "ctr": 1.5,
+      "cpc": 36.3,
+      "spend": 11794.0,
       "orders": 27,
       "revenue": 22280,
-      "drr": 52.8,
+      "drr": 52.9,
       "cr": 8.31
     },
     {
@@ -2675,47 +2675,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 78988,
+      "shows": 79257,
       "clicks": 939,
-      "ctr": 1.19,
-      "cpc": 12.4,
-      "spend": 11669.0,
+      "ctr": 1.18,
+      "cpc": 12.5,
+      "spend": 11709.0,
       "orders": 130,
       "revenue": 78138,
-      "drr": 14.9,
+      "drr": 15.0,
       "cr": 13.84
-    },
-    {
-      "id": 37047861,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 15834,
-      "clicks": 891,
-      "ctr": 5.63,
-      "cpc": 12.9,
-      "spend": 11526.0,
-      "orders": 89,
-      "revenue": 53610,
-      "drr": 21.5,
-      "cr": 9.99
-    },
-    {
-      "id": 28326174,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 10122,
-      "clicks": 431,
-      "ctr": 4.26,
-      "cpc": 26.5,
-      "spend": 11423.0,
-      "orders": 51,
-      "revenue": 39209,
-      "drr": 29.1,
-      "cr": 11.83
     },
     {
       "id": 37218982,
@@ -2739,14 +2707,14 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 63164,
+      "shows": 63418,
       "clicks": 439,
-      "ctr": 0.7,
-      "cpc": 25.4,
-      "spend": 11156.0,
+      "ctr": 0.69,
+      "cpc": 25.5,
+      "spend": 11199.0,
       "orders": 41,
       "revenue": 26840,
-      "drr": 41.6,
+      "drr": 41.7,
       "cr": 9.34
     },
     {
@@ -2755,11 +2723,11 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 67340,
+      "shows": 67342,
       "clicks": 1075,
       "ctr": 1.6,
       "cpc": 10.0,
-      "spend": 10722.0,
+      "spend": 10723.0,
       "orders": 167,
       "revenue": 42094,
       "drr": 25.5,
@@ -2771,11 +2739,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 17932,
+      "shows": 17970,
       "clicks": 460,
-      "ctr": 2.57,
-      "cpc": 21.0,
-      "spend": 9682.0,
+      "ctr": 2.56,
+      "cpc": 21.1,
+      "spend": 9704.0,
       "orders": 29,
       "revenue": 35630,
       "drr": 27.2,
@@ -2787,15 +2755,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 10373,
-      "clicks": 524,
-      "ctr": 5.05,
-      "cpc": 17.5,
-      "spend": 9148.0,
+      "shows": 10388,
+      "clicks": 528,
+      "ctr": 5.08,
+      "cpc": 17.4,
+      "spend": 9165.0,
       "orders": 50,
       "revenue": 26072,
-      "drr": 35.1,
-      "cr": 9.54
+      "drr": 35.2,
+      "cr": 9.47
     },
     {
       "id": 29588799,
@@ -2803,15 +2771,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 12846,
-      "clicks": 618,
-      "ctr": 4.81,
+      "shows": 12928,
+      "clicks": 620,
+      "ctr": 4.8,
       "cpc": 13.8,
-      "spend": 8532.0,
+      "spend": 8578.0,
       "orders": 189,
       "revenue": 54934,
-      "drr": 15.5,
-      "cr": 30.58
+      "drr": 15.6,
+      "cr": 30.48
     },
     {
       "id": 27483963,
@@ -2819,11 +2787,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 47493,
+      "shows": 47518,
       "clicks": 697,
       "ctr": 1.47,
       "cpc": 11.7,
-      "spend": 8150.0,
+      "spend": 8152.0,
       "orders": 77,
       "revenue": 36112,
       "drr": 22.6,
@@ -2835,15 +2803,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 39135,
+      "shows": 39151,
       "clicks": 398,
       "ctr": 1.02,
       "cpc": 20.3,
-      "spend": 8075.0,
-      "orders": 35,
-      "revenue": 27355,
-      "drr": 29.5,
-      "cr": 8.79
+      "spend": 8077.0,
+      "orders": 36,
+      "revenue": 28014,
+      "drr": 28.8,
+      "cr": 9.05
     },
     {
       "id": 35779866,
@@ -2851,14 +2819,14 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 40438,
+      "shows": 40539,
       "clicks": 1147,
-      "ctr": 2.84,
+      "ctr": 2.83,
       "cpc": 6.9,
-      "spend": 7929.0,
+      "spend": 7950.0,
       "orders": 271,
       "revenue": 91827,
-      "drr": 8.6,
+      "drr": 8.7,
       "cr": 23.63
     },
     {
@@ -2867,14 +2835,14 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 8468,
+      "shows": 8488,
       "clicks": 328,
-      "ctr": 3.87,
+      "ctr": 3.86,
       "cpc": 23.1,
-      "spend": 7564.0,
+      "spend": 7585.0,
       "orders": 30,
       "revenue": 20220,
-      "drr": 37.4,
+      "drr": 37.5,
       "cr": 9.15
     },
     {
@@ -2883,14 +2851,14 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 44621,
+      "shows": 44778,
       "clicks": 312,
       "ctr": 0.7,
-      "cpc": 24.1,
-      "spend": 7531.0,
+      "cpc": 24.2,
+      "spend": 7553.0,
       "orders": 48,
       "revenue": 24344,
-      "drr": 30.9,
+      "drr": 31.0,
       "cr": 15.38
     },
     {
@@ -2899,15 +2867,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 36335,
-      "clicks": 434,
+      "shows": 36405,
+      "clicks": 435,
       "ctr": 1.19,
       "cpc": 16.9,
-      "spend": 7331.0,
+      "spend": 7345.0,
       "orders": 21,
       "revenue": 11599,
-      "drr": 63.2,
-      "cr": 4.84
+      "drr": 63.3,
+      "cr": 4.83
     },
     {
       "id": 37031121,
@@ -2947,11 +2915,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 40556,
+      "shows": 40599,
       "clicks": 313,
       "ctr": 0.77,
       "cpc": 23.1,
-      "spend": 7232.0,
+      "spend": 7237.0,
       "orders": 38,
       "revenue": 21614,
       "drr": 33.5,
@@ -2963,15 +2931,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 42093,
-      "clicks": 917,
+      "shows": 42184,
+      "clicks": 920,
       "ctr": 2.18,
       "cpc": 7.7,
-      "spend": 7065.0,
+      "spend": 7080.0,
       "orders": 173,
       "revenue": 76565,
       "drr": 9.2,
-      "cr": 18.87
+      "cr": 18.8
     },
     {
       "id": 33607450,
@@ -2979,11 +2947,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 89158,
-      "clicks": 3373,
+      "shows": 89269,
+      "clicks": 3376,
       "ctr": 3.78,
       "cpc": 2.0,
-      "spend": 6880.0,
+      "spend": 6889.0,
       "orders": 142,
       "revenue": 135040,
       "drr": 5.1,
@@ -2995,15 +2963,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 36144,
+      "shows": 36276,
       "clicks": 567,
-      "ctr": 1.57,
+      "ctr": 1.56,
       "cpc": 12.0,
-      "spend": 6792.0,
-      "orders": 43,
-      "revenue": 20576,
-      "drr": 33.0,
-      "cr": 7.58
+      "spend": 6818.0,
+      "orders": 45,
+      "revenue": 21556,
+      "drr": 31.6,
+      "cr": 7.94
     },
     {
       "id": 36954902,
@@ -3011,14 +2979,14 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 2410,
+      "shows": 2412,
       "clicks": 19,
       "ctr": 0.79,
-      "cpc": 337.3,
-      "spend": 6408.0,
+      "cpc": 337.5,
+      "spend": 6412.0,
       "orders": 2,
       "revenue": 879,
-      "drr": 729.0,
+      "drr": 729.5,
       "cr": 10.53
     },
     {
@@ -3027,15 +2995,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 10544,
-      "clicks": 636,
-      "ctr": 6.03,
+      "shows": 10583,
+      "clicks": 643,
+      "ctr": 6.08,
       "cpc": 10.0,
-      "spend": 6380.0,
-      "orders": 118,
-      "revenue": 54942,
-      "drr": 11.6,
-      "cr": 18.55
+      "spend": 6402.0,
+      "orders": 120,
+      "revenue": 55828,
+      "drr": 11.5,
+      "cr": 18.66
     },
     {
       "id": 34763619,
@@ -3043,15 +3011,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 6286,
-      "clicks": 208,
+      "shows": 6306,
+      "clicks": 209,
       "ctr": 3.31,
-      "cpc": 27.2,
-      "spend": 5651.0,
+      "cpc": 27.1,
+      "spend": 5673.0,
       "orders": 22,
       "revenue": 23745,
-      "drr": 23.8,
-      "cr": 10.58
+      "drr": 23.9,
+      "cr": 10.53
     },
     {
       "id": 35779896,
@@ -3059,15 +3027,31 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 36185,
-      "clicks": 311,
+      "shows": 36247,
+      "clicks": 312,
       "ctr": 0.86,
       "cpc": 18.0,
-      "spend": 5599.0,
+      "spend": 5607.0,
       "orders": 50,
       "revenue": 17960,
       "drr": 31.2,
-      "cr": 16.08
+      "cr": 16.03
+    },
+    {
+      "id": 33607326,
+      "nmId": 0,
+      "is_top": true,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 60971,
+      "clicks": 1055,
+      "ctr": 1.73,
+      "cpc": 4.6,
+      "spend": 4850.0,
+      "orders": 49,
+      "revenue": 30116,
+      "drr": 16.1,
+      "cr": 4.64
     },
     {
       "id": 37031161,
@@ -3086,35 +3070,19 @@
       "cr": 24.38
     },
     {
-      "id": 33607326,
-      "nmId": 0,
-      "is_top": true,
-      "status": 9,
-      "name": "Мультитовар",
-      "shows": 60749,
-      "clicks": 1054,
-      "ctr": 1.74,
-      "cpc": 4.6,
-      "spend": 4832.0,
-      "orders": 49,
-      "revenue": 30116,
-      "drr": 16.0,
-      "cr": 4.65
-    },
-    {
       "id": 35484119,
       "nmId": 0,
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 24253,
+      "shows": 24325,
       "clicks": 156,
       "ctr": 0.64,
-      "cpc": 30.2,
-      "spend": 4707.0,
+      "cpc": 30.3,
+      "spend": 4721.0,
       "orders": 7,
       "revenue": 3952,
-      "drr": 119.1,
+      "drr": 119.5,
       "cr": 4.49
     },
     {
@@ -3123,14 +3091,14 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 32240,
+      "shows": 32317,
       "clicks": 286,
-      "ctr": 0.89,
+      "ctr": 0.88,
       "cpc": 16.0,
-      "spend": 4564.0,
+      "spend": 4575.0,
       "orders": 23,
       "revenue": 29034,
-      "drr": 15.7,
+      "drr": 15.8,
       "cr": 8.04
     },
     {
@@ -3171,11 +3139,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 26600,
+      "shows": 26675,
       "clicks": 466,
       "ctr": 1.75,
       "cpc": 8.5,
-      "spend": 3943.0,
+      "spend": 3955.0,
       "orders": 81,
       "revenue": 66537,
       "drr": 5.9,
@@ -3203,11 +3171,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 3947,
+      "shows": 3952,
       "clicks": 49,
       "ctr": 1.24,
-      "cpc": 68.5,
-      "spend": 3356.0,
+      "cpc": 68.6,
+      "spend": 3360.0,
       "orders": 18,
       "revenue": 8457,
       "drr": 39.7,
@@ -3219,14 +3187,14 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 20719,
+      "shows": 20781,
       "clicks": 372,
-      "ctr": 1.8,
-      "cpc": 8.7,
-      "spend": 3255.0,
+      "ctr": 1.79,
+      "cpc": 8.8,
+      "spend": 3266.0,
       "orders": 33,
       "revenue": 13571,
-      "drr": 24.0,
+      "drr": 24.1,
       "cr": 8.87
     },
     {
@@ -3235,14 +3203,14 @@
       "is_top": true,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 5297,
+      "shows": 5305,
       "clicks": 211,
       "ctr": 3.98,
       "cpc": 14.7,
-      "spend": 3105.0,
+      "spend": 3110.0,
       "orders": 23,
       "revenue": 15663,
-      "drr": 19.8,
+      "drr": 19.9,
       "cr": 10.9
     },
     {
@@ -3283,15 +3251,15 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 23616,
-      "clicks": 531,
+      "shows": 23653,
+      "clicks": 533,
       "ctr": 2.25,
       "cpc": 5.3,
-      "spend": 2802.0,
+      "spend": 2807.0,
       "orders": 70,
       "revenue": 43173,
       "drr": 6.5,
-      "cr": 13.18
+      "cr": 13.13
     },
     {
       "id": 35779889,
@@ -3299,11 +3267,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 17548,
+      "shows": 17593,
       "clicks": 90,
       "ctr": 0.51,
-      "cpc": 29.2,
-      "spend": 2627.0,
+      "cpc": 29.3,
+      "spend": 2634.0,
       "orders": 26,
       "revenue": 8299,
       "drr": 31.7,
@@ -3318,7 +3286,7 @@
       "shows": 1698,
       "clicks": 56,
       "ctr": 3.3,
-      "cpc": 39.5,
+      "cpc": 39.4,
       "spend": 2209.0,
       "orders": 30,
       "revenue": 18757,
@@ -3331,11 +3299,11 @@
       "is_top": true,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 15137,
+      "shows": 15160,
       "clicks": 113,
       "ctr": 0.75,
       "cpc": 18.7,
-      "spend": 2110.0,
+      "spend": 2113.0,
       "orders": 14,
       "revenue": 14131,
       "drr": 14.9,
@@ -3347,11 +3315,11 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 17556,
+      "shows": 17578,
       "clicks": 92,
       "ctr": 0.52,
       "cpc": 22.9,
-      "spend": 2104.0,
+      "spend": 2107.0,
       "orders": 21,
       "revenue": 7001,
       "drr": 30.1,
@@ -3404,6 +3372,22 @@
       "revenue": 18534,
       "drr": 9.4,
       "cr": 8.51
+    },
+    {
+      "id": 21632559,
+      "nmId": 0,
+      "is_top": true,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 14437,
+      "clicks": 177,
+      "ctr": 1.23,
+      "cpc": 9.6,
+      "spend": 1703.0,
+      "orders": 37,
+      "revenue": 20564,
+      "drr": 8.3,
+      "cr": 20.9
     },
     {
       "id": 37031219,
@@ -3475,14 +3459,14 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 832,
+      "shows": 833,
       "clicks": 31,
-      "ctr": 3.73,
+      "ctr": 3.72,
       "cpc": 48.0,
-      "spend": 1487.0,
+      "spend": 1488.0,
       "orders": 15,
       "revenue": 10084,
-      "drr": 14.7,
+      "drr": 14.8,
       "cr": 48.39
     },
     {
@@ -3507,11 +3491,11 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 2373,
+      "shows": 2376,
       "clicks": 94,
       "ctr": 3.96,
       "cpc": 14.3,
-      "spend": 1340.0,
+      "spend": 1341.0,
       "orders": 18,
       "revenue": 7328,
       "drr": 18.3,
@@ -3523,15 +3507,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 17303,
-      "clicks": 460,
-      "ctr": 2.66,
+      "shows": 17332,
+      "clicks": 462,
+      "ctr": 2.67,
       "cpc": 2.9,
-      "spend": 1331.0,
-      "orders": 72,
-      "revenue": 29254,
-      "drr": 4.6,
-      "cr": 15.65
+      "spend": 1333.0,
+      "orders": 73,
+      "revenue": 29658,
+      "drr": 4.5,
+      "cr": 15.8
     },
     {
       "id": 23234094,
@@ -3548,6 +3532,22 @@
       "revenue": 34945,
       "drr": 3.8,
       "cr": 136.61
+    },
+    {
+      "id": 24888250,
+      "nmId": 0,
+      "is_top": true,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 15733,
+      "clicks": 470,
+      "ctr": 2.99,
+      "cpc": 2.6,
+      "spend": 1229.0,
+      "orders": 64,
+      "revenue": 39076,
+      "drr": 3.1,
+      "cr": 13.62
     },
     {
       "id": 33818092,
@@ -3587,15 +3587,31 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 3396,
+      "shows": 3397,
       "clicks": 43,
       "ctr": 1.27,
       "cpc": 24.8,
       "spend": 1067.0,
       "orders": 20,
       "revenue": 14133,
-      "drr": 7.5,
+      "drr": 7.6,
       "cr": 46.51
+    },
+    {
+      "id": 35779884,
+      "nmId": 0,
+      "is_top": false,
+      "status": 9,
+      "name": "Мультитовар",
+      "shows": 9030,
+      "clicks": 221,
+      "ctr": 2.45,
+      "cpc": 4.8,
+      "spend": 1064.0,
+      "orders": 63,
+      "revenue": 24429,
+      "drr": 4.4,
+      "cr": 28.51
     },
     {
       "id": 37218747,
@@ -3612,22 +3628,6 @@
       "revenue": 14091,
       "drr": 7.5,
       "cr": 25.23
-    },
-    {
-      "id": 35779884,
-      "nmId": 0,
-      "is_top": false,
-      "status": 9,
-      "name": "Мультитовар",
-      "shows": 9015,
-      "clicks": 221,
-      "ctr": 2.45,
-      "cpc": 4.8,
-      "spend": 1062.0,
-      "orders": 63,
-      "revenue": 24429,
-      "drr": 4.3,
-      "cr": 28.51
     },
     {
       "id": 22645993,
@@ -3715,14 +3715,14 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 2818,
+      "shows": 2821,
       "clicks": 13,
       "ctr": 0.46,
       "cpc": 63.1,
-      "spend": 820.0,
+      "spend": 821.0,
       "orders": 4,
       "revenue": 2320,
-      "drr": 35.3,
+      "drr": 35.4,
       "cr": 30.77
     },
     {
@@ -3779,15 +3779,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 6212,
-      "clicks": 244,
-      "ctr": 3.93,
+      "shows": 6221,
+      "clicks": 245,
+      "ctr": 3.94,
       "cpc": 3.0,
-      "spend": 738.0,
+      "spend": 739.0,
       "orders": 43,
       "revenue": 18335,
       "drr": 4.0,
-      "cr": 17.62
+      "cr": 17.55
     },
     {
       "id": 36957181,
@@ -3875,15 +3875,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 7137,
-      "clicks": 165,
-      "ctr": 2.31,
+      "shows": 7165,
+      "clicks": 166,
+      "ctr": 2.32,
       "cpc": 3.8,
-      "spend": 629.0,
+      "spend": 632.0,
       "orders": 35,
       "revenue": 14101,
       "drr": 4.5,
-      "cr": 21.21
+      "cr": 21.08
     },
     {
       "id": 37017229,
@@ -3939,15 +3939,15 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 3935,
+      "shows": 3939,
       "clicks": 63,
       "ctr": 1.6,
       "cpc": 8.0,
       "spend": 506.0,
-      "orders": 11,
-      "revenue": 4550,
-      "drr": 11.1,
-      "cr": 17.46
+      "orders": 12,
+      "revenue": 5298,
+      "drr": 9.6,
+      "cr": 19.05
     },
     {
       "id": 37219069,
@@ -3987,7 +3987,7 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 1532,
+      "shows": 1533,
       "clicks": 34,
       "ctr": 2.22,
       "cpc": 13.8,
@@ -4035,15 +4035,15 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 3230,
-      "clicks": 255,
-      "ctr": 7.89,
+      "shows": 3233,
+      "clicks": 257,
+      "ctr": 7.95,
       "cpc": 1.7,
-      "spend": 425.0,
+      "spend": 426.0,
       "orders": 203,
       "revenue": 101170,
       "drr": 0.4,
-      "cr": 79.61
+      "cr": 78.99
     },
     {
       "id": 36957186,
@@ -4067,14 +4067,14 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 3147,
+      "shows": 3151,
       "clicks": 33,
       "ctr": 1.05,
       "cpc": 12.2,
-      "spend": 403.0,
+      "spend": 404.0,
       "orders": 1,
       "revenue": 748,
-      "drr": 53.9,
+      "drr": 54.0,
       "cr": 3.03
     },
     {
@@ -4355,7 +4355,7 @@
       "is_top": false,
       "status": 9,
       "name": "Мультитовар",
-      "shows": 3516,
+      "shows": 3518,
       "clicks": 79,
       "ctr": 2.25,
       "cpc": 3.5,
@@ -4515,10 +4515,10 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 1270,
+      "shows": 1271,
       "clicks": 11,
       "ctr": 0.87,
-      "cpc": 13.8,
+      "cpc": 13.9,
       "spend": 152.0,
       "orders": 2,
       "revenue": 359,
@@ -4718,22 +4718,6 @@
       "cr": 366.67
     },
     {
-      "id": 36956226,
-      "nmId": 0,
-      "is_top": true,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 160,
-      "clicks": 3,
-      "ctr": 1.88,
-      "cpc": 12.0,
-      "spend": 36.0,
-      "orders": 14,
-      "revenue": 9923,
-      "drr": 0.4,
-      "cr": 466.67
-    },
-    {
       "id": 37218888,
       "nmId": 0,
       "is_top": false,
@@ -4748,6 +4732,22 @@
       "revenue": 683,
       "drr": 5.2,
       "cr": 0
+    },
+    {
+      "id": 36956226,
+      "nmId": 0,
+      "is_top": true,
+      "status": 11,
+      "name": "Мультитовар",
+      "shows": 160,
+      "clicks": 3,
+      "ctr": 1.88,
+      "cpc": 12.0,
+      "spend": 36.0,
+      "orders": 14,
+      "revenue": 9923,
+      "drr": 0.4,
+      "cr": 466.67
     },
     {
       "id": 36730995,
@@ -4835,9 +4835,9 @@
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 288,
+      "shows": 289,
       "clicks": 9,
-      "ctr": 3.12,
+      "ctr": 3.11,
       "cpc": 3.0,
       "spend": 27.0,
       "orders": 4,
@@ -5038,22 +5038,6 @@
       "cr": 100.0
     },
     {
-      "id": 37219098,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 53,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 18.0,
-      "orders": 2,
-      "revenue": 1001,
-      "drr": 1.8,
-      "cr": 0
-    },
-    {
       "id": 37218778,
       "nmId": 0,
       "is_top": false,
@@ -5067,6 +5051,22 @@
       "orders": 4,
       "revenue": 2637,
       "drr": 0.7,
+      "cr": 0
+    },
+    {
+      "id": 37219098,
+      "nmId": 0,
+      "is_top": false,
+      "status": 11,
+      "name": "Мультитовар",
+      "shows": 53,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 18.0,
+      "orders": 2,
+      "revenue": 1001,
+      "drr": 1.8,
       "cr": 0
     },
     {
@@ -5238,28 +5238,12 @@
       "shows": 104,
       "clicks": 1,
       "ctr": 0.96,
-      "cpc": 14.2,
+      "cpc": 14.3,
       "spend": 14.0,
       "orders": 14,
       "revenue": 11241,
       "drr": 0.1,
       "cr": 1400.0
-    },
-    {
-      "id": 37218780,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 80,
-      "clicks": 1,
-      "ctr": 1.25,
-      "cpc": 12.5,
-      "spend": 13.0,
-      "orders": 3,
-      "revenue": 2136,
-      "drr": 0.6,
-      "cr": 300.0
     },
     {
       "id": 16666879,
@@ -5278,20 +5262,20 @@
       "cr": 0
     },
     {
-      "id": 36956698,
+      "id": 37218780,
       "nmId": 0,
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 49,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
+      "shows": 80,
+      "clicks": 1,
+      "ctr": 1.25,
+      "cpc": 12.5,
       "spend": 13.0,
-      "orders": 4,
-      "revenue": 2810,
-      "drr": 0.5,
-      "cr": 0
+      "orders": 3,
+      "revenue": 2136,
+      "drr": 0.6,
+      "cr": 300.0
     },
     {
       "id": 37219109,
@@ -5302,7 +5286,7 @@
       "shows": 51,
       "clicks": 1,
       "ctr": 1.96,
-      "cpc": 12.7,
+      "cpc": 12.6,
       "spend": 13.0,
       "orders": 1,
       "revenue": 1201,
@@ -5324,6 +5308,22 @@
       "revenue": 979,
       "drr": 1.3,
       "cr": 150.0
+    },
+    {
+      "id": 36956698,
+      "nmId": 0,
+      "is_top": false,
+      "status": 11,
+      "name": "Мультитовар",
+      "shows": 49,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 13.0,
+      "orders": 4,
+      "revenue": 2810,
+      "drr": 0.5,
+      "cr": 0
     },
     {
       "id": 37219197,
@@ -5486,12 +5486,12 @@
       "cr": 100.0
     },
     {
-      "id": 37219185,
-      "nmId": 305475056,
+      "id": 37219095,
+      "nmId": 560673743,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 305475056",
-      "shows": 29,
+      "name": "Артикул 560673743",
+      "shows": 11,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
@@ -5502,12 +5502,12 @@
       "cr": 0
     },
     {
-      "id": 37219095,
-      "nmId": 560673743,
+      "id": 37219185,
+      "nmId": 305475056,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 560673743",
-      "shows": 11,
+      "name": "Артикул 305475056",
+      "shows": 29,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
@@ -5742,22 +5742,6 @@
       "cr": 50.0
     },
     {
-      "id": 19175068,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 61,
-      "clicks": 8,
-      "ctr": 13.11,
-      "cpc": 0.9,
-      "spend": 7.0,
-      "orders": 8,
-      "revenue": 2116,
-      "drr": 0.3,
-      "cr": 100.0
-    },
-    {
       "id": 37218929,
       "nmId": 560673743,
       "is_top": false,
@@ -5772,6 +5756,22 @@
       "revenue": 0,
       "drr": 0,
       "cr": 0
+    },
+    {
+      "id": 19175068,
+      "nmId": 0,
+      "is_top": false,
+      "status": 11,
+      "name": "Мультитовар",
+      "shows": 61,
+      "clicks": 8,
+      "ctr": 13.11,
+      "cpc": 0.9,
+      "spend": 7.0,
+      "orders": 8,
+      "revenue": 2116,
+      "drr": 0.3,
+      "cr": 100.0
     },
     {
       "id": 37219108,
@@ -5854,22 +5854,6 @@
       "cr": 0
     },
     {
-      "id": 37219200,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 22,
-      "clicks": 1,
-      "ctr": 4.55,
-      "cpc": 5.8,
-      "spend": 6.0,
-      "orders": 3,
-      "revenue": 707,
-      "drr": 0.8,
-      "cr": 300.0
-    },
-    {
       "id": 37057317,
       "nmId": 0,
       "is_top": false,
@@ -5884,6 +5868,22 @@
       "revenue": 1954,
       "drr": 0.3,
       "cr": 0
+    },
+    {
+      "id": 37219200,
+      "nmId": 0,
+      "is_top": false,
+      "status": 11,
+      "name": "Мультитовар",
+      "shows": 22,
+      "clicks": 1,
+      "ctr": 4.55,
+      "cpc": 5.8,
+      "spend": 6.0,
+      "orders": 3,
+      "revenue": 707,
+      "drr": 0.8,
+      "cr": 300.0
     },
     {
       "id": 37219078,
@@ -5982,22 +5982,6 @@
       "cr": 0.0
     },
     {
-      "id": 34702428,
-      "nmId": 788992396,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 788992396",
-      "shows": 6,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 5.0,
-      "orders": 1,
-      "revenue": 1355,
-      "drr": 0.3,
-      "cr": 0
-    },
-    {
       "id": 32917170,
       "nmId": 0,
       "is_top": false,
@@ -6012,6 +5996,22 @@
       "revenue": 3209,
       "drr": 0.2,
       "cr": 250.0
+    },
+    {
+      "id": 34702428,
+      "nmId": 788992396,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 788992396",
+      "shows": 6,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 5.0,
+      "orders": 1,
+      "revenue": 1355,
+      "drr": 0.3,
+      "cr": 0
     },
     {
       "id": 21583510,
@@ -6094,22 +6094,6 @@
       "cr": 0
     },
     {
-      "id": 36462658,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 41,
-      "clicks": 5,
-      "ctr": 12.2,
-      "cpc": 1.0,
-      "spend": 5.0,
-      "orders": 2,
-      "revenue": 1051,
-      "drr": 0.5,
-      "cr": 40.0
-    },
-    {
       "id": 33818163,
       "nmId": 0,
       "is_top": false,
@@ -6124,6 +6108,22 @@
       "revenue": 1431,
       "drr": 0.3,
       "cr": 0
+    },
+    {
+      "id": 36462658,
+      "nmId": 0,
+      "is_top": false,
+      "status": 11,
+      "name": "Мультитовар",
+      "shows": 41,
+      "clicks": 5,
+      "ctr": 12.2,
+      "cpc": 1.0,
+      "spend": 5.0,
+      "orders": 2,
+      "revenue": 1051,
+      "drr": 0.5,
+      "cr": 40.0
     },
     {
       "id": 37218955,
@@ -6190,12 +6190,12 @@
       "cr": 0
     },
     {
-      "id": 36995656,
-      "nmId": 948818682,
+      "id": 37219088,
+      "nmId": 303760636,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 948818682",
-      "shows": 5,
+      "name": "Артикул 303760636",
+      "shows": 2,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
@@ -6206,12 +6206,12 @@
       "cr": 0
     },
     {
-      "id": 37219088,
-      "nmId": 303760636,
+      "id": 36995656,
+      "nmId": 948818682,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 303760636",
-      "shows": 2,
+      "name": "Артикул 948818682",
+      "shows": 5,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
@@ -6302,22 +6302,6 @@
       "cr": 0
     },
     {
-      "id": 37219007,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 6,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 4.0,
-      "orders": 5,
-      "revenue": 1020,
-      "drr": 0.4,
-      "cr": 0
-    },
-    {
       "id": 36463003,
       "nmId": 0,
       "is_top": false,
@@ -6334,19 +6318,19 @@
       "cr": 200.0
     },
     {
-      "id": 32632582,
+      "id": 37219007,
       "nmId": 0,
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 3,
+      "shows": 6,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
-      "spend": 3.0,
-      "orders": 1,
-      "revenue": 829,
-      "drr": 0.3,
+      "spend": 4.0,
+      "orders": 5,
+      "revenue": 1020,
+      "drr": 0.4,
       "cr": 0
     },
     {
@@ -6366,7 +6350,7 @@
       "cr": 50.0
     },
     {
-      "id": 25533957,
+      "id": 32632582,
       "nmId": 0,
       "is_top": false,
       "status": 11,
@@ -6376,9 +6360,25 @@
       "ctr": 0.0,
       "cpc": 0,
       "spend": 3.0,
-      "orders": 2,
-      "revenue": 1259,
-      "drr": 0.2,
+      "orders": 1,
+      "revenue": 829,
+      "drr": 0.3,
+      "cr": 0
+    },
+    {
+      "id": 28889183,
+      "nmId": 259869224,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 259869224",
+      "shows": 8,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 3.0,
+      "orders": 0,
+      "revenue": 0,
+      "drr": 0,
       "cr": 0
     },
     {
@@ -6398,19 +6398,19 @@
       "cr": 200.0
     },
     {
-      "id": 21809293,
+      "id": 25533957,
       "nmId": 0,
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 21,
+      "shows": 3,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
       "spend": 3.0,
       "orders": 2,
-      "revenue": 1020,
-      "drr": 0.3,
+      "revenue": 1259,
+      "drr": 0.2,
       "cr": 0
     },
     {
@@ -6430,19 +6430,19 @@
       "cr": 20.0
     },
     {
-      "id": 28889183,
-      "nmId": 259869224,
+      "id": 21809293,
+      "nmId": 0,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 259869224",
-      "shows": 8,
+      "name": "Мультитовар",
+      "shows": 21,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
       "spend": 3.0,
-      "orders": 0,
-      "revenue": 0,
-      "drr": 0,
+      "orders": 2,
+      "revenue": 1020,
+      "drr": 0.3,
       "cr": 0
     },
     {
@@ -6478,22 +6478,6 @@
       "cr": 50.0
     },
     {
-      "id": 37219072,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 7,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 3.0,
-      "orders": 8,
-      "revenue": 2880,
-      "drr": 0.1,
-      "cr": 0
-    },
-    {
       "id": 37219143,
       "nmId": 0,
       "is_top": false,
@@ -6510,20 +6494,36 @@
       "cr": 0
     },
     {
-      "id": 37218959,
-      "nmId": 901017956,
+      "id": 37219072,
+      "nmId": 0,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 901017956",
-      "shows": 5,
-      "clicks": 1,
-      "ctr": 20.0,
-      "cpc": 3.3,
+      "name": "Мультитовар",
+      "shows": 7,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 3.0,
+      "orders": 8,
+      "revenue": 2880,
+      "drr": 0.1,
+      "cr": 0
+    },
+    {
+      "id": 36463422,
+      "nmId": 505660356,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 505660356",
+      "shows": 22,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
       "spend": 3.0,
       "orders": 0,
       "revenue": 0,
       "drr": 0,
-      "cr": 0.0
+      "cr": 0
     },
     {
       "id": 25705025,
@@ -6558,20 +6558,20 @@
       "cr": 0.0
     },
     {
-      "id": 36463422,
-      "nmId": 505660356,
+      "id": 37218959,
+      "nmId": 901017956,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 505660356",
-      "shows": 22,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
+      "name": "Артикул 901017956",
+      "shows": 5,
+      "clicks": 1,
+      "ctr": 20.0,
+      "cpc": 3.3,
       "spend": 3.0,
       "orders": 0,
       "revenue": 0,
       "drr": 0,
-      "cr": 0
+      "cr": 0.0
     },
     {
       "id": 35779862,
@@ -6638,22 +6638,6 @@
       "cr": 0.0
     },
     {
-      "id": 26958876,
-      "nmId": 449708247,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 449708247",
-      "shows": 5,
-      "clicks": 2,
-      "ctr": 40.0,
-      "cpc": 1.2,
-      "spend": 2.0,
-      "orders": 3,
-      "revenue": 966,
-      "drr": 0.2,
-      "cr": 150.0
-    },
-    {
       "id": 27432707,
       "nmId": 0,
       "is_top": false,
@@ -6686,6 +6670,22 @@
       "cr": 0
     },
     {
+      "id": 26958876,
+      "nmId": 449708247,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 449708247",
+      "shows": 5,
+      "clicks": 2,
+      "ctr": 40.0,
+      "cpc": 1.2,
+      "spend": 2.0,
+      "orders": 3,
+      "revenue": 966,
+      "drr": 0.2,
+      "cr": 150.0
+    },
+    {
       "id": 25450347,
       "nmId": 279011425,
       "is_top": false,
@@ -6702,11 +6702,11 @@
       "cr": 0
     },
     {
-      "id": 36996122,
-      "nmId": 949032716,
+      "id": 37219034,
+      "nmId": 305475056,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 949032716",
+      "name": "Артикул 305475056",
       "shows": 3,
       "clicks": 0,
       "ctr": 0.0,
@@ -6718,11 +6718,11 @@
       "cr": 0
     },
     {
-      "id": 37219034,
-      "nmId": 305475056,
+      "id": 36996122,
+      "nmId": 949032716,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 305475056",
+      "name": "Артикул 949032716",
       "shows": 3,
       "clicks": 0,
       "ctr": 0.0,
@@ -6766,22 +6766,6 @@
       "cr": 0
     },
     {
-      "id": 37219005,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 3,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 2.0,
-      "orders": 1,
-      "revenue": 805,
-      "drr": 0.3,
-      "cr": 0
-    },
-    {
       "id": 37218936,
       "nmId": 901297875,
       "is_top": false,
@@ -6796,6 +6780,22 @@
       "revenue": 0,
       "drr": 0,
       "cr": 0.0
+    },
+    {
+      "id": 37219005,
+      "nmId": 0,
+      "is_top": false,
+      "status": 11,
+      "name": "Мультитовар",
+      "shows": 3,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 2.0,
+      "orders": 1,
+      "revenue": 805,
+      "drr": 0.3,
+      "cr": 0
     },
     {
       "id": 37219164,
@@ -6830,12 +6830,12 @@
       "cr": 0
     },
     {
-      "id": 25534201,
-      "nmId": 404268784,
+      "id": 30256664,
+      "nmId": 259873569,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 404268784",
-      "shows": 8,
+      "name": "Артикул 259873569",
+      "shows": 3,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
@@ -6846,28 +6846,12 @@
       "cr": 0
     },
     {
-      "id": 30126658,
-      "nmId": 566138180,
+      "id": 25534201,
+      "nmId": 404268784,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 566138180",
-      "shows": 9,
-      "clicks": 1,
-      "ctr": 11.11,
-      "cpc": 0.9,
-      "spend": 1.0,
-      "orders": 0,
-      "revenue": 0,
-      "drr": 0,
-      "cr": 0.0
-    },
-    {
-      "id": 30256664,
-      "nmId": 259873569,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 259873569",
-      "shows": 3,
+      "name": "Артикул 404268784",
+      "shows": 8,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
@@ -6887,6 +6871,22 @@
       "clicks": 2,
       "ctr": 25.0,
       "cpc": 0.3,
+      "spend": 1.0,
+      "orders": 0,
+      "revenue": 0,
+      "drr": 0,
+      "cr": 0.0
+    },
+    {
+      "id": 30126658,
+      "nmId": 566138180,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 566138180",
+      "shows": 9,
+      "clicks": 1,
+      "ctr": 11.11,
+      "cpc": 0.9,
       "spend": 1.0,
       "orders": 0,
       "revenue": 0,
@@ -6926,20 +6926,20 @@
       "cr": 0.0
     },
     {
-      "id": 19169951,
-      "nmId": 78346400,
+      "id": 23362966,
+      "nmId": 288702897,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 78346400",
-      "shows": 5,
+      "name": "Артикул 288702897",
+      "shows": 7,
       "clicks": 1,
-      "ctr": 20.0,
+      "ctr": 14.29,
       "cpc": 0.5,
       "spend": 1.0,
-      "orders": 1,
-      "revenue": 789,
-      "drr": 0.1,
-      "cr": 100.0
+      "orders": 0,
+      "revenue": 0,
+      "drr": 0,
+      "cr": 0.0
     },
     {
       "id": 35373665,
@@ -6974,20 +6974,52 @@
       "cr": 200.0
     },
     {
-      "id": 23362966,
-      "nmId": 288702897,
+      "id": 19169951,
+      "nmId": 78346400,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 288702897",
-      "shows": 7,
+      "name": "Артикул 78346400",
+      "shows": 5,
       "clicks": 1,
-      "ctr": 14.29,
+      "ctr": 20.0,
       "cpc": 0.5,
+      "spend": 1.0,
+      "orders": 1,
+      "revenue": 789,
+      "drr": 0.1,
+      "cr": 100.0
+    },
+    {
+      "id": 33344617,
+      "nmId": 668547127,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 668547127",
+      "shows": 5,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
       "spend": 1.0,
       "orders": 0,
       "revenue": 0,
       "drr": 0,
-      "cr": 0.0
+      "cr": 0
+    },
+    {
+      "id": 32141578,
+      "nmId": 0,
+      "is_top": false,
+      "status": 11,
+      "name": "Мультитовар",
+      "shows": 8,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 1.0,
+      "orders": 1,
+      "revenue": 659,
+      "drr": 0.1,
+      "cr": 0
     },
     {
       "id": 23624026,
@@ -7022,20 +7054,20 @@
       "cr": 0
     },
     {
-      "id": 33344617,
-      "nmId": 668547127,
+      "id": 31821097,
+      "nmId": 0,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 668547127",
-      "shows": 5,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
+      "name": "Мультитовар",
+      "shows": 8,
+      "clicks": 4,
+      "ctr": 50.0,
+      "cpc": 0.2,
       "spend": 1.0,
-      "orders": 0,
-      "revenue": 0,
-      "drr": 0,
-      "cr": 0
+      "orders": 1,
+      "revenue": 494,
+      "drr": 0.2,
+      "cr": 25.0
     },
     {
       "id": 32918022,
@@ -7052,6 +7084,22 @@
       "revenue": 0,
       "drr": 0,
       "cr": 0
+    },
+    {
+      "id": 30127015,
+      "nmId": 566940859,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 566940859",
+      "shows": 8,
+      "clicks": 1,
+      "ctr": 12.5,
+      "cpc": 0.9,
+      "spend": 1.0,
+      "orders": 1,
+      "revenue": 833,
+      "drr": 0.1,
+      "cr": 100.0
     },
     {
       "id": 27361596,
@@ -7086,52 +7134,20 @@
       "cr": 0
     },
     {
-      "id": 32141578,
+      "id": 37218975,
       "nmId": 0,
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 8,
+      "shows": 1,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
-      "spend": 1.0,
-      "orders": 1,
-      "revenue": 659,
+      "spend": 1,
+      "orders": 3,
+      "revenue": 1039,
       "drr": 0.1,
       "cr": 0
-    },
-    {
-      "id": 31821097,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 8,
-      "clicks": 4,
-      "ctr": 50.0,
-      "cpc": 0.2,
-      "spend": 1.0,
-      "orders": 1,
-      "revenue": 494,
-      "drr": 0.2,
-      "cr": 25.0
-    },
-    {
-      "id": 30127015,
-      "nmId": 566940859,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 566940859",
-      "shows": 8,
-      "clicks": 1,
-      "ctr": 12.5,
-      "cpc": 0.9,
-      "spend": 1.0,
-      "orders": 1,
-      "revenue": 833,
-      "drr": 0.1,
-      "cr": 100.0
     },
     {
       "id": 37219070,
@@ -7150,22 +7166,6 @@
       "cr": 0
     },
     {
-      "id": 37218975,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 1,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 1,
-      "orders": 3,
-      "revenue": 1039,
-      "drr": 0.1,
-      "cr": 0
-    },
-    {
       "id": 23372701,
       "nmId": 288702897,
       "is_top": false,
@@ -7178,6 +7178,22 @@
       "spend": 1.0,
       "orders": 1,
       "revenue": 821,
+      "drr": 0.1,
+      "cr": 100.0
+    },
+    {
+      "id": 36462732,
+      "nmId": 255066954,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 255066954",
+      "shows": 5,
+      "clicks": 1,
+      "ctr": 20.0,
+      "cpc": 0.6,
+      "spend": 1.0,
+      "orders": 1,
+      "revenue": 800,
       "drr": 0.1,
       "cr": 100.0
     },
@@ -7198,20 +7214,20 @@
       "cr": 0
     },
     {
-      "id": 36462732,
-      "nmId": 255066954,
+      "id": 36477190,
+      "nmId": 822655388,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 255066954",
-      "shows": 5,
-      "clicks": 1,
-      "ctr": 20.0,
-      "cpc": 0.6,
+      "name": "Артикул 822655388",
+      "shows": 1,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
       "spend": 1.0,
-      "orders": 1,
-      "revenue": 800,
-      "drr": 0.1,
-      "cr": 100.0
+      "orders": 0,
+      "revenue": 0,
+      "drr": 0,
+      "cr": 0
     },
     {
       "id": 35411729,
@@ -7230,11 +7246,27 @@
       "cr": 300.0
     },
     {
-      "id": 36477190,
-      "nmId": 822655388,
+      "id": 37219024,
+      "nmId": 321843631,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 822655388",
+      "name": "Артикул 321843631",
+      "shows": 1,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 1.0,
+      "orders": 0,
+      "revenue": 0,
+      "drr": 0,
+      "cr": 0
+    },
+    {
+      "id": 37219134,
+      "nmId": 299459809,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 299459809",
       "shows": 1,
       "clicks": 0,
       "ctr": 0.0,
@@ -7262,19 +7294,19 @@
       "cr": 0
     },
     {
-      "id": 37219134,
-      "nmId": 299459809,
+      "id": 36477228,
+      "nmId": 0,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 299459809",
+      "name": "Мультитовар",
       "shows": 1,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
       "spend": 1.0,
-      "orders": 0,
-      "revenue": 0,
-      "drr": 0,
+      "orders": 1,
+      "revenue": 1849,
+      "drr": 0.1,
       "cr": 0
     },
     {
@@ -7310,34 +7342,18 @@
       "cr": 0
     },
     {
-      "id": 37219024,
-      "nmId": 321843631,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 321843631",
-      "shows": 1,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 1.0,
-      "orders": 0,
-      "revenue": 0,
-      "drr": 0,
-      "cr": 0
-    },
-    {
-      "id": 36477228,
+      "id": 36959867,
       "nmId": 0,
       "is_top": false,
       "status": 11,
       "name": "Мультитовар",
-      "shows": 1,
+      "shows": 3,
       "clicks": 0,
       "ctr": 0.0,
       "cpc": 0,
       "spend": 1.0,
-      "orders": 1,
-      "revenue": 1849,
+      "orders": 4,
+      "revenue": 1425,
       "drr": 0.1,
       "cr": 0
     },
@@ -7358,22 +7374,6 @@
       "cr": 0
     },
     {
-      "id": 36959867,
-      "nmId": 0,
-      "is_top": false,
-      "status": 11,
-      "name": "Мультитовар",
-      "shows": 3,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 1.0,
-      "orders": 4,
-      "revenue": 1425,
-      "drr": 0.1,
-      "cr": 0
-    },
-    {
       "id": 18793806,
       "nmId": 0,
       "is_top": false,
@@ -7390,11 +7390,11 @@
       "cr": 0
     },
     {
-      "id": 32931087,
-      "nmId": 259833340,
+      "id": 34156586,
+      "nmId": 786708018,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 259833340",
+      "name": "Артикул 786708018",
       "shows": 1,
       "clicks": 0,
       "ctr": 0.0,
@@ -7406,27 +7406,11 @@
       "cr": 0
     },
     {
-      "id": 35779879,
-      "nmId": 29743749,
+      "id": 32931087,
+      "nmId": 259833340,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 29743749",
-      "shows": 4,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 0.0,
-      "orders": 0,
-      "revenue": 0,
-      "drr": 0,
-      "cr": 0
-    },
-    {
-      "id": 34156586,
-      "nmId": 786708018,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 786708018",
+      "name": "Артикул 259833340",
       "shows": 1,
       "clicks": 0,
       "ctr": 0.0,
@@ -7451,6 +7435,22 @@
       "orders": 1,
       "revenue": 230,
       "drr": 0.1,
+      "cr": 0
+    },
+    {
+      "id": 35779879,
+      "nmId": 29743749,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 29743749",
+      "shows": 4,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 0.0,
+      "orders": 0,
+      "revenue": 0,
+      "drr": 0,
       "cr": 0
     },
     {
@@ -7502,6 +7502,22 @@
       "cr": 0.0
     },
     {
+      "id": 35779899,
+      "nmId": 114391690,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 114391690",
+      "shows": 1,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 0.0,
+      "orders": 0,
+      "revenue": 0,
+      "drr": 0,
+      "cr": 0
+    },
+    {
       "id": 25050810,
       "nmId": 372647752,
       "is_top": false,
@@ -7550,20 +7566,20 @@
       "cr": 0
     },
     {
-      "id": 35779899,
-      "nmId": 114391690,
+      "id": 30126835,
+      "nmId": 566852983,
       "is_top": false,
       "status": 11,
-      "name": "Артикул 114391690",
-      "shows": 1,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
+      "name": "Артикул 566852983",
+      "shows": 5,
+      "clicks": 4,
+      "ctr": 80.0,
+      "cpc": 0.1,
       "spend": 0.0,
-      "orders": 0,
-      "revenue": 0,
-      "drr": 0,
-      "cr": 0
+      "orders": 1,
+      "revenue": 748,
+      "drr": 0.1,
+      "cr": 25.0
     },
     {
       "id": 27957895,
@@ -7580,22 +7596,6 @@
       "revenue": 693,
       "drr": 0.0,
       "cr": 0
-    },
-    {
-      "id": 30126835,
-      "nmId": 566852983,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 566852983",
-      "shows": 5,
-      "clicks": 4,
-      "ctr": 80.0,
-      "cpc": 0.1,
-      "spend": 0.0,
-      "orders": 1,
-      "revenue": 748,
-      "drr": 0.1,
-      "cr": 25.0
     },
     {
       "id": 36953604,
@@ -7630,22 +7630,6 @@
       "cr": 0
     },
     {
-      "id": 37059604,
-      "nmId": 255078349,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 255078349",
-      "shows": 6,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 0.0,
-      "orders": 0,
-      "revenue": 0,
-      "drr": 0,
-      "cr": 0
-    },
-    {
       "id": 34154931,
       "nmId": 788364494,
       "is_top": false,
@@ -7659,22 +7643,6 @@
       "orders": 0,
       "revenue": 0,
       "drr": 0,
-      "cr": 0
-    },
-    {
-      "id": 37061676,
-      "nmId": 321789024,
-      "is_top": false,
-      "status": 11,
-      "name": "Артикул 321789024",
-      "shows": 3,
-      "clicks": 0,
-      "ctr": 0.0,
-      "cpc": 0,
-      "spend": 0.0,
-      "orders": 1,
-      "revenue": 821,
-      "drr": 0.0,
       "cr": 0
     },
     {
@@ -7708,24 +7676,101 @@
       "revenue": 475,
       "drr": 0.0,
       "cr": 50.0
+    },
+    {
+      "id": 37059604,
+      "nmId": 255078349,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 255078349",
+      "shows": 6,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 0.0,
+      "orders": 0,
+      "revenue": 0,
+      "drr": 0,
+      "cr": 0
+    },
+    {
+      "id": 37061676,
+      "nmId": 321789024,
+      "is_top": false,
+      "status": 11,
+      "name": "Артикул 321789024",
+      "shows": 3,
+      "clicks": 0,
+      "ctr": 0.0,
+      "cpc": 0,
+      "spend": 0.0,
+      "orders": 1,
+      "revenue": 821,
+      "drr": 0.0,
+      "cr": 0
     }
   ],
   "nm_ads": {
-    "668547127": {
-      "nmId": 668547127,
-      "spend": 26,
-      "orders": 8,
-      "clicks": 1,
-      "shows": 63,
-      "status": 9,
-      "drr": 0.3
+    "259873569": {
+      "nmId": 259873569,
+      "spend": 1,
+      "orders": 0,
+      "clicks": 0,
+      "shows": 3,
+      "status": 11,
+      "drr": 0
     },
-    "115819519": {
-      "nmId": 115819519,
-      "spend": 15,
-      "orders": 308,
-      "clicks": 17,
-      "shows": 69,
+    "449742164": {
+      "nmId": 449742164,
+      "spend": 17859,
+      "orders": 531,
+      "clicks": 2153,
+      "shows": 119761,
+      "status": 9,
+      "drr": 3.4
+    },
+    "681446128": {
+      "nmId": 681446128,
+      "spend": 18853,
+      "orders": 144,
+      "clicks": 1376,
+      "shows": 131266,
+      "status": 9,
+      "drr": 13.1
+    },
+    "161665998": {
+      "nmId": 161665998,
+      "spend": 2,
+      "orders": 1,
+      "clicks": 0,
+      "shows": 12,
+      "status": 9,
+      "drr": 0.2
+    },
+    "321834819": {
+      "nmId": 321834819,
+      "spend": 8,
+      "orders": 53,
+      "clicks": 4,
+      "shows": 49,
+      "status": 9,
+      "drr": 0.0
+    },
+    "138903776": {
+      "nmId": 138903776,
+      "spend": 0,
+      "orders": 226,
+      "clicks": 0,
+      "shows": 2,
+      "status": 9,
+      "drr": 0.0
+    },
+    "404268784": {
+      "nmId": 404268784,
+      "spend": 1,
+      "orders": 16,
+      "clicks": 0,
+      "shows": 8,
       "status": 9,
       "drr": 0.0
     },
@@ -7738,374 +7783,77 @@
       "status": 9,
       "drr": 0.3
     },
-    "404268784": {
-      "nmId": 404268784,
+    "142807090": {
+      "nmId": 142807090,
       "spend": 1,
-      "orders": 16,
-      "clicks": 0,
-      "shows": 8,
+      "orders": 24,
+      "clicks": 1,
+      "shows": 6,
       "status": 9,
       "drr": 0.0
     },
-    "255066954": {
-      "nmId": 255066954,
-      "spend": 2555,
-      "orders": 87,
-      "clicks": 75,
-      "shows": 4233,
+    "668547127": {
+      "nmId": 668547127,
+      "spend": 26,
+      "orders": 8,
+      "clicks": 1,
+      "shows": 63,
       "status": 9,
-      "drr": 2.9
+      "drr": 0.3
     },
-    "109511802": {
-      "nmId": 109511802,
-      "spend": 76289,
-      "orders": 251,
-      "clicks": 1194,
-      "shows": 40306,
+    "729283424": {
+      "nmId": 729283424,
+      "spend": 133146,
+      "orders": 115,
+      "clicks": 1309,
+      "shows": 59288,
       "status": 9,
-      "drr": 30.4
+      "drr": 115.8
     },
-    "328084669": {
-      "nmId": 328084669,
-      "spend": 1504,
-      "orders": 102,
-      "clicks": 121,
-      "shows": 4825,
-      "status": 9,
-      "drr": 1.5
-    },
-    "212005646": {
-      "nmId": 212005646,
-      "spend": 73865,
-      "orders": 674,
-      "clicks": 5113,
-      "shows": 167003,
-      "status": 9,
-      "drr": 11.0
-    },
-    "110572701": {
-      "nmId": 110572701,
-      "spend": 425,
-      "orders": 571,
-      "clicks": 255,
-      "shows": 3230,
-      "status": 9,
-      "drr": 0.1
-    },
-    "161665998": {
-      "nmId": 161665998,
-      "spend": 2,
-      "orders": 1,
+    "968914637": {
+      "nmId": 968914637,
+      "spend": 13,
+      "orders": 0,
       "clicks": 0,
-      "shows": 12,
+      "shows": 51,
       "status": 9,
-      "drr": 0.1
+      "drr": 0
     },
-    "681446128": {
-      "nmId": 681446128,
-      "spend": 18850,
-      "orders": 144,
-      "clicks": 1376,
-      "shows": 131256,
+    "115819519": {
+      "nmId": 115819519,
+      "spend": 15,
+      "orders": 311,
+      "clicks": 17,
+      "shows": 69,
       "status": 9,
-      "drr": 13.1
+      "drr": 0.0
+    },
+    "786708018": {
+      "nmId": 786708018,
+      "spend": 0,
+      "orders": 0,
+      "clicks": 0,
+      "shows": 1,
+      "status": 11,
+      "drr": 0
+    },
+    "788844804": {
+      "nmId": 788844804,
+      "spend": 648,
+      "orders": 21,
+      "clicks": 82,
+      "shows": 2812,
+      "status": 9,
+      "drr": 3.1
     },
     "788813551": {
       "nmId": 788813551,
-      "spend": 1537,
+      "spend": 1539,
       "orders": 20,
       "clicks": 354,
-      "shows": 19337,
+      "shows": 19367,
       "status": 9,
       "drr": 7.7
-    },
-    "603944614": {
-      "nmId": 603944614,
-      "spend": 80311,
-      "orders": 195,
-      "clicks": 3256,
-      "shows": 117547,
-      "status": 9,
-      "drr": 41.2
-    },
-    "621827967": {
-      "nmId": 621827967,
-      "spend": 175554,
-      "orders": 1250,
-      "clicks": 17659,
-      "shows": 1045546,
-      "status": 9,
-      "drr": 14.0
-    },
-    "677009256": {
-      "nmId": 677009256,
-      "spend": 18326,
-      "orders": 84,
-      "clicks": 1105,
-      "shows": 18935,
-      "status": 9,
-      "drr": 21.8
-    },
-    "198237441": {
-      "nmId": 198237441,
-      "spend": 1317,
-      "orders": 469,
-      "clicks": 112,
-      "shows": 1897,
-      "status": 9,
-      "drr": 0.3
-    },
-    "498184213": {
-      "nmId": 498184213,
-      "spend": 27970,
-      "orders": 124,
-      "clicks": 1862,
-      "shows": 135019,
-      "status": 9,
-      "drr": 22.6
-    },
-    "534435680": {
-      "nmId": 534435680,
-      "spend": 16143,
-      "orders": 140,
-      "clicks": 2229,
-      "shows": 88108,
-      "status": 9,
-      "drr": 11.5
-    },
-    "142905787": {
-      "nmId": 142905787,
-      "spend": 7,
-      "orders": 37,
-      "clicks": 6,
-      "shows": 59,
-      "status": 9,
-      "drr": 0.0
-    },
-    "195721178": {
-      "nmId": 195721178,
-      "spend": 796,
-      "orders": 63,
-      "clicks": 88,
-      "shows": 2277,
-      "status": 9,
-      "drr": 1.3
-    },
-    "29743753": {
-      "nmId": 29743753,
-      "spend": 539,
-      "orders": 210,
-      "clicks": 73,
-      "shows": 3336,
-      "status": 9,
-      "drr": 0.3
-    },
-    "131472745": {
-      "nmId": 131472745,
-      "spend": 657,
-      "orders": 38,
-      "clicks": 69,
-      "shows": 3523,
-      "status": 9,
-      "drr": 1.7
-    },
-    "455440273": {
-      "nmId": 455440273,
-      "spend": 573594,
-      "orders": 2504,
-      "clicks": 50656,
-      "shows": 2312126,
-      "status": 9,
-      "drr": 22.9
-    },
-    "624258829": {
-      "nmId": 624258829,
-      "spend": 177187,
-      "orders": 325,
-      "clicks": 6345,
-      "shows": 141605,
-      "status": 9,
-      "drr": 54.5
-    },
-    "933622167": {
-      "nmId": 933622167,
-      "spend": 80619,
-      "orders": 519,
-      "clicks": 4294,
-      "shows": 93929,
-      "status": 9,
-      "drr": 15.5
-    },
-    "822751567": {
-      "nmId": 822751567,
-      "spend": 20,
-      "orders": 3,
-      "clicks": 4,
-      "shows": 132,
-      "status": 9,
-      "drr": 0.7
-    },
-    "832030050": {
-      "nmId": 832030050,
-      "spend": 2161,
-      "orders": 33,
-      "clicks": 415,
-      "shows": 12073,
-      "status": 9,
-      "drr": 6.5
-    },
-    "822735241": {
-      "nmId": 822735241,
-      "spend": 631,
-      "orders": 17,
-      "clicks": 54,
-      "shows": 1790,
-      "status": 9,
-      "drr": 3.7
-    },
-    "831907670": {
-      "nmId": 831907670,
-      "spend": 1143,
-      "orders": 20,
-      "clicks": 114,
-      "shows": 5086,
-      "status": 9,
-      "drr": 5.7
-    },
-    "788231018": {
-      "nmId": 788231018,
-      "spend": 1702,
-      "orders": 32,
-      "clicks": 104,
-      "shows": 2525,
-      "status": 9,
-      "drr": 5.3
-    },
-    "446640188": {
-      "nmId": 446640188,
-      "spend": 1969,
-      "orders": 58,
-      "clicks": 259,
-      "shows": 9510,
-      "status": 9,
-      "drr": 3.4
-    },
-    "138903776": {
-      "nmId": 138903776,
-      "spend": 0,
-      "orders": 223,
-      "clicks": 0,
-      "shows": 2,
-      "status": 9,
-      "drr": 0.0
-    },
-    "30189556": {
-      "nmId": 30189556,
-      "spend": 185,
-      "orders": 61,
-      "clicks": 55,
-      "shows": 1589,
-      "status": 9,
-      "drr": 0.3
-    },
-    "136513559": {
-      "nmId": 136513559,
-      "spend": 11,
-      "orders": 60,
-      "clicks": 0,
-      "shows": 16,
-      "status": 9,
-      "drr": 0.0
-    },
-    "214706138": {
-      "nmId": 214706138,
-      "spend": 50,
-      "orders": 111,
-      "clicks": 20,
-      "shows": 429,
-      "status": 9,
-      "drr": 0.0
-    },
-    "115821448": {
-      "nmId": 115821448,
-      "spend": 132683,
-      "orders": 925,
-      "clicks": 4288,
-      "shows": 41807,
-      "status": 9,
-      "drr": 14.3
-    },
-    "255078349": {
-      "nmId": 255078349,
-      "spend": 53103,
-      "orders": 557,
-      "clicks": 4404,
-      "shows": 72831,
-      "status": 9,
-      "drr": 9.5
-    },
-    "161695636": {
-      "nmId": 161695636,
-      "spend": 27,
-      "orders": 120,
-      "clicks": 2,
-      "shows": 42,
-      "status": 9,
-      "drr": 0.0
-    },
-    "321782514": {
-      "nmId": 321782514,
-      "spend": 90152,
-      "orders": 423,
-      "clicks": 3735,
-      "shows": 76337,
-      "status": 9,
-      "drr": 21.3
-    },
-    "161707334": {
-      "nmId": 161707334,
-      "spend": 4,
-      "orders": 46,
-      "clicks": 1,
-      "shows": 5,
-      "status": 9,
-      "drr": 0.0
-    },
-    "328121083": {
-      "nmId": 328121083,
-      "spend": 12432,
-      "orders": 134,
-      "clicks": 1627,
-      "shows": 14473,
-      "status": 9,
-      "drr": 9.3
-    },
-    "192807560": {
-      "nmId": 192807560,
-      "spend": 50438,
-      "orders": 126,
-      "clicks": 1687,
-      "shows": 222352,
-      "status": 9,
-      "drr": 40.0
-    },
-    "164391784": {
-      "nmId": 164391784,
-      "spend": 820,
-      "orders": 25,
-      "clicks": 13,
-      "shows": 2818,
-      "status": 9,
-      "drr": 3.3
-    },
-    "143674623": {
-      "nmId": 143674623,
-      "spend": 17039,
-      "orders": 90,
-      "clicks": 795,
-      "shows": 16447,
-      "status": 9,
-      "drr": 18.9
     },
     "697427825": {
       "nmId": 697427825,
@@ -8113,6 +7861,285 @@
       "orders": 1,
       "clicks": 0,
       "shows": 313,
+      "status": 9,
+      "drr": 9.6
+    },
+    "621827967": {
+      "nmId": 621827967,
+      "spend": 175925,
+      "orders": 1255,
+      "clicks": 17696,
+      "shows": 1047934,
+      "status": 9,
+      "drr": 14.0
+    },
+    "404222389": {
+      "nmId": 404222389,
+      "spend": 8,
+      "orders": 56,
+      "clicks": 16,
+      "shows": 53,
+      "status": 9,
+      "drr": 0.0
+    },
+    "198237441": {
+      "nmId": 198237441,
+      "spend": 1317,
+      "orders": 467,
+      "clicks": 112,
+      "shows": 1897,
+      "status": 9,
+      "drr": 0.3
+    },
+    "141540419": {
+      "nmId": 141540419,
+      "spend": 1,
+      "orders": 37,
+      "clicks": 0,
+      "shows": 3,
+      "status": 9,
+      "drr": 0.0
+    },
+    "215433137": {
+      "nmId": 215433137,
+      "spend": 55,
+      "orders": 14,
+      "clicks": 6,
+      "shows": 187,
+      "status": 9,
+      "drr": 0.4
+    },
+    "788231018": {
+      "nmId": 788231018,
+      "spend": 1702,
+      "orders": 67,
+      "clicks": 104,
+      "shows": 2525,
+      "status": 9,
+      "drr": 2.5
+    },
+    "161636990": {
+      "nmId": 161636990,
+      "spend": 20749,
+      "orders": 179,
+      "clicks": 1251,
+      "shows": 18851,
+      "status": 9,
+      "drr": 11.6
+    },
+    "567006801": {
+      "nmId": 567006801,
+      "spend": 1,
+      "orders": 8,
+      "clicks": 0,
+      "shows": 12,
+      "status": 9,
+      "drr": 0.0
+    },
+    "54050044": {
+      "nmId": 54050044,
+      "spend": 1354,
+      "orders": 1,
+      "clicks": 29,
+      "shows": 1612,
+      "status": 9,
+      "drr": 135.4
+    },
+    "120686700": {
+      "nmId": 120686700,
+      "spend": 1121,
+      "orders": 356,
+      "clicks": 133,
+      "shows": 3434,
+      "status": 9,
+      "drr": 0.3
+    },
+    "446640188": {
+      "nmId": 446640188,
+      "spend": 1973,
+      "orders": 58,
+      "clicks": 260,
+      "shows": 9541,
+      "status": 9,
+      "drr": 3.4
+    },
+    "29743753": {
+      "nmId": 29743753,
+      "spend": 539,
+      "orders": 213,
+      "clicks": 73,
+      "shows": 3336,
+      "status": 9,
+      "drr": 0.3
+    },
+    "110572701": {
+      "nmId": 110572701,
+      "spend": 426,
+      "orders": 574,
+      "clicks": 257,
+      "shows": 3233,
+      "status": 9,
+      "drr": 0.1
+    },
+    "214706138": {
+      "nmId": 214706138,
+      "spend": 50,
+      "orders": 107,
+      "clicks": 20,
+      "shows": 429,
+      "status": 9,
+      "drr": 0.0
+    },
+    "109511802": {
+      "nmId": 109511802,
+      "spend": 76664,
+      "orders": 251,
+      "clicks": 1199,
+      "shows": 40485,
+      "status": 9,
+      "drr": 30.5
+    },
+    "41323816": {
+      "nmId": 41323816,
+      "spend": 71421,
+      "orders": 707,
+      "clicks": 5330,
+      "shows": 93352,
+      "status": 9,
+      "drr": 10.1
+    },
+    "164391050": {
+      "nmId": 164391050,
+      "spend": 3797,
+      "orders": 75,
+      "clicks": 124,
+      "shows": 6901,
+      "status": 9,
+      "drr": 5.1
+    },
+    "321782514": {
+      "nmId": 321782514,
+      "spend": 90319,
+      "orders": 424,
+      "clicks": 3741,
+      "shows": 76466,
+      "status": 9,
+      "drr": 21.3
+    },
+    "212005646": {
+      "nmId": 212005646,
+      "spend": 73983,
+      "orders": 673,
+      "clicks": 5117,
+      "shows": 167107,
+      "status": 9,
+      "drr": 11.0
+    },
+    "288497987": {
+      "nmId": 288497987,
+      "spend": 63951,
+      "orders": 776,
+      "clicks": 5007,
+      "shows": 92783,
+      "status": 9,
+      "drr": 8.2
+    },
+    "328121083": {
+      "nmId": 328121083,
+      "spend": 12464,
+      "orders": 145,
+      "clicks": 1628,
+      "shows": 14503,
+      "status": 9,
+      "drr": 8.6
+    },
+    "328103995": {
+      "nmId": 328103995,
+      "spend": 668,
+      "orders": 66,
+      "clicks": 67,
+      "shows": 2444,
+      "status": 9,
+      "drr": 1.0
+    },
+    "255066954": {
+      "nmId": 255066954,
+      "spend": 2555,
+      "orders": 87,
+      "clicks": 75,
+      "shows": 4235,
+      "status": 9,
+      "drr": 2.9
+    },
+    "566940859": {
+      "nmId": 566940859,
+      "spend": 1,
+      "orders": 4,
+      "clicks": 1,
+      "shows": 8,
+      "status": 9,
+      "drr": 0.0
+    },
+    "328084669": {
+      "nmId": 328084669,
+      "spend": 1504,
+      "orders": 109,
+      "clicks": 121,
+      "shows": 4825,
+      "status": 9,
+      "drr": 1.4
+    },
+    "215456282": {
+      "nmId": 215456282,
+      "spend": 76971,
+      "orders": 980,
+      "clicks": 3908,
+      "shows": 35442,
+      "status": 9,
+      "drr": 7.9
+    },
+    "449708247": {
+      "nmId": 449708247,
+      "spend": 5,
+      "orders": 54,
+      "clicks": 4,
+      "shows": 24,
+      "status": 9,
+      "drr": 0.0
+    },
+    "142905787": {
+      "nmId": 142905787,
+      "spend": 7,
+      "orders": 36,
+      "clicks": 6,
+      "shows": 59,
+      "status": 9,
+      "drr": 0.0
+    },
+    "301072698": {
+      "nmId": 301072698,
+      "spend": 15441,
+      "orders": 193,
+      "clicks": 1497,
+      "shows": 19855,
+      "status": 9,
+      "drr": 8.0
+    },
+    "527920640": {
+      "nmId": 527920640,
+      "spend": 236820,
+      "orders": 558,
+      "clicks": 14898,
+      "shows": 1064555,
+      "status": 9,
+      "drr": 42.4
+    },
+    "255078349": {
+      "nmId": 255078349,
+      "spend": 53224,
+      "orders": 554,
+      "clicks": 4413,
+      "shows": 72973,
       "status": 9,
       "drr": 9.6
     },
@@ -8125,59 +8152,86 @@
       "status": 11,
       "drr": 0
     },
-    "321834819": {
-      "nmId": 321834819,
-      "spend": 8,
-      "orders": 42,
-      "clicks": 4,
-      "shows": 49,
-      "status": 9,
-      "drr": 0.0
-    },
-    "142807090": {
-      "nmId": 142807090,
-      "spend": 1,
-      "orders": 20,
-      "clicks": 1,
-      "shows": 6,
-      "status": 9,
-      "drr": 0.0
-    },
-    "566138180": {
-      "nmId": 566138180,
-      "spend": 28964,
-      "orders": 54,
-      "clicks": 718,
-      "shows": 23391,
-      "status": 9,
-      "drr": 53.6
-    },
-    "259873569": {
-      "nmId": 259873569,
-      "spend": 1,
+    "714942620": {
+      "nmId": 714942620,
+      "spend": 2,
       "orders": 0,
-      "clicks": 0,
-      "shows": 3,
+      "clicks": 1,
+      "shows": 16,
       "status": 11,
       "drr": 0
     },
     "259833340": {
       "nmId": 259833340,
       "spend": 0,
-      "orders": 2,
+      "orders": 3,
       "clicks": 0,
       "shows": 1,
       "status": 9,
       "drr": 0.0
     },
-    "788844804": {
-      "nmId": 788844804,
-      "spend": 648,
-      "orders": 21,
-      "clicks": 82,
-      "shows": 2812,
+    "161708530": {
+      "nmId": 161708530,
+      "spend": 10723,
+      "orders": 146,
+      "clicks": 1075,
+      "shows": 67345,
       "status": 9,
-      "drr": 3.1
+      "drr": 7.3
+    },
+    "697405820": {
+      "nmId": 697405820,
+      "spend": 712,
+      "orders": 12,
+      "clicks": 145,
+      "shows": 2490,
+      "status": 9,
+      "drr": 5.9
+    },
+    "933622167": {
+      "nmId": 933622167,
+      "spend": 80809,
+      "orders": 519,
+      "clicks": 4302,
+      "shows": 94113,
+      "status": 9,
+      "drr": 15.6
+    },
+    "115822290": {
+      "nmId": 115822290,
+      "spend": 11199,
+      "orders": 53,
+      "clicks": 439,
+      "shows": 63418,
+      "status": 9,
+      "drr": 21.1
+    },
+    "699645201": {
+      "nmId": 699645201,
+      "spend": 14,
+      "orders": 3,
+      "clicks": 1,
+      "shows": 48,
+      "status": 9,
+      "drr": 0.5
+    },
+    "498156978": {
+      "nmId": 498156978,
+      "spend": 75357,
+      "orders": 220,
+      "clicks": 4620,
+      "shows": 328488,
+      "status": 9,
+      "drr": 34.3
+    },
+    "214720811": {
+      "nmId": 214720811,
+      "spend": 3,
+      "orders": 1,
+      "clicks": 1,
+      "shows": 13,
+      "status": 9,
+      "drr": 0.3
     },
     "29743749": {
       "nmId": 29743749,
@@ -8188,41 +8242,50 @@
       "status": 11,
       "drr": 0
     },
-    "449817254": {
-      "nmId": 449817254,
-      "spend": 666,
-      "orders": 63,
-      "clicks": 45,
-      "shows": 2465,
-      "status": 9,
-      "drr": 1.1
-    },
-    "449742164": {
-      "nmId": 449742164,
-      "spend": 17852,
-      "orders": 531,
-      "clicks": 2153,
-      "shows": 119739,
-      "status": 9,
-      "drr": 3.4
-    },
-    "449716821": {
-      "nmId": 449716821,
-      "spend": 32196,
-      "orders": 209,
-      "clicks": 854,
-      "shows": 16983,
-      "status": 9,
-      "drr": 15.4
-    },
-    "786708018": {
-      "nmId": 786708018,
-      "spend": 0,
+    "141703950": {
+      "nmId": 141703950,
+      "spend": 5,
       "orders": 0,
-      "clicks": 0,
-      "shows": 1,
+      "clicks": 3,
+      "shows": 34,
       "status": 11,
       "drr": 0
+    },
+    "566138180": {
+      "nmId": 566138180,
+      "spend": 29016,
+      "orders": 55,
+      "clicks": 718,
+      "shows": 23431,
+      "status": 9,
+      "drr": 52.8
+    },
+    "328090490": {
+      "nmId": 328090490,
+      "spend": 22954,
+      "orders": 292,
+      "clicks": 1891,
+      "shows": 17311,
+      "status": 9,
+      "drr": 7.9
+    },
+    "656081013": {
+      "nmId": 656081013,
+      "spend": 31,
+      "orders": 5,
+      "clicks": 1,
+      "shows": 42,
+      "status": 9,
+      "drr": 0.6
+    },
+    "788727929": {
+      "nmId": 788727929,
+      "spend": 8107,
+      "orders": 60,
+      "clicks": 3411,
+      "shows": 90254,
+      "status": 9,
+      "drr": 13.5
     },
     "681472290": {
       "nmId": 681472290,
@@ -8242,6 +8305,150 @@
       "status": 9,
       "drr": 6.3
     },
+    "449817254": {
+      "nmId": 449817254,
+      "spend": 666,
+      "orders": 64,
+      "clicks": 45,
+      "shows": 2465,
+      "status": 9,
+      "drr": 1.0
+    },
+    "449716821": {
+      "nmId": 449716821,
+      "spend": 32196,
+      "orders": 207,
+      "clicks": 854,
+      "shows": 16983,
+      "status": 9,
+      "drr": 15.6
+    },
+    "603944614": {
+      "nmId": 603944614,
+      "spend": 80312,
+      "orders": 195,
+      "clicks": 3256,
+      "shows": 117551,
+      "status": 9,
+      "drr": 41.2
+    },
+    "30189556": {
+      "nmId": 30189556,
+      "spend": 185,
+      "orders": 61,
+      "clicks": 55,
+      "shows": 1589,
+      "status": 9,
+      "drr": 0.3
+    },
+    "136513559": {
+      "nmId": 136513559,
+      "spend": 11,
+      "orders": 59,
+      "clicks": 0,
+      "shows": 16,
+      "status": 9,
+      "drr": 0.0
+    },
+    "534435680": {
+      "nmId": 534435680,
+      "spend": 16169,
+      "orders": 141,
+      "clicks": 2235,
+      "shows": 88252,
+      "status": 9,
+      "drr": 11.5
+    },
+    "831907670": {
+      "nmId": 831907670,
+      "spend": 1143,
+      "orders": 20,
+      "clicks": 114,
+      "shows": 5086,
+      "status": 9,
+      "drr": 5.7
+    },
+    "822735241": {
+      "nmId": 822735241,
+      "spend": 631,
+      "orders": 19,
+      "clicks": 54,
+      "shows": 1791,
+      "status": 9,
+      "drr": 3.3
+    },
+    "832030050": {
+      "nmId": 832030050,
+      "spend": 2161,
+      "orders": 34,
+      "clicks": 415,
+      "shows": 12073,
+      "status": 9,
+      "drr": 6.4
+    },
+    "822751567": {
+      "nmId": 822751567,
+      "spend": 20,
+      "orders": 4,
+      "clicks": 4,
+      "shows": 132,
+      "status": 9,
+      "drr": 0.5
+    },
+    "624258829": {
+      "nmId": 624258829,
+      "spend": 177490,
+      "orders": 327,
+      "clicks": 6358,
+      "shows": 141872,
+      "status": 9,
+      "drr": 54.3
+    },
+    "195721178": {
+      "nmId": 195721178,
+      "spend": 796,
+      "orders": 63,
+      "clicks": 88,
+      "shows": 2277,
+      "status": 9,
+      "drr": 1.3
+    },
+    "131472745": {
+      "nmId": 131472745,
+      "spend": 657,
+      "orders": 38,
+      "clicks": 69,
+      "shows": 3523,
+      "status": 9,
+      "drr": 1.7
+    },
+    "677009256": {
+      "nmId": 677009256,
+      "spend": 18364,
+      "orders": 84,
+      "clicks": 1108,
+      "shows": 18972,
+      "status": 9,
+      "drr": 21.9
+    },
+    "498184213": {
+      "nmId": 498184213,
+      "spend": 28043,
+      "orders": 124,
+      "clicks": 1863,
+      "shows": 135347,
+      "status": 9,
+      "drr": 22.6
+    },
+    "455440273": {
+      "nmId": 455440273,
+      "spend": 574255,
+      "orders": 2512,
+      "clicks": 50737,
+      "shows": 2316435,
+      "status": 9,
+      "drr": 22.9
+    },
     "377482218": {
       "nmId": 377482218,
       "spend": 44,
@@ -8251,509 +8458,95 @@
       "status": 9,
       "drr": 4.4
     },
+    "451052444": {
+      "nmId": 451052444,
+      "spend": 14378,
+      "orders": 83,
+      "clicks": 699,
+      "shows": 27733,
+      "status": 9,
+      "drr": 17.3
+    },
     "78346400": {
       "nmId": 78346400,
       "spend": 16,
-      "orders": 9,
+      "orders": 8,
       "clicks": 3,
       "shows": 13,
       "status": 9,
       "drr": 0.2
-    },
-    "451052444": {
-      "nmId": 451052444,
-      "spend": 14372,
-      "orders": 85,
-      "clicks": 699,
-      "shows": 27731,
-      "status": 9,
-      "drr": 16.9
-    },
-    "161708530": {
-      "nmId": 161708530,
-      "spend": 10723,
-      "orders": 145,
-      "clicks": 1075,
-      "shows": 67343,
-      "status": 9,
-      "drr": 7.4
     },
     "820426026": {
       "nmId": 820426026,
-      "spend": 5652,
+      "spend": 5674,
       "orders": 13,
-      "clicks": 209,
-      "shows": 6293,
+      "clicks": 210,
+      "shows": 6313,
       "status": 9,
-      "drr": 43.5
+      "drr": 43.6
     },
-    "41323816": {
-      "nmId": 41323816,
-      "spend": 71225,
-      "orders": 706,
-      "clicks": 5315,
-      "shows": 93162,
+    "245585382": {
+      "nmId": 245585382,
+      "spend": 13485,
+      "orders": 59,
+      "clicks": 385,
+      "shows": 13234,
       "status": 9,
-      "drr": 10.1
+      "drr": 22.9
     },
-    "215456282": {
-      "nmId": 215456282,
-      "spend": 76952,
-      "orders": 965,
-      "clicks": 3906,
-      "shows": 35435,
-      "status": 9,
-      "drr": 8.0
-    },
-    "106682406": {
-      "nmId": 106682406,
-      "spend": 738,
-      "orders": 31,
-      "clicks": 244,
-      "shows": 6212,
-      "status": 9,
-      "drr": 2.4
-    },
-    "164385966": {
-      "nmId": 164385966,
-      "spend": 540599,
-      "orders": 6464,
-      "clicks": 26004,
-      "shows": 155877,
-      "status": 9,
-      "drr": 8.4
-    },
-    "534551749": {
-      "nmId": 534551749,
-      "spend": 3943,
-      "orders": 156,
-      "clicks": 466,
-      "shows": 26600,
-      "status": 9,
-      "drr": 2.5
-    },
-    "111036561": {
-      "nmId": 111036561,
-      "spend": 70515,
-      "orders": 383,
-      "clicks": 4540,
-      "shows": 338582,
-      "status": 9,
-      "drr": 18.4
-    },
-    "402654485": {
-      "nmId": 402654485,
-      "spend": 12198,
-      "orders": 146,
-      "clicks": 1055,
-      "shows": 74445,
-      "status": 9,
-      "drr": 8.4
-    },
-    "215461299": {
-      "nmId": 215461299,
-      "spend": 31787,
-      "orders": 145,
-      "clicks": 1057,
-      "shows": 19086,
-      "status": 9,
-      "drr": 21.9
-    },
-    "714942620": {
-      "nmId": 714942620,
-      "spend": 2,
-      "orders": 0,
-      "clicks": 1,
-      "shows": 16,
-      "status": 11,
-      "drr": 0
-    },
-    "214720811": {
-      "nmId": 214720811,
-      "spend": 3,
+    "259869224": {
+      "nmId": 259869224,
+      "spend": 11,
       "orders": 1,
-      "clicks": 1,
-      "shows": 13,
+      "clicks": 3,
+      "shows": 82,
       "status": 9,
-      "drr": 0.3
+      "drr": 1.1
     },
-    "288497987": {
-      "nmId": 288497987,
-      "spend": 63857,
-      "orders": 774,
-      "clicks": 4998,
-      "shows": 92645,
-      "status": 9,
-      "drr": 8.3
-    },
-    "164391050": {
-      "nmId": 164391050,
-      "spend": 3797,
-      "orders": 75,
-      "clicks": 124,
-      "shows": 6901,
-      "status": 9,
-      "drr": 5.1
-    },
-    "328103995": {
-      "nmId": 328103995,
-      "spend": 668,
-      "orders": 64,
-      "clicks": 67,
-      "shows": 2444,
+    "715951780": {
+      "nmId": 715951780,
+      "spend": 88,
+      "orders": 9,
+      "clicks": 15,
+      "shows": 742,
       "status": 9,
       "drr": 1.0
     },
-    "527920640": {
-      "nmId": 527920640,
-      "spend": 236658,
-      "orders": 558,
-      "clicks": 14876,
-      "shows": 1063387,
+    "168137942": {
+      "nmId": 168137942,
+      "spend": 155,
+      "orders": 18,
+      "clicks": 18,
+      "shows": 1468,
       "status": 9,
-      "drr": 42.4
+      "drr": 0.9
     },
-    "120686700": {
-      "nmId": 120686700,
-      "spend": 1121,
-      "orders": 344,
-      "clicks": 133,
-      "shows": 3434,
+    "321825140": {
+      "nmId": 321825140,
+      "spend": 7,
+      "orders": 6,
+      "clicks": 3,
+      "shows": 63,
       "status": 9,
-      "drr": 0.3
+      "drr": 0.1
     },
-    "301072698": {
-      "nmId": 301072698,
-      "spend": 15409,
-      "orders": 194,
-      "clicks": 1494,
-      "shows": 19817,
-      "status": 9,
-      "drr": 7.9
-    },
-    "566940859": {
-      "nmId": 566940859,
-      "spend": 1,
-      "orders": 4,
-      "clicks": 1,
-      "shows": 8,
-      "status": 9,
-      "drr": 0.0
-    },
-    "449708247": {
-      "nmId": 449708247,
-      "spend": 5,
-      "orders": 53,
-      "clicks": 4,
-      "shows": 24,
-      "status": 9,
-      "drr": 0.0
-    },
-    "729283424": {
-      "nmId": 729283424,
-      "spend": 132838,
-      "orders": 114,
-      "clicks": 1307,
-      "shows": 59155,
-      "status": 9,
-      "drr": 116.5
-    },
-    "968914637": {
-      "nmId": 968914637,
-      "spend": 13,
-      "orders": 0,
-      "clicks": 0,
-      "shows": 51,
-      "status": 9,
-      "drr": 0
-    },
-    "328090490": {
-      "nmId": 328090490,
-      "spend": 22887,
-      "orders": 288,
-      "clicks": 1885,
-      "shows": 17264,
-      "status": 9,
-      "drr": 7.9
-    },
-    "656081013": {
-      "nmId": 656081013,
-      "spend": 31,
-      "orders": 5,
-      "clicks": 1,
+    "161695636": {
+      "nmId": 161695636,
+      "spend": 27,
+      "orders": 120,
+      "clicks": 2,
       "shows": 42,
       "status": 9,
-      "drr": 0.6
-    },
-    "788727929": {
-      "nmId": 788727929,
-      "spend": 8099,
-      "orders": 55,
-      "clicks": 3408,
-      "shows": 90143,
-      "status": 9,
-      "drr": 14.7
-    },
-    "141703950": {
-      "nmId": 141703950,
-      "spend": 5,
-      "orders": 0,
-      "clicks": 3,
-      "shows": 34,
-      "status": 11,
-      "drr": 0
-    },
-    "697405820": {
-      "nmId": 697405820,
-      "spend": 712,
-      "orders": 12,
-      "clicks": 145,
-      "shows": 2490,
-      "status": 9,
-      "drr": 5.9
-    },
-    "498156978": {
-      "nmId": 498156978,
-      "spend": 75206,
-      "orders": 221,
-      "clicks": 4611,
-      "shows": 327878,
-      "status": 9,
-      "drr": 34.0
-    },
-    "115822290": {
-      "nmId": 115822290,
-      "spend": 11156,
-      "orders": 53,
-      "clicks": 439,
-      "shows": 63164,
-      "status": 9,
-      "drr": 21.0
-    },
-    "699645201": {
-      "nmId": 699645201,
-      "spend": 14,
-      "orders": 3,
-      "clicks": 1,
-      "shows": 48,
-      "status": 9,
-      "drr": 0.5
-    },
-    "480057647": {
-      "nmId": 480057647,
-      "spend": 2802,
-      "orders": 39,
-      "clicks": 531,
-      "shows": 23616,
-      "status": 9,
-      "drr": 7.2
-    },
-    "140347042": {
-      "nmId": 140347042,
-      "spend": 3,
-      "orders": 0,
-      "clicks": 1,
-      "shows": 25,
-      "status": 9,
-      "drr": 0
-    },
-    "358472577": {
-      "nmId": 358472577,
-      "spend": 26,
-      "orders": 1,
-      "clicks": 2,
-      "shows": 92,
-      "status": 11,
-      "drr": 2.6
-    },
-    "560813388": {
-      "nmId": 560813388,
-      "spend": 14960,
-      "orders": 201,
-      "clicks": 1657,
-      "shows": 18109,
-      "status": 9,
-      "drr": 7.4
-    },
-    "404222389": {
-      "nmId": 404222389,
-      "spend": 8,
-      "orders": 55,
-      "clicks": 16,
-      "shows": 53,
-      "status": 9,
       "drr": 0.0
     },
-    "999025426": {
-      "nmId": 999025426,
-      "spend": 8690,
-      "orders": 52,
-      "clicks": 1047,
-      "shows": 28096,
+    "402654485": {
+      "nmId": 402654485,
+      "spend": 12222,
+      "orders": 152,
+      "clicks": 1057,
+      "shows": 74660,
       "status": 9,
-      "drr": 16.7
-    },
-    "681674448": {
-      "nmId": 681674448,
-      "spend": 12,
-      "orders": 10,
-      "clicks": 10,
-      "shows": 98,
-      "status": 9,
-      "drr": 0.1
-    },
-    "161636271": {
-      "nmId": 161636271,
-      "spend": 2032,
-      "orders": 109,
-      "clicks": 226,
-      "shows": 4245,
-      "status": 9,
-      "drr": 1.9
-    },
-    "566039536": {
-      "nmId": 566039536,
-      "spend": 15645,
-      "orders": 47,
-      "clicks": 876,
-      "shows": 16357,
-      "status": 9,
-      "drr": 33.3
-    },
-    "955506932": {
-      "nmId": 955506932,
-      "spend": 300062,
-      "orders": 1580,
-      "clicks": 35301,
-      "shows": 1514606,
-      "status": 9,
-      "drr": 19.0
-    },
-    "569673686": {
-      "nmId": 569673686,
-      "spend": 55414,
-      "orders": 219,
-      "clicks": 2205,
-      "shows": 66778,
-      "status": 9,
-      "drr": 25.3
-    },
-    "152131805": {
-      "nmId": 152131805,
-      "spend": 7,
-      "orders": 11,
-      "clicks": 8,
-      "shows": 61,
-      "status": 9,
-      "drr": 0.1
-    },
-    "952751006": {
-      "nmId": 952751006,
-      "spend": 31870,
-      "orders": 188,
-      "clicks": 2328,
-      "shows": 208645,
-      "status": 9,
-      "drr": 17.0
-    },
-    "161695224": {
-      "nmId": 161695224,
-      "spend": 7929,
-      "orders": 103,
-      "clicks": 1147,
-      "shows": 40438,
-      "status": 9,
-      "drr": 7.7
-    },
-    "161672033": {
-      "nmId": 161672033,
-      "spend": 1062,
-      "orders": 28,
-      "clicks": 221,
-      "shows": 9015,
-      "status": 9,
-      "drr": 3.8
-    },
-    "102136669": {
-      "nmId": 102136669,
-      "spend": 204140,
-      "orders": 1695,
-      "clicks": 11463,
-      "shows": 115270,
-      "status": 9,
-      "drr": 12.0
-    },
-    "758409275": {
-      "nmId": 758409275,
-      "spend": 68,
-      "orders": 5,
-      "clicks": 0,
-      "shows": 188,
-      "status": 9,
-      "drr": 1.4
-    },
-    "758194743": {
-      "nmId": 758194743,
-      "spend": 16,
-      "orders": 8,
-      "clicks": 1,
-      "shows": 58,
-      "status": 9,
-      "drr": 0.2
-    },
-    "141540419": {
-      "nmId": 141540419,
-      "spend": 1,
-      "orders": 37,
-      "clicks": 0,
-      "shows": 3,
-      "status": 9,
-      "drr": 0.0
-    },
-    "30044395": {
-      "nmId": 30044395,
-      "spend": 6384,
-      "orders": 85,
-      "clicks": 637,
-      "shows": 10575,
-      "status": 9,
-      "drr": 7.5
-    },
-    "567006801": {
-      "nmId": 567006801,
-      "spend": 1,
-      "orders": 7,
-      "clicks": 0,
-      "shows": 12,
-      "status": 9,
-      "drr": 0.0
-    },
-    "54050044": {
-      "nmId": 54050044,
-      "spend": 1354,
-      "orders": 1,
-      "clicks": 29,
-      "shows": 1612,
-      "status": 9,
-      "drr": 135.4
-    },
-    "161636990": {
-      "nmId": 161636990,
-      "spend": 20701,
-      "orders": 177,
-      "clicks": 1246,
-      "shows": 18806,
-      "status": 9,
-      "drr": 11.7
-    },
-    "215433137": {
-      "nmId": 215433137,
-      "spend": 55,
-      "orders": 14,
-      "clicks": 6,
-      "shows": 187,
-      "status": 9,
-      "drr": 0.4
+      "drr": 8.0
     },
     "881326466": {
       "nmId": 881326466,
@@ -8764,23 +8557,95 @@
       "status": 9,
       "drr": 0.0
     },
-    "400556329": {
-      "nmId": 400556329,
-      "spend": 2,
-      "orders": 2,
-      "clicks": 0,
-      "shows": 16,
+    "152131805": {
+      "nmId": 152131805,
+      "spend": 7,
+      "orders": 11,
+      "clicks": 8,
+      "shows": 61,
       "status": 9,
       "drr": 0.1
     },
-    "259869224": {
-      "nmId": 259869224,
-      "spend": 11,
-      "orders": 0,
-      "clicks": 3,
-      "shows": 82,
+    "560813388": {
+      "nmId": 560813388,
+      "spend": 14984,
+      "orders": 202,
+      "clicks": 1661,
+      "shows": 18138,
+      "status": 9,
+      "drr": 7.4
+    },
+    "115821448": {
+      "nmId": 115821448,
+      "spend": 88336,
+      "orders": 705,
+      "clicks": 6624,
+      "shows": 458146,
+      "status": 9,
+      "drr": 12.5
+    },
+    "30044395": {
+      "nmId": 30044395,
+      "spend": 6405,
+      "orders": 86,
+      "clicks": 644,
+      "shows": 10614,
+      "status": 9,
+      "drr": 7.4
+    },
+    "161707334": {
+      "nmId": 161707334,
+      "spend": 4,
+      "orders": 46,
+      "clicks": 1,
+      "shows": 5,
+      "status": 9,
+      "drr": 0.0
+    },
+    "288702897": {
+      "nmId": 288702897,
+      "spend": 2,
+      "orders": 1,
+      "clicks": 2,
+      "shows": 10,
       "status": 11,
-      "drr": 0
+      "drr": 0.2
+    },
+    "144144869": {
+      "nmId": 144144869,
+      "spend": 130,
+      "orders": 36,
+      "clicks": 17,
+      "shows": 1107,
+      "status": 9,
+      "drr": 0.4
+    },
+    "161696690": {
+      "nmId": 161696690,
+      "spend": 8578,
+      "orders": 121,
+      "clicks": 620,
+      "shows": 12928,
+      "status": 9,
+      "drr": 7.1
+    },
+    "358472577": {
+      "nmId": 358472577,
+      "spend": 26,
+      "orders": 1,
+      "clicks": 2,
+      "shows": 92,
+      "status": 11,
+      "drr": 2.6
+    },
+    "569673686": {
+      "nmId": 569673686,
+      "spend": 55538,
+      "orders": 219,
+      "clicks": 2206,
+      "shows": 66918,
+      "status": 9,
+      "drr": 25.4
     },
     "279011425": {
       "nmId": 279011425,
@@ -8791,14 +8656,176 @@
       "status": 11,
       "drr": 0
     },
-    "168137942": {
-      "nmId": 168137942,
-      "spend": 155,
-      "orders": 18,
-      "clicks": 18,
-      "shows": 1468,
+    "400556329": {
+      "nmId": 400556329,
+      "spend": 2,
+      "orders": 2,
+      "clicks": 0,
+      "shows": 16,
       "status": 9,
-      "drr": 0.9
+      "drr": 0.1
+    },
+    "255100935": {
+      "nmId": 255100935,
+      "spend": 0,
+      "orders": 0,
+      "clicks": 1,
+      "shows": 2,
+      "status": 11,
+      "drr": 0
+    },
+    "955506932": {
+      "nmId": 955506932,
+      "spend": 300264,
+      "orders": 1581,
+      "clicks": 35327,
+      "shows": 1516147,
+      "status": 9,
+      "drr": 19.0
+    },
+    "161636271": {
+      "nmId": 161636271,
+      "spend": 2032,
+      "orders": 111,
+      "clicks": 226,
+      "shows": 4245,
+      "status": 9,
+      "drr": 1.8
+    },
+    "161672033": {
+      "nmId": 161672033,
+      "spend": 1064,
+      "orders": 28,
+      "clicks": 221,
+      "shows": 9030,
+      "status": 9,
+      "drr": 3.8
+    },
+    "161695224": {
+      "nmId": 161695224,
+      "spend": 7950,
+      "orders": 103,
+      "clicks": 1147,
+      "shows": 40539,
+      "status": 9,
+      "drr": 7.7
+    },
+    "102136669": {
+      "nmId": 102136669,
+      "spend": 204447,
+      "orders": 1677,
+      "clicks": 11481,
+      "shows": 115448,
+      "status": 9,
+      "drr": 12.2
+    },
+    "952751006": {
+      "nmId": 952751006,
+      "spend": 31923,
+      "orders": 188,
+      "clicks": 2332,
+      "shows": 209014,
+      "status": 9,
+      "drr": 17.0
+    },
+    "566039536": {
+      "nmId": 566039536,
+      "spend": 15679,
+      "orders": 47,
+      "clicks": 876,
+      "shows": 16388,
+      "status": 9,
+      "drr": 33.4
+    },
+    "758194743": {
+      "nmId": 758194743,
+      "spend": 16,
+      "orders": 8,
+      "clicks": 1,
+      "shows": 58,
+      "status": 9,
+      "drr": 0.2
+    },
+    "758409275": {
+      "nmId": 758409275,
+      "spend": 68,
+      "orders": 5,
+      "clicks": 0,
+      "shows": 188,
+      "status": 9,
+      "drr": 1.4
+    },
+    "681674448": {
+      "nmId": 681674448,
+      "spend": 12,
+      "orders": 10,
+      "clicks": 10,
+      "shows": 98,
+      "status": 9,
+      "drr": 0.1
+    },
+    "534551749": {
+      "nmId": 534551749,
+      "spend": 3955,
+      "orders": 155,
+      "clicks": 466,
+      "shows": 26675,
+      "status": 9,
+      "drr": 2.6
+    },
+    "999025426": {
+      "nmId": 999025426,
+      "spend": 8690,
+      "orders": 53,
+      "clicks": 1047,
+      "shows": 28096,
+      "status": 9,
+      "drr": 16.4
+    },
+    "30189558": {
+      "nmId": 30189558,
+      "spend": 5607,
+      "orders": 18,
+      "clicks": 312,
+      "shows": 36247,
+      "status": 9,
+      "drr": 31.2
+    },
+    "161565242": {
+      "nmId": 161565242,
+      "spend": 15768,
+      "orders": 196,
+      "clicks": 1667,
+      "shows": 84525,
+      "status": 9,
+      "drr": 8.0
+    },
+    "192807560": {
+      "nmId": 192807560,
+      "spend": 50448,
+      "orders": 127,
+      "clicks": 1687,
+      "shows": 222371,
+      "status": 9,
+      "drr": 39.7
+    },
+    "480057647": {
+      "nmId": 480057647,
+      "spend": 2807,
+      "orders": 38,
+      "clicks": 533,
+      "shows": 23653,
+      "status": 9,
+      "drr": 7.4
+    },
+    "140347042": {
+      "nmId": 140347042,
+      "spend": 3,
+      "orders": 0,
+      "clicks": 1,
+      "shows": 25,
+      "status": 9,
+      "drr": 0
     },
     "769081296": {
       "nmId": 769081296,
@@ -8811,237 +8838,75 @@
     },
     "118203193": {
       "nmId": 118203193,
-      "spend": 11669,
+      "spend": 11709,
       "orders": 103,
       "clicks": 939,
-      "shows": 78988,
+      "shows": 79257,
       "status": 9,
-      "drr": 11.3
+      "drr": 11.4
     },
     "568559289": {
       "nmId": 568559289,
-      "spend": 51710,
+      "spend": 51810,
       "orders": 115,
-      "clicks": 1626,
-      "shows": 50402,
+      "clicks": 1632,
+      "shows": 50527,
       "status": 9,
-      "drr": 45.0
+      "drr": 45.1
     },
     "119933902": {
       "nmId": 119933902,
-      "spend": 2627,
+      "spend": 2634,
       "orders": 22,
       "clicks": 90,
-      "shows": 17548,
+      "shows": 17593,
       "status": 9,
-      "drr": 11.9
+      "drr": 12.0
     },
-    "144144869": {
-      "nmId": 144144869,
-      "spend": 130,
-      "orders": 35,
-      "clicks": 17,
-      "shows": 1107,
-      "status": 9,
-      "drr": 0.4
-    },
-    "161696690": {
-      "nmId": 161696690,
-      "spend": 8532,
-      "orders": 120,
-      "clicks": 618,
-      "shows": 12846,
-      "status": 9,
-      "drr": 7.1
-    },
-    "715951780": {
-      "nmId": 715951780,
-      "spend": 88,
-      "orders": 9,
-      "clicks": 15,
-      "shows": 742,
-      "status": 9,
-      "drr": 1.0
-    },
-    "245585382": {
-      "nmId": 245585382,
-      "spend": 13437,
-      "orders": 59,
-      "clicks": 384,
-      "shows": 13186,
-      "status": 9,
-      "drr": 22.8
-    },
-    "255100935": {
-      "nmId": 255100935,
-      "spend": 0,
-      "orders": 0,
-      "clicks": 1,
-      "shows": 2,
-      "status": 11,
-      "drr": 0
-    },
-    "321825140": {
-      "nmId": 321825140,
-      "spend": 7,
-      "orders": 6,
-      "clicks": 3,
-      "shows": 63,
-      "status": 9,
-      "drr": 0.1
-    },
-    "288702897": {
-      "nmId": 288702897,
-      "spend": 2,
-      "orders": 1,
-      "clicks": 2,
-      "shows": 10,
-      "status": 11,
-      "drr": 0.2
-    },
-    "161565242": {
-      "nmId": 161565242,
-      "spend": 15728,
-      "orders": 195,
-      "clicks": 1665,
-      "shows": 84274,
-      "status": 9,
-      "drr": 8.1
-    },
-    "30189558": {
-      "nmId": 30189558,
-      "spend": 5599,
-      "orders": 18,
-      "clicks": 311,
-      "shows": 36185,
-      "status": 9,
-      "drr": 31.1
-    },
-    "788992396": {
-      "nmId": 788992396,
-      "spend": 21,
-      "orders": 14,
-      "clicks": 11,
-      "shows": 175,
-      "status": 9,
-      "drr": 0.1
-    },
-    "258272585": {
-      "nmId": 258272585,
-      "spend": 992,
-      "orders": 1,
-      "clicks": 19,
-      "shows": 1246,
-      "status": 11,
-      "drr": 99.2
-    },
-    "372647752": {
-      "nmId": 372647752,
-      "spend": 0,
-      "orders": 3,
+    "566074232": {
+      "nmId": 566074232,
+      "spend": 12,
+      "orders": 2,
       "clicks": 0,
-      "shows": 3,
+      "shows": 95,
       "status": 9,
-      "drr": 0.0
-    },
-    "451039750": {
-      "nmId": 451039750,
-      "spend": 29755,
-      "orders": 118,
-      "clicks": 2041,
-      "shows": 89903,
-      "status": 9,
-      "drr": 25.2
-    },
-    "128834846": {
-      "nmId": 128834846,
-      "spend": 9148,
-      "orders": 39,
-      "clicks": 524,
-      "shows": 10373,
-      "status": 9,
-      "drr": 23.5
-    },
-    "321867551": {
-      "nmId": 321867551,
-      "spend": 8075,
-      "orders": 51,
-      "clicks": 398,
-      "shows": 39135,
-      "status": 9,
-      "drr": 15.8
-    },
-    "111495893": {
-      "nmId": 111495893,
-      "spend": 5,
-      "orders": 24,
-      "clicks": 5,
-      "shows": 33,
-      "status": 9,
-      "drr": 0.0
-    },
-    "161709334": {
-      "nmId": 161709334,
-      "spend": 15664,
-      "orders": 241,
-      "clicks": 1693,
-      "shows": 31450,
-      "status": 9,
-      "drr": 6.5
-    },
-    "303745697": {
-      "nmId": 303745697,
-      "spend": 3358,
-      "orders": 7,
-      "clicks": 49,
-      "shows": 3954,
-      "status": 9,
-      "drr": 48.0
-    },
-    "848936282": {
-      "nmId": 848936282,
-      "spend": 28,
-      "orders": 3,
-      "clicks": 7,
-      "shows": 213,
-      "status": 9,
-      "drr": 0.9
-    },
-    "557730710": {
-      "nmId": 557730710,
-      "spend": 13015,
-      "orders": 52,
-      "clicks": 499,
-      "shows": 13491,
-      "status": 9,
-      "drr": 25.0
+      "drr": 0.6
     },
     "534265808": {
       "nmId": 534265808,
-      "spend": 44623,
+      "spend": 44626,
       "orders": 15,
       "clicks": 700,
-      "shows": 133096,
+      "shows": 133106,
       "status": 9,
       "drr": 297.5
     },
-    "330945599": {
-      "nmId": 330945599,
-      "spend": 26280,
-      "orders": 59,
-      "clicks": 500,
-      "shows": 16450,
+    "111036561": {
+      "nmId": 111036561,
+      "spend": 70549,
+      "orders": 384,
+      "clicks": 4543,
+      "shows": 338776,
+      "status": 9,
+      "drr": 18.4
+    },
+    "527920335": {
+      "nmId": 527920335,
+      "spend": 34697,
+      "orders": 78,
+      "clicks": 909,
+      "shows": 59751,
       "status": 9,
       "drr": 44.5
     },
-    "170675835": {
-      "nmId": 170675835,
-      "spend": 3255,
-      "orders": 33,
-      "clicks": 372,
-      "shows": 20719,
+    "330945599": {
+      "nmId": 330945599,
+      "spend": 26314,
+      "orders": 60,
+      "clicks": 500,
+      "shows": 16485,
       "status": 9,
-      "drr": 9.9
+      "drr": 43.9
     },
     "534217019": {
       "nmId": 534217019,
@@ -9052,14 +8917,185 @@
       "status": 9,
       "drr": 1.4
     },
-    "527920335": {
-      "nmId": 527920335,
-      "spend": 34670,
-      "orders": 78,
-      "clicks": 909,
-      "shows": 59684,
+    "215461299": {
+      "nmId": 215461299,
+      "spend": 31787,
+      "orders": 163,
+      "clicks": 1057,
+      "shows": 19086,
       "status": 9,
-      "drr": 44.4
+      "drr": 19.5
+    },
+    "171258247": {
+      "nmId": 171258247,
+      "spend": 224379,
+      "orders": 1723,
+      "clicks": 5399,
+      "shows": 73852,
+      "status": 9,
+      "drr": 13.0
+    },
+    "170675835": {
+      "nmId": 170675835,
+      "spend": 3266,
+      "orders": 33,
+      "clicks": 372,
+      "shows": 20781,
+      "status": 9,
+      "drr": 9.9
+    },
+    "164385966": {
+      "nmId": 164385966,
+      "spend": 541502,
+      "orders": 6700,
+      "clicks": 26052,
+      "shows": 156149,
+      "status": 9,
+      "drr": 8.1
+    },
+    "106682406": {
+      "nmId": 106682406,
+      "spend": 739,
+      "orders": 31,
+      "clicks": 245,
+      "shows": 6221,
+      "status": 9,
+      "drr": 2.4
+    },
+    "534382610": {
+      "nmId": 534382610,
+      "spend": 11794,
+      "orders": 15,
+      "clicks": 325,
+      "shows": 21626,
+      "status": 9,
+      "drr": 78.6
+    },
+    "143674624": {
+      "nmId": 143674624,
+      "spend": 8152,
+      "orders": 54,
+      "clicks": 697,
+      "shows": 47518,
+      "status": 9,
+      "drr": 15.1
+    },
+    "161709334": {
+      "nmId": 161709334,
+      "spend": 15683,
+      "orders": 242,
+      "clicks": 1694,
+      "shows": 31489,
+      "status": 9,
+      "drr": 6.5
+    },
+    "786654580": {
+      "nmId": 786654580,
+      "spend": 27380,
+      "orders": 63,
+      "clicks": 761,
+      "shows": 52658,
+      "status": 9,
+      "drr": 43.5
+    },
+    "258272585": {
+      "nmId": 258272585,
+      "spend": 992,
+      "orders": 1,
+      "clicks": 19,
+      "shows": 1246,
+      "status": 11,
+      "drr": 99.2
+    },
+    "848936282": {
+      "nmId": 848936282,
+      "spend": 28,
+      "orders": 3,
+      "clicks": 7,
+      "shows": 213,
+      "status": 9,
+      "drr": 0.9
+    },
+    "656145360": {
+      "nmId": 656145360,
+      "spend": 405,
+      "orders": 14,
+      "clicks": 43,
+      "shows": 1972,
+      "status": 9,
+      "drr": 2.9
+    },
+    "534534300": {
+      "nmId": 534534300,
+      "spend": 16,
+      "orders": 1,
+      "clicks": 3,
+      "shows": 86,
+      "status": 11,
+      "drr": 1.6
+    },
+    "788992396": {
+      "nmId": 788992396,
+      "spend": 21,
+      "orders": 14,
+      "clicks": 11,
+      "shows": 175,
+      "status": 9,
+      "drr": 0.1
+    },
+    "303745697": {
+      "nmId": 303745697,
+      "spend": 3361,
+      "orders": 7,
+      "clicks": 49,
+      "shows": 3959,
+      "status": 9,
+      "drr": 48.0
+    },
+    "114391690": {
+      "nmId": 114391690,
+      "spend": 0,
+      "orders": 2,
+      "clicks": 0,
+      "shows": 1,
+      "status": 9,
+      "drr": 0.0
+    },
+    "372647752": {
+      "nmId": 372647752,
+      "spend": 0,
+      "orders": 3,
+      "clicks": 0,
+      "shows": 3,
+      "status": 9,
+      "drr": 0.0
+    },
+    "119899275": {
+      "nmId": 119899275,
+      "spend": 1729,
+      "orders": 33,
+      "clicks": 62,
+      "shows": 3174,
+      "status": 9,
+      "drr": 5.2
+    },
+    "557730710": {
+      "nmId": 557730710,
+      "spend": 13044,
+      "orders": 53,
+      "clicks": 501,
+      "shows": 13518,
+      "status": 9,
+      "drr": 24.6
+    },
+    "128834846": {
+      "nmId": 128834846,
+      "spend": 9165,
+      "orders": 40,
+      "clicks": 528,
+      "shows": 10388,
+      "status": 9,
+      "drr": 22.9
     },
     "715893780": {
       "nmId": 715893780,
@@ -9072,75 +9108,30 @@
     },
     "172068710": {
       "nmId": 172068710,
-      "spend": 20314,
+      "spend": 20315,
       "orders": 321,
       "clicks": 2494,
-      "shows": 107380,
+      "shows": 107382,
       "status": 9,
       "drr": 6.3
     },
     "681646891": {
       "nmId": 681646891,
-      "spend": 48586,
-      "orders": 260,
-      "clicks": 2995,
-      "shows": 178707,
+      "spend": 48698,
+      "orders": 262,
+      "clicks": 3005,
+      "shows": 179157,
       "status": 9,
-      "drr": 18.7
+      "drr": 18.6
     },
     "461944901": {
       "nmId": 461944901,
-      "spend": 14602,
-      "orders": 45,
-      "clicks": 805,
-      "shows": 15030,
+      "spend": 14632,
+      "orders": 46,
+      "clicks": 806,
+      "shows": 15056,
       "status": 9,
-      "drr": 32.4
-    },
-    "642503439": {
-      "nmId": 642503439,
-      "spend": 1,
-      "orders": 0,
-      "clicks": 0,
-      "shows": 6,
-      "status": 11,
-      "drr": 0
-    },
-    "321789024": {
-      "nmId": 321789024,
-      "spend": 33337,
-      "orders": 203,
-      "clicks": 2012,
-      "shows": 100598,
-      "status": 9,
-      "drr": 16.4
-    },
-    "161697080": {
-      "nmId": 161697080,
-      "spend": 3,
-      "orders": 9,
-      "clicks": 1,
-      "shows": 32,
-      "status": 9,
-      "drr": 0.0
-    },
-    "321756385": {
-      "nmId": 321756385,
-      "spend": 788,
-      "orders": 19,
-      "clicks": 45,
-      "shows": 1959,
-      "status": 9,
-      "drr": 4.1
-    },
-    "715051664": {
-      "nmId": 715051664,
-      "spend": 7,
-      "orders": 9,
-      "clicks": 1,
-      "shows": 23,
-      "status": 9,
-      "drr": 0.1
+      "drr": 31.8
     },
     "681481895": {
       "nmId": 681481895,
@@ -9151,15 +9142,6 @@
       "status": 11,
       "drr": 15.7
     },
-    "681262511": {
-      "nmId": 681262511,
-      "spend": 4422,
-      "orders": 10,
-      "clicks": 113,
-      "shows": 4818,
-      "status": 9,
-      "drr": 44.2
-    },
     "881535444": {
       "nmId": 881535444,
       "spend": 14,
@@ -9169,212 +9151,32 @@
       "status": 11,
       "drr": 0.7
     },
-    "566074232": {
-      "nmId": 566074232,
-      "spend": 12,
-      "orders": 2,
-      "clicks": 0,
-      "shows": 95,
-      "status": 9,
-      "drr": 0.6
-    },
-    "656145360": {
-      "nmId": 656145360,
-      "spend": 405,
-      "orders": 13,
-      "clicks": 43,
-      "shows": 1972,
-      "status": 9,
-      "drr": 3.1
-    },
-    "119899275": {
-      "nmId": 119899275,
-      "spend": 1729,
-      "orders": 32,
-      "clicks": 62,
-      "shows": 3174,
-      "status": 9,
-      "drr": 5.4
-    },
-    "534534300": {
-      "nmId": 534534300,
-      "spend": 16,
-      "orders": 1,
-      "clicks": 3,
-      "shows": 86,
-      "status": 11,
-      "drr": 1.6
-    },
-    "114391690": {
-      "nmId": 114391690,
-      "spend": 0,
-      "orders": 3,
-      "clicks": 0,
-      "shows": 1,
-      "status": 9,
-      "drr": 0.0
-    },
-    "949271935": {
-      "nmId": 949271935,
-      "spend": 20,
-      "orders": 1,
-      "clicks": 0,
-      "shows": 55,
-      "status": 9,
-      "drr": 2.0
-    },
-    "788876360": {
-      "nmId": 788876360,
-      "spend": 651,
-      "orders": 8,
-      "clicks": 97,
-      "shows": 7946,
-      "status": 9,
-      "drr": 8.1
-    },
-    "788750198": {
-      "nmId": 788750198,
-      "spend": 1005,
-      "orders": 6,
-      "clicks": 151,
-      "shows": 12519,
-      "status": 9,
-      "drr": 16.7
-    },
-    "949032716": {
-      "nmId": 949032716,
-      "spend": 37,
-      "orders": 1,
-      "clicks": 0,
-      "shows": 137,
-      "status": 9,
-      "drr": 3.7
-    },
-    "258424424": {
-      "nmId": 258424424,
-      "spend": 28733,
-      "orders": 185,
-      "clicks": 1392,
-      "shows": 76459,
-      "status": 9,
-      "drr": 15.5
-    },
-    "455507054": {
-      "nmId": 455507054,
-      "spend": 49002,
-      "orders": 283,
-      "clicks": 2222,
-      "shows": 39625,
-      "status": 9,
-      "drr": 17.3
-    },
-    "140360077": {
-      "nmId": 140360077,
-      "spend": 7065,
-      "orders": 107,
-      "clicks": 917,
-      "shows": 42093,
-      "status": 9,
-      "drr": 6.6
-    },
-    "951731934": {
-      "nmId": 951731934,
-      "spend": 10,
-      "orders": 7,
-      "clicks": 0,
-      "shows": 19,
+    "715051664": {
+      "nmId": 715051664,
+      "spend": 7,
+      "orders": 9,
+      "clicks": 1,
+      "shows": 23,
       "status": 9,
       "drr": 0.1
     },
-    "120262417": {
-      "nmId": 120262417,
-      "spend": 2093,
-      "orders": 5,
-      "clicks": 54,
-      "shows": 935,
-      "status": 9,
-      "drr": 41.9
-    },
-    "328041176": {
-      "nmId": 328041176,
-      "spend": 283,
+    "681262511": {
+      "nmId": 681262511,
+      "spend": 4422,
       "orders": 10,
-      "clicks": 79,
-      "shows": 3530,
+      "clicks": 113,
+      "shows": 4818,
       "status": 9,
-      "drr": 2.8
+      "drr": 44.2
     },
-    "788909685": {
-      "nmId": 788909685,
-      "spend": 153,
-      "orders": 5,
-      "clicks": 12,
-      "shows": 1272,
-      "status": 9,
-      "drr": 3.1
-    },
-    "1136133506": {
-      "nmId": 1136133506,
-      "spend": 85002,
-      "orders": 643,
-      "clicks": 4254,
-      "shows": 140005,
-      "status": 9,
-      "drr": 13.2
-    },
-    "161656813": {
-      "nmId": 161656813,
-      "spend": 0,
-      "orders": 43,
-      "clicks": 0,
-      "shows": 1,
+    "111495893": {
+      "nmId": 111495893,
+      "spend": 5,
+      "orders": 25,
+      "clicks": 5,
+      "shows": 33,
       "status": 9,
       "drr": 0.0
-    },
-    "305475056": {
-      "nmId": 305475056,
-      "spend": 13,
-      "orders": 0,
-      "clicks": 0,
-      "shows": 32,
-      "status": 11,
-      "drr": 0
-    },
-    "786781197": {
-      "nmId": 786781197,
-      "spend": 13,
-      "orders": 0,
-      "clicks": 0,
-      "shows": 29,
-      "status": 11,
-      "drr": 0
-    },
-    "566852983": {
-      "nmId": 566852983,
-      "spend": 0,
-      "orders": 2,
-      "clicks": 4,
-      "shows": 5,
-      "status": 9,
-      "drr": 0.0
-    },
-    "258265125": {
-      "nmId": 258265125,
-      "spend": 5498,
-      "orders": 7,
-      "clicks": 166,
-      "shows": 25317,
-      "status": 9,
-      "drr": 78.5
-    },
-    "161674211": {
-      "nmId": 161674211,
-      "spend": 61,
-      "orders": 33,
-      "clicks": 0,
-      "shows": 43,
-      "status": 9,
-      "drr": 0.2
     },
     "161665733": {
       "nmId": 161665733,
@@ -9387,39 +9189,48 @@
     },
     "348492271": {
       "nmId": 348492271,
-      "spend": 403,
+      "spend": 404,
       "orders": 1,
       "clicks": 33,
-      "shows": 3147,
+      "shows": 3151,
       "status": 9,
-      "drr": 40.3
+      "drr": 40.4
     },
-    "656029675": {
-      "nmId": 656029675,
-      "spend": 755,
-      "orders": 10,
-      "clicks": 42,
-      "shows": 1816,
-      "status": 9,
-      "drr": 7.6
-    },
-    "901035667": {
-      "nmId": 901035667,
-      "spend": 23,
-      "orders": 2,
+    "161674211": {
+      "nmId": 161674211,
+      "spend": 61,
+      "orders": 35,
       "clicks": 0,
-      "shows": 62,
+      "shows": 43,
       "status": 9,
-      "drr": 1.1
-    },
-    "321843631": {
-      "nmId": 321843631,
-      "spend": 17,
-      "orders": 9,
-      "clicks": 0,
-      "shows": 38,
-      "status": 11,
       "drr": 0.2
+    },
+    "161656813": {
+      "nmId": 161656813,
+      "spend": 0,
+      "orders": 44,
+      "clicks": 0,
+      "shows": 1,
+      "status": 9,
+      "drr": 0.0
+    },
+    "151623977": {
+      "nmId": 151623977,
+      "spend": 16403,
+      "orders": 55,
+      "clicks": 812,
+      "shows": 16385,
+      "status": 9,
+      "drr": 29.8
+    },
+    "642503439": {
+      "nmId": 642503439,
+      "spend": 1,
+      "orders": 0,
+      "clicks": 0,
+      "shows": 6,
+      "status": 11,
+      "drr": 0
     },
     "786633712": {
       "nmId": 786633712,
@@ -9430,32 +9241,122 @@
       "status": 9,
       "drr": 1.1
     },
-    "143674624": {
-      "nmId": 143674624,
-      "spend": 8150,
-      "orders": 54,
-      "clicks": 697,
-      "shows": 47493,
+    "656029675": {
+      "nmId": 656029675,
+      "spend": 755,
+      "orders": 10,
+      "clicks": 42,
+      "shows": 1816,
       "status": 9,
-      "drr": 15.1
+      "drr": 7.6
     },
-    "534382610": {
-      "nmId": 534382610,
-      "spend": 11762,
-      "orders": 15,
-      "clicks": 325,
-      "shows": 21570,
+    "143674623": {
+      "nmId": 143674623,
+      "spend": 17060,
+      "orders": 89,
+      "clicks": 797,
+      "shows": 16474,
       "status": 9,
-      "drr": 78.4
+      "drr": 19.2
     },
-    "786654580": {
-      "nmId": 786654580,
-      "spend": 27362,
-      "orders": 63,
-      "clicks": 759,
-      "shows": 52612,
+    "328111573": {
+      "nmId": 328111573,
+      "spend": 1229,
+      "orders": 66,
+      "clicks": 473,
+      "shows": 15733,
       "status": 9,
-      "drr": 43.4
+      "drr": 1.9
+    },
+    "901035667": {
+      "nmId": 901035667,
+      "spend": 23,
+      "orders": 4,
+      "clicks": 0,
+      "shows": 62,
+      "status": 9,
+      "drr": 0.6
+    },
+    "566852983": {
+      "nmId": 566852983,
+      "spend": 0,
+      "orders": 2,
+      "clicks": 4,
+      "shows": 5,
+      "status": 9,
+      "drr": 0.0
+    },
+    "667729236": {
+      "nmId": 667729236,
+      "spend": 13145,
+      "orders": 81,
+      "clicks": 1839,
+      "shows": 70770,
+      "status": 9,
+      "drr": 16.2
+    },
+    "258424424": {
+      "nmId": 258424424,
+      "spend": 28733,
+      "orders": 185,
+      "clicks": 1392,
+      "shows": 76459,
+      "status": 9,
+      "drr": 15.5
+    },
+    "455507054": {
+      "nmId": 455507054,
+      "spend": 49003,
+      "orders": 281,
+      "clicks": 2222,
+      "shows": 39627,
+      "status": 9,
+      "drr": 17.4
+    },
+    "140360077": {
+      "nmId": 140360077,
+      "spend": 7080,
+      "orders": 107,
+      "clicks": 920,
+      "shows": 42184,
+      "status": 9,
+      "drr": 6.6
+    },
+    "1136133506": {
+      "nmId": 1136133506,
+      "spend": 85012,
+      "orders": 644,
+      "clicks": 4254,
+      "shows": 140021,
+      "status": 9,
+      "drr": 13.2
+    },
+    "161707757": {
+      "nmId": 161707757,
+      "spend": 1970,
+      "orders": 79,
+      "clicks": 505,
+      "shows": 18828,
+      "status": 9,
+      "drr": 2.5
+    },
+    "305475056": {
+      "nmId": 305475056,
+      "spend": 13,
+      "orders": 0,
+      "clicks": 0,
+      "shows": 32,
+      "status": 11,
+      "drr": 0
+    },
+    "328041176": {
+      "nmId": 328041176,
+      "spend": 283,
+      "orders": 10,
+      "clicks": 79,
+      "shows": 3532,
+      "status": 9,
+      "drr": 2.8
     },
     "70066424": {
       "nmId": 70066424,
@@ -9468,12 +9369,84 @@
     },
     "255029477": {
       "nmId": 255029477,
-      "spend": 25657,
-      "orders": 231,
-      "clicks": 1571,
-      "shows": 41923,
+      "spend": 25697,
+      "orders": 232,
+      "clicks": 1575,
+      "shows": 41990,
       "status": 9,
       "drr": 11.1
+    },
+    "788909685": {
+      "nmId": 788909685,
+      "spend": 154,
+      "orders": 5,
+      "clicks": 12,
+      "shows": 1273,
+      "status": 9,
+      "drr": 3.1
+    },
+    "788781501": {
+      "nmId": 788781501,
+      "spend": 34968,
+      "orders": 101,
+      "clicks": 1414,
+      "shows": 27466,
+      "status": 9,
+      "drr": 34.6
+    },
+    "786781197": {
+      "nmId": 786781197,
+      "spend": 13,
+      "orders": 0,
+      "clicks": 0,
+      "shows": 29,
+      "status": 11,
+      "drr": 0
+    },
+    "164391784": {
+      "nmId": 164391784,
+      "spend": 821,
+      "orders": 23,
+      "clicks": 13,
+      "shows": 2821,
+      "status": 9,
+      "drr": 3.6
+    },
+    "788876360": {
+      "nmId": 788876360,
+      "spend": 653,
+      "orders": 8,
+      "clicks": 97,
+      "shows": 7963,
+      "status": 9,
+      "drr": 8.2
+    },
+    "949032716": {
+      "nmId": 949032716,
+      "spend": 37,
+      "orders": 1,
+      "clicks": 0,
+      "shows": 137,
+      "status": 9,
+      "drr": 3.7
+    },
+    "788750198": {
+      "nmId": 788750198,
+      "spend": 1007,
+      "orders": 6,
+      "clicks": 151,
+      "shows": 12548,
+      "status": 9,
+      "drr": 16.8
+    },
+    "949271935": {
+      "nmId": 949271935,
+      "spend": 20,
+      "orders": 1,
+      "clicks": 0,
+      "shows": 55,
+      "status": 9,
+      "drr": 2.0
     },
     "584926424": {
       "nmId": 584926424,
@@ -9487,11 +9460,11 @@
     "299455566": {
       "nmId": 299455566,
       "spend": 584,
-      "orders": 17,
+      "orders": 18,
       "clicks": 46,
       "shows": 2258,
       "status": 9,
-      "drr": 3.4
+      "drr": 3.2
     },
     "533417944": {
       "nmId": 533417944,
@@ -9499,78 +9472,6 @@
       "orders": 8,
       "clicks": 1,
       "shows": 23,
-      "status": 9,
-      "drr": 0.1
-    },
-    "214732507": {
-      "nmId": 214732507,
-      "spend": 0,
-      "orders": 3,
-      "clicks": 0,
-      "shows": 3,
-      "status": 9,
-      "drr": 0.0
-    },
-    "948818682": {
-      "nmId": 948818682,
-      "spend": 23,
-      "orders": 1,
-      "clicks": 2,
-      "shows": 59,
-      "status": 9,
-      "drr": 2.3
-    },
-    "321749848": {
-      "nmId": 321749848,
-      "spend": 1,
-      "orders": 2,
-      "clicks": 0,
-      "shows": 3,
-      "status": 9,
-      "drr": 0.0
-    },
-    "161707757": {
-      "nmId": 161707757,
-      "spend": 1968,
-      "orders": 77,
-      "clicks": 503,
-      "shows": 18799,
-      "status": 9,
-      "drr": 2.6
-    },
-    "667729236": {
-      "nmId": 667729236,
-      "spend": 13121,
-      "orders": 81,
-      "clicks": 1837,
-      "shows": 70632,
-      "status": 9,
-      "drr": 16.2
-    },
-    "822655388": {
-      "nmId": 822655388,
-      "spend": 19,
-      "orders": 3,
-      "clicks": 0,
-      "shows": 112,
-      "status": 9,
-      "drr": 0.6
-    },
-    "710405211": {
-      "nmId": 710405211,
-      "spend": 28644,
-      "orders": 84,
-      "clicks": 1023,
-      "shows": 37175,
-      "status": 9,
-      "drr": 34.1
-    },
-    "969689782": {
-      "nmId": 969689782,
-      "spend": 5,
-      "orders": 6,
-      "clicks": 0,
-      "shows": 10,
       "status": 9,
       "drr": 0.1
     },
@@ -9583,122 +9484,77 @@
       "status": 11,
       "drr": 0
     },
-    "901297875": {
-      "nmId": 901297875,
-      "spend": 32,
-      "orders": 1,
-      "clicks": 1,
-      "shows": 59,
+    "321843631": {
+      "nmId": 321843631,
+      "spend": 17,
+      "orders": 9,
+      "clicks": 0,
+      "shows": 38,
       "status": 11,
-      "drr": 3.2
+      "drr": 0.2
     },
-    "321809942": {
-      "nmId": 321809942,
-      "spend": 6408,
-      "orders": 0,
-      "clicks": 19,
-      "shows": 2410,
-      "status": 11,
-      "drr": 0
+    "451039750": {
+      "nmId": 451039750,
+      "spend": 12883,
+      "orders": 64,
+      "clicks": 1298,
+      "shows": 72854,
+      "status": 9,
+      "drr": 20.1
     },
-    "505652688": {
-      "nmId": 505652688,
-      "spend": 3105,
-      "orders": 23,
-      "clicks": 211,
-      "shows": 5297,
+    "321867551": {
+      "nmId": 321867551,
+      "spend": 8077,
+      "orders": 60,
+      "clicks": 398,
+      "shows": 39151,
       "status": 9,
       "drr": 13.5
     },
-    "788364494": {
-      "nmId": 788364494,
+    "258265125": {
+      "nmId": 258265125,
+      "spend": 5512,
+      "orders": 7,
+      "clicks": 166,
+      "shows": 25389,
+      "status": 9,
+      "drr": 78.7
+    },
+    "214732507": {
+      "nmId": 214732507,
       "spend": 0,
-      "orders": 2,
+      "orders": 3,
       "clicks": 0,
-      "shows": 1,
+      "shows": 3,
       "status": 9,
       "drr": 0.0
     },
-    "161647787": {
-      "nmId": 161647787,
-      "spend": 26,
-      "orders": 1,
+    "951731934": {
+      "nmId": 951731934,
+      "spend": 10,
+      "orders": 7,
       "clicks": 0,
-      "shows": 57,
-      "status": 9,
-      "drr": 2.6
-    },
-    "715940920": {
-      "nmId": 715940920,
-      "spend": 32,
-      "orders": 1,
-      "clicks": 2,
-      "shows": 125,
-      "status": 11,
-      "drr": 3.2
-    },
-    "972242130": {
-      "nmId": 972242130,
-      "spend": 47,
-      "orders": 8,
-      "clicks": 3,
-      "shows": 132,
-      "status": 9,
-      "drr": 0.6
-    },
-    "277575503": {
-      "nmId": 277575503,
-      "spend": 16862,
-      "orders": 17,
-      "clicks": 527,
-      "shows": 95920,
-      "status": 9,
-      "drr": 99.2
-    },
-    "771043125": {
-      "nmId": 771043125,
-      "spend": 41657,
-      "orders": 36,
-      "clicks": 1176,
-      "shows": 41735,
-      "status": 9,
-      "drr": 115.7
-    },
-    "732857504": {
-      "nmId": 732857504,
-      "spend": 70690,
-      "orders": 82,
-      "clicks": 2189,
-      "shows": 82682,
-      "status": 9,
-      "drr": 86.2
-    },
-    "161672951": {
-      "nmId": 161672951,
-      "spend": 0,
-      "orders": 5,
-      "clicks": 0,
-      "shows": 1,
-      "status": 9,
-      "drr": 0.0
-    },
-    "516922870": {
-      "nmId": 516922870,
-      "spend": 29,
-      "orders": 36,
-      "clicks": 1,
-      "shows": 20,
+      "shows": 19,
       "status": 9,
       "drr": 0.1
     },
-    "949244640": {
-      "nmId": 949244640,
-      "spend": 96,
-      "orders": 0,
-      "clicks": 0,
-      "shows": 335,
+    "321789024": {
+      "nmId": 321789024,
+      "spend": 21916,
+      "orders": 165,
+      "clicks": 1581,
+      "shows": 90479,
       "status": 9,
-      "drr": 0
+      "drr": 13.3
+    },
+    "120262417": {
+      "nmId": 120262417,
+      "spend": 2093,
+      "orders": 5,
+      "clicks": 54,
+      "shows": 935,
+      "status": 9,
+      "drr": 41.9
     },
     "831790996": {
       "nmId": 831790996,
@@ -9708,6 +9564,15 @@
       "shows": 2941,
       "status": 9,
       "drr": 3.6
+    },
+    "161647787": {
+      "nmId": 161647787,
+      "spend": 26,
+      "orders": 1,
+      "clicks": 0,
+      "shows": 57,
+      "status": 9,
+      "drr": 2.6
     },
     "955700168": {
       "nmId": 955700168,
@@ -9727,6 +9592,132 @@
       "status": 11,
       "drr": 0
     },
+    "822655388": {
+      "nmId": 822655388,
+      "spend": 19,
+      "orders": 4,
+      "clicks": 0,
+      "shows": 112,
+      "status": 9,
+      "drr": 0.5
+    },
+    "710405211": {
+      "nmId": 710405211,
+      "spend": 28699,
+      "orders": 85,
+      "clicks": 1026,
+      "shows": 37248,
+      "status": 9,
+      "drr": 33.8
+    },
+    "901297875": {
+      "nmId": 901297875,
+      "spend": 32,
+      "orders": 1,
+      "clicks": 1,
+      "shows": 59,
+      "status": 11,
+      "drr": 3.2
+    },
+    "948818682": {
+      "nmId": 948818682,
+      "spend": 23,
+      "orders": 1,
+      "clicks": 2,
+      "shows": 59,
+      "status": 9,
+      "drr": 2.3
+    },
+    "715940920": {
+      "nmId": 715940920,
+      "spend": 32,
+      "orders": 1,
+      "clicks": 2,
+      "shows": 125,
+      "status": 11,
+      "drr": 3.2
+    },
+    "516922870": {
+      "nmId": 516922870,
+      "spend": 29,
+      "orders": 36,
+      "clicks": 1,
+      "shows": 20,
+      "status": 9,
+      "drr": 0.1
+    },
+    "972242130": {
+      "nmId": 972242130,
+      "spend": 47,
+      "orders": 8,
+      "clicks": 3,
+      "shows": 132,
+      "status": 9,
+      "drr": 0.6
+    },
+    "277575503": {
+      "nmId": 277575503,
+      "spend": 16893,
+      "orders": 17,
+      "clicks": 527,
+      "shows": 96102,
+      "status": 9,
+      "drr": 99.4
+    },
+    "771043125": {
+      "nmId": 771043125,
+      "spend": 41714,
+      "orders": 36,
+      "clicks": 1179,
+      "shows": 41800,
+      "status": 9,
+      "drr": 115.9
+    },
+    "161672951": {
+      "nmId": 161672951,
+      "spend": 0,
+      "orders": 5,
+      "clicks": 0,
+      "shows": 1,
+      "status": 9,
+      "drr": 0.0
+    },
+    "732857504": {
+      "nmId": 732857504,
+      "spend": 70807,
+      "orders": 82,
+      "clicks": 2191,
+      "shows": 82824,
+      "status": 9,
+      "drr": 86.3
+    },
+    "321749848": {
+      "nmId": 321749848,
+      "spend": 1,
+      "orders": 1,
+      "clicks": 0,
+      "shows": 3,
+      "status": 9,
+      "drr": 0.1
+    },
+    "161698192": {
+      "nmId": 161698192,
+      "spend": 12695,
+      "orders": 25,
+      "clicks": 303,
+      "shows": 10522,
+      "status": 9,
+      "drr": 50.8
+    },
+    "969689782": {
+      "nmId": 969689782,
+      "spend": 5,
+      "orders": 6,
+      "clicks": 0,
+      "shows": 10,
+      "status": 9,
+      "drr": 0.1
+    },
     "299450710": {
       "nmId": 299450710,
       "spend": 3,
@@ -9736,59 +9727,50 @@
       "status": 9,
       "drr": 0.1
     },
-    "161698192": {
-      "nmId": 161698192,
-      "spend": 12663,
-      "orders": 25,
-      "clicks": 303,
-      "shows": 10494,
+    "505652688": {
+      "nmId": 505652688,
+      "spend": 3110,
+      "orders": 23,
+      "clicks": 211,
+      "shows": 5305,
       "status": 9,
-      "drr": 50.7
+      "drr": 13.5
     },
-    "111428910": {
-      "nmId": 111428910,
-      "spend": 14632,
-      "orders": 24,
-      "clicks": 452,
-      "shows": 14262,
+    "161697080": {
+      "nmId": 161697080,
+      "spend": 3,
+      "orders": 8,
+      "clicks": 1,
+      "shows": 32,
       "status": 9,
-      "drr": 61.0
+      "drr": 0.0
     },
-    "533576652": {
-      "nmId": 533576652,
-      "spend": 24305,
-      "orders": 205,
-      "clicks": 1170,
-      "shows": 31158,
+    "788364494": {
+      "nmId": 788364494,
+      "spend": 14424,
+      "orders": 40,
+      "clicks": 731,
+      "shows": 17678,
       "status": 9,
-      "drr": 11.9
+      "drr": 36.1
     },
-    "300260937": {
-      "nmId": 300260937,
-      "spend": 1117,
-      "orders": 24,
-      "clicks": 206,
-      "shows": 9528,
-      "status": 9,
-      "drr": 4.7
-    },
-    "299459809": {
-      "nmId": 299459809,
-      "spend": 509,
+    "949244640": {
+      "nmId": 949244640,
+      "spend": 96,
       "orders": 0,
-      "clicks": 62,
-      "shows": 3941,
+      "clicks": 0,
+      "shows": 335,
       "status": 9,
       "drr": 0
     },
-    "901017956": {
-      "nmId": 901017956,
-      "spend": 31,
-      "orders": 3,
-      "clicks": 3,
-      "shows": 92,
+    "321809942": {
+      "nmId": 321809942,
+      "spend": 6412,
+      "orders": 0,
+      "clicks": 19,
+      "shows": 2412,
       "status": 11,
-      "drr": 1.0
+      "drr": 0
     },
     "948937685": {
       "nmId": 948937685,
@@ -9799,33 +9781,6 @@
       "status": 9,
       "drr": 0
     },
-    "321871765": {
-      "nmId": 321871765,
-      "spend": 58092,
-      "orders": 311,
-      "clicks": 1155,
-      "shows": 23266,
-      "status": 9,
-      "drr": 18.7
-    },
-    "451068100": {
-      "nmId": 451068100,
-      "spend": 11526,
-      "orders": 152,
-      "clicks": 891,
-      "shows": 15834,
-      "status": 9,
-      "drr": 7.6
-    },
-    "583707520": {
-      "nmId": 583707520,
-      "spend": 3,
-      "orders": 1,
-      "clicks": 2,
-      "shows": 6,
-      "status": 9,
-      "drr": 0.3
-    },
     "505685732": {
       "nmId": 505685732,
       "spend": 484,
@@ -9835,14 +9790,14 @@
       "status": 9,
       "drr": 48.4
     },
-    "321741864": {
-      "nmId": 321741864,
-      "spend": 11,
-      "orders": 0,
-      "clicks": 0,
-      "shows": 4,
-      "status": 11,
-      "drr": 0
+    "771337729": {
+      "nmId": 771337729,
+      "spend": 23813,
+      "orders": 68,
+      "clicks": 1398,
+      "shows": 117304,
+      "status": 9,
+      "drr": 35.0
     },
     "505660356": {
       "nmId": 505660356,
@@ -9853,14 +9808,113 @@
       "status": 11,
       "drr": 0
     },
-    "771337729": {
-      "nmId": 771337729,
-      "spend": 23748,
-      "orders": 68,
-      "clicks": 1395,
-      "shows": 116942,
+    "300260937": {
+      "nmId": 300260937,
+      "spend": 1117,
+      "orders": 25,
+      "clicks": 206,
+      "shows": 9528,
       "status": 9,
-      "drr": 34.9
+      "drr": 4.5
+    },
+    "111428910": {
+      "nmId": 111428910,
+      "spend": 14655,
+      "orders": 25,
+      "clicks": 452,
+      "shows": 14283,
+      "status": 9,
+      "drr": 58.6
+    },
+    "299459809": {
+      "nmId": 299459809,
+      "spend": 509,
+      "orders": 0,
+      "clicks": 62,
+      "shows": 3945,
+      "status": 9,
+      "drr": 0
+    },
+    "321741864": {
+      "nmId": 321741864,
+      "spend": 11,
+      "orders": 0,
+      "clicks": 0,
+      "shows": 4,
+      "status": 11,
+      "drr": 0
+    },
+    "583707520": {
+      "nmId": 583707520,
+      "spend": 3,
+      "orders": 1,
+      "clicks": 2,
+      "shows": 6,
+      "status": 9,
+      "drr": 0.3
+    },
+    "321756385": {
+      "nmId": 321756385,
+      "spend": 788,
+      "orders": 19,
+      "clicks": 45,
+      "shows": 1960,
+      "status": 9,
+      "drr": 4.1
+    },
+    "901017956": {
+      "nmId": 901017956,
+      "spend": 31,
+      "orders": 3,
+      "clicks": 3,
+      "shows": 92,
+      "status": 11,
+      "drr": 1.0
+    },
+    "243921929": {
+      "nmId": 243921929,
+      "spend": 9005,
+      "orders": 12,
+      "clicks": 459,
+      "shows": 39112,
+      "status": 9,
+      "drr": 75.0
+    },
+    "258262853": {
+      "nmId": 258262853,
+      "spend": 699,
+      "orders": 1,
+      "clicks": 6,
+      "shows": 995,
+      "status": 9,
+      "drr": 69.9
+    },
+    "901036829": {
+      "nmId": 901036829,
+      "spend": 332,
+      "orders": 24,
+      "clicks": 70,
+      "shows": 2815,
+      "status": 9,
+      "drr": 1.4
+    },
+    "161635633": {
+      "nmId": 161635633,
+      "spend": 1703,
+      "orders": 18,
+      "clicks": 177,
+      "shows": 14437,
+      "status": 9,
+      "drr": 9.5
+    },
+    "697361393": {
+      "nmId": 697361393,
+      "spend": 23,
+      "orders": 0,
+      "clicks": 3,
+      "shows": 66,
+      "status": 9,
+      "drr": 0
     },
     "471400421": {
       "nmId": 471400421,
@@ -9880,194 +9934,113 @@
       "status": 9,
       "drr": 484.9
     },
-    "243921929": {
-      "nmId": 243921929,
-      "spend": 8991,
-      "orders": 12,
-      "clicks": 458,
-      "shows": 39042,
-      "status": 9,
-      "drr": 74.9
-    },
-    "839945629": {
-      "nmId": 839945629,
-      "spend": 26049,
-      "orders": 51,
-      "clicks": 708,
-      "shows": 26097,
-      "status": 9,
-      "drr": 51.1
-    },
-    "699496634": {
-      "nmId": 699496634,
-      "spend": 571,
-      "orders": 5,
+    "120006479": {
+      "nmId": 120006479,
+      "spend": 2107,
+      "orders": 11,
       "clicks": 92,
-      "shows": 4917,
+      "shows": 17578,
       "status": 9,
-      "drr": 11.4
-    },
-    "258262853": {
-      "nmId": 258262853,
-      "spend": 699,
-      "orders": 1,
-      "clicks": 6,
-      "shows": 995,
-      "status": 9,
-      "drr": 69.9
-    },
-    "161702629": {
-      "nmId": 161702629,
-      "spend": 77620,
-      "orders": 282,
-      "clicks": 3243,
-      "shows": 93702,
-      "status": 9,
-      "drr": 27.5
-    },
-    "901036829": {
-      "nmId": 901036829,
-      "spend": 332,
-      "orders": 20,
-      "clicks": 70,
-      "shows": 2815,
-      "status": 9,
-      "drr": 1.7
-    },
-    "697361393": {
-      "nmId": 697361393,
-      "spend": 23,
-      "orders": 0,
-      "clicks": 3,
-      "shows": 66,
-      "status": 9,
-      "drr": 0
-    },
-    "853049612": {
-      "nmId": 853049612,
-      "spend": 62937,
-      "orders": 79,
-      "clicks": 2636,
-      "shows": 197542,
-      "status": 9,
-      "drr": 79.7
-    },
-    "788481162": {
-      "nmId": 788481162,
-      "spend": 21234,
-      "orders": 61,
-      "clicks": 2981,
-      "shows": 148795,
-      "status": 9,
-      "drr": 34.8
+      "drr": 19.2
     },
     "258300919": {
       "nmId": 258300919,
       "spend": 920,
-      "orders": 6,
+      "orders": 7,
       "clicks": 35,
       "shows": 1365,
       "status": 9,
-      "drr": 15.3
-    },
-    "120006479": {
-      "nmId": 120006479,
-      "spend": 2104,
-      "orders": 11,
-      "clicks": 92,
-      "shows": 17556,
-      "status": 9,
-      "drr": 19.1
-    },
-    "681598236": {
-      "nmId": 681598236,
-      "spend": 54579,
-      "orders": 217,
-      "clicks": 2235,
-      "shows": 169276,
-      "status": 9,
-      "drr": 25.2
-    },
-    "681644959": {
-      "nmId": 681644959,
-      "spend": 18010,
-      "orders": 43,
-      "clicks": 713,
-      "shows": 32204,
-      "status": 9,
-      "drr": 41.9
-    },
-    "109787865": {
-      "nmId": 109787865,
-      "spend": 7531,
-      "orders": 42,
-      "clicks": 312,
-      "shows": 44621,
-      "status": 9,
-      "drr": 17.9
-    },
-    "115826544": {
-      "nmId": 115826544,
-      "spend": 31393,
-      "orders": 29,
-      "clicks": 480,
-      "shows": 49034,
-      "status": 9,
-      "drr": 108.3
-    },
-    "258023126": {
-      "nmId": 258023126,
-      "spend": 14246,
-      "orders": 20,
-      "clicks": 746,
-      "shows": 50172,
-      "status": 9,
-      "drr": 71.2
-    },
-    "161560998": {
-      "nmId": 161560998,
-      "spend": 18546,
-      "orders": 109,
-      "clicks": 948,
-      "shows": 36387,
-      "status": 9,
-      "drr": 17.0
-    },
-    "560838839": {
-      "nmId": 560838839,
-      "spend": 7564,
-      "orders": 22,
-      "clicks": 328,
-      "shows": 8468,
-      "status": 9,
-      "drr": 34.4
-    },
-    "258047671": {
-      "nmId": 258047671,
-      "spend": 2110,
-      "orders": 13,
-      "clicks": 113,
-      "shows": 15137,
-      "status": 9,
-      "drr": 16.2
+      "drr": 13.1
     },
     "161707577": {
       "nmId": 161707577,
-      "spend": 6792,
-      "orders": 28,
+      "spend": 6818,
+      "orders": 29,
       "clicks": 567,
-      "shows": 36144,
+      "shows": 36276,
       "status": 9,
-      "drr": 24.3
+      "drr": 23.5
+    },
+    "161702629": {
+      "nmId": 161702629,
+      "spend": 77757,
+      "orders": 282,
+      "clicks": 3247,
+      "shows": 93845,
+      "status": 9,
+      "drr": 27.6
+    },
+    "788481162": {
+      "nmId": 788481162,
+      "spend": 21248,
+      "orders": 61,
+      "clicks": 2982,
+      "shows": 148950,
+      "status": 9,
+      "drr": 34.8
+    },
+    "853049612": {
+      "nmId": 853049612,
+      "spend": 63040,
+      "orders": 79,
+      "clicks": 2638,
+      "shows": 197838,
+      "status": 9,
+      "drr": 79.8
+    },
+    "161560998": {
+      "nmId": 161560998,
+      "spend": 18589,
+      "orders": 109,
+      "clicks": 951,
+      "shows": 36471,
+      "status": 9,
+      "drr": 17.1
+    },
+    "109787865": {
+      "nmId": 109787865,
+      "spend": 7553,
+      "orders": 42,
+      "clicks": 312,
+      "shows": 44778,
+      "status": 9,
+      "drr": 18.0
+    },
+    "258023126": {
+      "nmId": 258023126,
+      "spend": 14279,
+      "orders": 20,
+      "clicks": 746,
+      "shows": 50287,
+      "status": 9,
+      "drr": 71.4
+    },
+    "560838839": {
+      "nmId": 560838839,
+      "spend": 7585,
+      "orders": 23,
+      "clicks": 328,
+      "shows": 8488,
+      "status": 9,
+      "drr": 33.0
+    },
+    "258047671": {
+      "nmId": 258047671,
+      "spend": 2113,
+      "orders": 13,
+      "clicks": 113,
+      "shows": 15160,
+      "status": 9,
+      "drr": 16.3
     },
     "771017820": {
       "nmId": 771017820,
-      "spend": 37235,
+      "spend": 37271,
       "orders": 29,
       "clicks": 671,
-      "shows": 51448,
+      "shows": 51504,
       "status": 9,
-      "drr": 128.4
+      "drr": 128.5
     },
     "305468847": {
       "nmId": 305468847,
@@ -10077,6 +10050,42 @@
       "shows": 28,
       "status": 9,
       "drr": 0
+    },
+    "115826544": {
+      "nmId": 115826544,
+      "spend": 31427,
+      "orders": 29,
+      "clicks": 481,
+      "shows": 49081,
+      "status": 9,
+      "drr": 108.4
+    },
+    "699496634": {
+      "nmId": 699496634,
+      "spend": 571,
+      "orders": 4,
+      "clicks": 92,
+      "shows": 4917,
+      "status": 9,
+      "drr": 14.3
+    },
+    "681644959": {
+      "nmId": 681644959,
+      "spend": 18033,
+      "orders": 43,
+      "clicks": 714,
+      "shows": 32244,
+      "status": 9,
+      "drr": 41.9
+    },
+    "681598236": {
+      "nmId": 681598236,
+      "spend": 54748,
+      "orders": 217,
+      "clicks": 2245,
+      "shows": 169740,
+      "status": 9,
+      "drr": 25.2
     },
     "174976436": {
       "nmId": 174976436,
@@ -10092,10 +10101,10 @@
     "total_orders": 1573,
     "total_revenue": 1247351.0,
     "price_violations": 0,
-    "ad_spend": 380682.0,
-    "ad_orders": 29086,
-    "drr": 30.5,
-    "ads_count": 68
+    "ad_spend": 381073.0,
+    "ad_orders": 30819,
+    "drr": 30.6,
+    "ads_count": 70
   },
   "novosti": [
     {
@@ -11595,7 +11604,7 @@
           "q": "шампунь для волос женскиЙ",
           "freq": 426838,
           "pos": 84,
-          "delta": 5,
+          "delta": 0,
           "history": {
             "2026-06-28": 0,
             "2026-06-29": 0,
@@ -11619,7 +11628,7 @@
           "q": "шампунь для волос",
           "freq": 145865,
           "pos": 77,
-          "delta": 18,
+          "delta": 0,
           "history": {
             "2026-06-28": 0,
             "2026-06-29": 0,
@@ -11636,7 +11645,7 @@
           "q": "мист для тела",
           "freq": 178053,
           "pos": 25,
-          "delta": 6,
+          "delta": 0,
           "history": {
             "2026-06-28": 10,
             "2026-06-29": 0,
@@ -11648,7 +11657,7 @@
           "q": "мист для тела парфюмированный",
           "freq": 88467,
           "pos": 106,
-          "delta": -4,
+          "delta": 0,
           "history": {
             "2026-06-28": 0,
             "2026-06-29": 0,
@@ -11660,7 +11669,7 @@
           "q": "спрей для тела",
           "freq": 28869,
           "pos": 92,
-          "delta": -8,
+          "delta": 0,
           "history": {
             "2026-06-28": 0,
             "2026-06-29": 0,
@@ -11677,7 +11686,7 @@
           "q": "тени для век",
           "freq": 137553,
           "pos": 40,
-          "delta": 7,
+          "delta": 0,
           "history": {
             "2026-06-30": 47,
             "2026-07-01": 40
@@ -11687,7 +11696,7 @@
           "q": "Тени",
           "freq": 66436,
           "pos": 22,
-          "delta": -2,
+          "delta": 0,
           "history": {
             "2026-06-30": 20,
             "2026-07-01": 22
@@ -11697,7 +11706,7 @@
           "q": "Тени для век блестящие",
           "freq": 13763,
           "pos": 17,
-          "delta": 4,
+          "delta": 0,
           "history": {
             "2026-06-30": 21,
             "2026-07-01": 17
@@ -11712,7 +11721,7 @@
           "q": "термозащита для волос",
           "freq": 231921,
           "pos": 48,
-          "delta": 16,
+          "delta": 0,
           "history": {
             "2026-06-28": 0,
             "2026-06-29": 0,
@@ -11724,7 +11733,7 @@
           "q": "спрей для волос",
           "freq": 124672,
           "pos": 21,
-          "delta": 2,
+          "delta": 0,
           "history": {
             "2026-06-28": 0,
             "2026-06-29": 0,
@@ -11741,7 +11750,7 @@
           "q": "гель для бровей",
           "freq": 395123,
           "pos": 69,
-          "delta": 6,
+          "delta": 0,
           "history": {
             "2026-06-30": 75,
             "2026-07-01": 69
@@ -11756,7 +11765,7 @@
           "q": "спф 50 для лица",
           "freq": 94756,
           "pos": 113,
-          "delta": -8,
+          "delta": 0,
           "history": {
             "2026-06-30": 105,
             "2026-07-01": 113
@@ -11766,7 +11775,7 @@
           "q": "спф для лица",
           "freq": 208785,
           "pos": 154,
-          "delta": 2,
+          "delta": 0,
           "history": {
             "2026-06-30": 156,
             "2026-07-01": 154
@@ -11781,7 +11790,7 @@
           "q": "бб крем",
           "freq": 22567,
           "pos": 21,
-          "delta": -1,
+          "delta": 0,
           "history": {
             "2026-06-30": 20,
             "2026-07-01": 21
