@@ -485,8 +485,6 @@
       </div>
     </div>
 
-    <div id="novinkaDebug" style="font-size:11px;color:var(--text2);padding:4px 0 8px;opacity:0.6"></div>
-
     <div class="section">
       <div class="section-header">
         <div class="section-title">&#128230; Плановые новинки к поставке</div>
@@ -1015,7 +1013,6 @@ function renderNovosti(data) {
   const countEl = document.getElementById('novosti-count');
   if (!container) return;
   const items = (data.novosti || []).filter(i => i.name);
-  console.log('[novosti] items:', items.length, '| novinkaList:', novinkaList.length, '| nm_ads keys:', Object.keys(data.nm_ads||{}).length);
   if (!items.length) {
     container.innerHTML = '<p style="color:var(--text2);padding:12px">Нет данных — запустите wb_fetch.py</p>';
     return;
@@ -2357,12 +2354,6 @@ function loadNovinkaJson() {
       renderPriceTable();
       // Перерисовываем Плановые новинки — теперь с РРЦ/МРЦ из листа
       if (window.rawData) renderNovosti(window.rawData);
-      // Диагностика: показываем сколько загружено
-      const diagEl = document.getElementById('novinkaDebug');
-      if (diagEl) {
-        const withRrc = novinkaList.filter(n => n.rrc).length;
-        diagEl.textContent = `novinka.json: ${novinkaList.length} позиций, ${withRrc} с РРЦ/МРЦ`;
-      }
     })
     .catch(() => console.warn('novinka.json не найден'));
 }
