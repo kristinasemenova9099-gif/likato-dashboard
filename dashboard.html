@@ -475,6 +475,9 @@
       <button class="btn" onclick="openBestCards(41,50)" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
         ДРР 41–50%
       </button>
+      <button class="btn" onclick="openBestCards(51,9999)" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
+        ДРР &gt; 50%
+      </button>
     </div>
 
     <!-- MODAL: Лучшие карточки -->
@@ -930,8 +933,8 @@ function openBestCards(minDrr, maxDrr) {
   document.getElementById('bestCardsModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
 
-  const emoji = maxDrr <= 20 ? '⭐' : maxDrr <= 30 ? '📊' : maxDrr <= 40 ? '📈' : '📉';
-  const rangeLabel = minDrr > 0 ? (minDrr + '–' + maxDrr + '%') : ('≤ ' + maxDrr + '%');
+  const emoji = maxDrr <= 20 ? '⭐' : maxDrr <= 30 ? '📊' : maxDrr <= 40 ? '📈' : maxDrr <= 50 ? '📉' : '🔴';
+  const rangeLabel = maxDrr >= 9999 ? ('> 50%') : minDrr > 0 ? (minDrr + '–' + maxDrr + '%') : ('≤ ' + maxDrr + '%');
   document.getElementById('bestCardsTitle').textContent = emoji + ' Карточки с ДРР ' + rangeLabel;
   document.getElementById('bestCardsSubtitle').textContent = 'Новинки с ДРР ' + rangeLabel + ' — отсортированы по эффективности';
 
