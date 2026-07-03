@@ -2378,7 +2378,7 @@ function switchTab(tab, el) {
 
 // Загружаем data.json (без кэша)
 function loadData() {
-  fetch('data.json?v=' + Date.now())
+  fetch('data.json?v=' + Date.now(), { cache: 'no-store' })
     .then(r => r.json())
     .then(data => {
     rawData = data;
