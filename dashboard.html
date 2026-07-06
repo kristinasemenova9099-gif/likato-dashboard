@@ -307,6 +307,7 @@
 <div class="tabs">
   <div class="tab active" onclick="switchTab('top', this)">ТОП-товары</div>
   <div class="tab" onclick="switchTab('novinka', this)">Новинки</div>
+  <div class="tab" onclick="switchTab('advisor', this)">🎯 Советник по раздачам</div>
 </div>
 
 <div class="main">
@@ -410,8 +411,13 @@
         </div>
         <div style="margin-top:14px" class="table-wrap">
           <table>
-            <thead><tr><th>Товар</th><th>Заказов за спринт</th><th>Выручка</th><th>В среднем/день</th></tr></thead>
-            <tbody id="orgTable"><tr><td colspan="4" style="color:var(--text2)">Загрузка...</td></tr></tbody>
+            <thead><tr>
+              <th>Товар</th><th>Заказов за спринт</th><th>Выручка</th><th>В среднем/день</th>
+              <th style="background:rgba(251,191,36,0.08);text-align:right">Расход РК, ₽</th>
+              <th style="background:rgba(251,191,36,0.08);text-align:right">Заказы с РК</th>
+              <th style="background:rgba(251,191,36,0.08);text-align:center">ДРР</th>
+            </tr></thead>
+            <tbody id="orgTable"><tr><td colspan="7" style="color:var(--text2)">Загрузка...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -421,11 +427,14 @@
     <div class="section">
       <div class="section-header">
         <div class="section-title">&#128227; Рекламные кампании</div>
-        <div style="font-size:11px;color:var(--text2)">Данные из Google Sheets · обновляется при загрузке выгрузки</div>
+        <div style="font-size:11px;color:var(--text2)">Данные из WB API · привязка по листу «Кампания→Артикул»</div>
       </div>
       <div class="section-body">
         <!-- KPI строка -->
         <div class="kpi-grid" id="adsKpi" style="margin-bottom:14px"></div>
+        <!-- Карточки РК по каждому товару -->
+        <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">📦 Реклама по товарам</div>
+        <div id="adsByProduct" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px"></div>
         <!-- Таблица кампаний -->
         <div class="table-wrap">
           <table style="font-size:12px">
@@ -590,6 +599,18 @@
     </div>
 
   </div><!-- /page-novinka -->
+
+  <!-- === ADVISOR PAGE (Советник по раздачам) === -->
+  <div class="page" id="page-advisor">
+    <div style="margin-bottom:14px">
+      <div style="font-size:18px;font-weight:700;color:var(--text)">🎯 Советник по раздачам</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px">Автоматический анализ обновляется каждый день вместе с данными. Показывает, что сейчас происходит с раздачами и что улучшить.</div>
+    </div>
+    <!-- Сводка "что мы видим" -->
+    <div id="advisorSummary" class="kpi-grid" style="margin-bottom:16px"></div>
+    <!-- Карточки-советы по товарам -->
+    <div id="advisorContent" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div><!-- /page-advisor -->
 
 </div><!-- /main -->
 
@@ -899,15 +920,57 @@ function renderDashboard(data) {
   if (orgBody) {
     orgBody.innerHTML = prods.map(p => {
       const rev = Math.round(p.total_revenue).toLocaleString('ru');
+      const spend = p.ad_spend || 0;
+      const adOrders = p.ad_orders || 0;
+      const drr = p.ad_drr || 0;
+      const drrColor = drr === 0 ? 'var(--text2)' : drr <= 20 ? '#22c55e' : drr <= 30 ? '#3b82f6' : drr <= 40 ? '#f59e0b' : drr <= 50 ? '#ef4444' : '#a855f7';
+      const drrCell = spend > 0
+        ? `<span style="font-weight:700;color:${drrColor}">${drr}%</span>`
+        : '<span style="color:var(--text2)">—</span>';
       return `<tr>
         <td>${p.name}</td>
         <td><b>${p.total_orders.toLocaleString('ru')}</b></td>
         <td>${rev} ₽</td>
         <td>${Math.round(p.total_orders/data.sprint_days*10)/10}/день</td>
+        <td style="text-align:right;background:rgba(251,191,36,0.05)">${spend > 0 ? spend.toLocaleString('ru') + ' ₽' : '<span style="color:var(--text2)">—</span>'}</td>
+        <td style="text-align:right;background:rgba(251,191,36,0.05)">${spend > 0 ? adOrders.toLocaleString('ru') : '<span style="color:var(--text2)">—</span>'}</td>
+        <td style="text-align:center;background:rgba(251,191,36,0.05)">${drrCell}</td>
       </tr>`;
     }).join('');
   }
 
+  // Карточки РК по каждому товару
+  const adsByProduct = document.getElementById('adsByProduct');
+  if (adsByProduct) {
+    const withAds = prods.filter(p => (p.ad_spend || 0) > 0);
+    if (withAds.length === 0) {
+      adsByProduct.innerHTML = '<div style="color:var(--text2);font-size:12px">Нет данных по рекламе. Проверьте лист «Кампания→Артикул».</div>';
+    } else {
+      adsByProduct.innerHTML = withAds.map(p => {
+        const drr = p.ad_drr || 0;
+        const drrColor = drr <= 20 ? '#22c55e' : drr <= 30 ? '#3b82f6' : drr <= 40 ? '#f59e0b' : drr <= 50 ? '#ef4444' : '#a855f7';
+        const nCamp = (p.ad_campaigns || []).length;
+        return `<div style="flex:1 1 240px;min-width:240px;background:var(--card2,rgba(255,255,255,0.03));border:1px solid var(--border);border-left:3px solid ${drrColor};border-radius:8px;padding:12px 14px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:2px">${p.name}</div>
+          <div style="font-size:10px;color:var(--text2);margin-bottom:10px">арт. ${p.nmId} · кампаний: ${nCamp}</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <span style="font-size:11px;color:var(--text2)">Расход</span>
+            <span style="font-weight:700;font-size:15px">${(p.ad_spend||0).toLocaleString('ru')} ₽</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <span style="font-size:11px;color:var(--text2)">ДРР</span>
+            <span style="font-weight:700;font-size:15px;color:${drrColor}">${drr}%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:11px;color:var(--text2);border-top:1px solid var(--border);padding-top:8px">
+            <div>Заказы с РК: <b style="color:var(--text)">${(p.ad_orders||0).toLocaleString('ru')}</b></div>
+            <div>CTR: <b style="color:var(--text)">${p.ad_ctr||0}%</b></div>
+            <div>Клики: <b style="color:var(--text)">${(p.ad_clicks||0).toLocaleString('ru')}</b></div>
+            <div>CPC: <b style="color:var(--text)">${p.ad_cpc||0} ₽</b></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
 
   renderAlerts(data);
   renderPlanForecast(data);
@@ -915,6 +978,7 @@ function renderDashboard(data) {
   renderStocks(data);
   renderNovosti(data);
   renderDistEfficiency(data);
+  try { renderDistAdvisor(data); } catch(e) { console.error('renderDistAdvisor error:', e); }
 }
 
 const NOVOSTI_NOTES_KEY = 'novosti_notes_v1';
@@ -1619,6 +1683,153 @@ function renderDistEfficiency(data) {
       _distEffCharts[pi] = chart;
     });
   }, 50);
+}
+
+// ── СОВЕТНИК ПО РАЗДАЧАМ (правила пересчитываются при каждой загрузке данных) ──
+function renderDistAdvisor(data) {
+  const sumEl = document.getElementById('advisorSummary');
+  const el = document.getElementById('advisorContent');
+  if (!el) return;
+  const products = (data.products || []).filter(p => p.nmId);
+  const kwAll = data.keywords || {};
+  const avg = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : null;
+
+  let totalPlan = 0, totalFact = 0, nMissing = 0, nOk = 0, nWarn = 0, nBad = 0;
+  const cards = [];
+
+  products.forEach(p => {
+    const days = (p.days || []).slice(-14);
+    if (!days.length) return;
+
+    // Раздачи план/факт за спринт
+    const distPlan = days.reduce((s,d)=> s + (d.dist_plan||0), 0);
+    const distFact = days.reduce((s,d)=> s + (d.dist_fact||0), 0);
+    totalPlan += distPlan; totalFact += distFact;
+    const planPct = distPlan > 0 ? Math.round(distFact/distPlan*100) : null;
+
+    // Органика: total = order_sum/avg_price, organic = total − факт раздач
+    const totalOrders = days.map(d => (d.avg_price>0) ? Math.round((d.order_sum||0)/d.avg_price) : (d.orders||0));
+    const dFact = days.map(d => d.dist_fact||0);
+    const organic = days.map((d,i)=> Math.max(0, totalOrders[i]-dFact[i]));
+    const firstDistIdx = dFact.findIndex(v=>v>0);
+    const orgBefore = firstDistIdx>0 ? avg(organic.slice(0,firstDistIdx).filter(v=>v>0)) : null;
+    const orgRecent = avg(organic.filter(v=>v>0).slice(-3));
+    const orgTrend = (orgBefore && orgRecent) ? Math.round((orgRecent-orgBefore)/orgBefore*100) : null;
+
+    // Позиция по главному ключу (было → стало)
+    const kwList = (kwAll[String(p.nmId)]||{}).keywords || [];
+    const kwWithHistory = kwList.filter(k => Object.values(k.history||{}).some(v=>v>0));
+    const kw = kwWithHistory[0] || kwList[0];
+    let posFirst=null, posNow=null, kwName=null;
+    if (kw) {
+      kwName = kw.q;
+      const hist = kw.history||{};
+      const dts = days.map(d=>d.date).filter(dt => hist[dt]>0);
+      if (dts.length) { posFirst = hist[dts[0]]; posNow = hist[dts[dts.length-1]]; }
+    }
+    const posDelta = (posFirst!=null && posNow!=null) ? (posFirst - posNow) : null; // >0 = рост в выдаче
+
+    // Факт за вчера (предпоследний день; последний может быть неполным)
+    const yd = days[days.length-2];
+    const factMissingYesterday = yd && (yd.dist_plan>0) && (yd.dist_fact==null);
+    if (factMissingYesterday) nMissing++;
+
+    const inStock = (p.stock_total||0) > 0;
+
+    // Правила → советы и вердикт
+    const tips = [];
+    let verdict = 'ok';
+    const worse = v => { if (v==='bad' || (v==='warn' && verdict==='ok')) verdict = v; };
+
+    if (!inStock) {
+      worse('bad');
+      tips.push('🚫 Товар не в наличии — раздачи невозможны. Пополните склад, иначе позиции просядут.');
+    } else {
+      if (factMissingYesterday) {
+        tips.push(`✍️ Не заполнен факт раздач за вчера (план был ${yd.dist_plan} шт). Внесите данные в дневник — без этого аналитика неточная.`);
+        worse('warn');
+      }
+      if (distPlan>0 && planPct!=null && planPct < 70) {
+        tips.push(`📉 Раздачи отстают от плана: ${distFact} из ${distPlan} шт (${planPct}%). Догоните объём до конца спринта.`);
+        worse('warn');
+      }
+      if (distPlan===0) {
+        if (posNow!=null && posNow > 30) {
+          tips.push(`▶️ Раздачи не ведутся, а позиция по «${kwName}» низкая (#${posNow}). Запустите раздачи для роста в выдаче.`);
+          worse('warn');
+        } else {
+          tips.push('ℹ️ Раздачи по товару сейчас не запланированы.');
+        }
+      }
+      if (distFact>0 && posDelta!=null) {
+        if (posDelta >= 3) {
+          tips.push(`✅ Раздачи работают: позиция по «${kwName}» выросла #${posFirst} → #${posNow} (+${posDelta}). Держите темп.`);
+        } else if (posDelta <= -3) {
+          tips.push(`⚠️ Несмотря на раздачи, позиция по «${kwName}» упала #${posFirst} → #${posNow}. Смените ключ или увеличьте частоту/объём.`);
+          worse('bad');
+        } else {
+          tips.push(`➖ Позиция по «${kwName}» стоит на месте (#${posNow}) при активных раздачах. Проверьте, тот ли ключ вы продвигаете.`);
+          worse('warn');
+        }
+      }
+      if (orgTrend!=null) {
+        if (orgTrend >= 10) {
+          tips.push(`✅ Органика выросла на ${orgTrend}% относительно периода до раздач — товар разогнался.`);
+        } else if (orgTrend <= -15) {
+          tips.push(`⚠️ Органика падает (${orgTrend}%) — раздачи не удерживают спрос. Проверьте цену, карточку и остаток.`);
+          worse('bad');
+        }
+      }
+      if (!kw) {
+        tips.push('🔑 Нет отслеживаемых ключей — добавьте запросы, чтобы видеть эффект раздач на позиции.');
+        worse('warn');
+      }
+    }
+    if (tips.length===0) tips.push('✅ Всё в порядке — раздачи идут по плану, показатели стабильны.');
+
+    if (verdict==='ok') nOk++; else if (verdict==='warn') nWarn++; else nBad++;
+
+    const vColor = verdict==='ok' ? '#22c55e' : verdict==='warn' ? '#f59e0b' : '#ef4444';
+    const vLabel = verdict==='ok' ? '🟢 Работает' : verdict==='warn' ? '🟡 Внимание' : '🔴 Проблема';
+
+    // «Что видим» — текущие показатели
+    const posStr = (posFirst!=null && posNow!=null)
+      ? `#${posFirst} → <b style="color:var(--text)">#${posNow}</b> ${posDelta>0?`<span style="color:#22c55e">▲${posDelta}</span>`:posDelta<0?`<span style="color:#ef4444">▼${-posDelta}</span>`:''}`
+      : '<span style="color:var(--text2)">нет данных</span>';
+    const orgStr = (orgTrend!=null && Math.abs(orgTrend)>=3)
+      ? `<b style="color:var(--text)">${orgRecent}/дн</b> ${orgTrend>0?`<span style="color:#22c55e">▲${orgTrend}%</span>`:`<span style="color:#ef4444">▼${-orgTrend}%</span>`}`
+      : (orgRecent!=null ? `<b style="color:var(--text)">${orgRecent}/дн</b>` : '<span style="color:var(--text2)">—</span>');
+
+    cards.push(`
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid ${vColor};border-radius:10px;padding:14px 16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+          <div style="font-weight:700;font-size:14px">${p.name}</div>
+          <div style="font-size:12px;font-weight:700;color:${vColor}">${vLabel}</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:18px;font-size:12px;color:var(--text2);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)">
+          <div>Раздано: <b style="color:var(--text)">${distFact}${distPlan?` / ${distPlan}`:''}</b>${planPct!=null?` (${planPct}%)`:''}</div>
+          <div>Ключ «${kwName||'—'}»: ${posStr}</div>
+          <div>Органика: ${orgStr}</div>
+          <div>Остаток: <b style="color:${inStock?'var(--text)':'#ef4444'}">${(p.stock_total||0).toLocaleString('ru')} шт</b></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${tips.map(t=>`<div style="font-size:12.5px;line-height:1.45;color:var(--text)">${t}</div>`).join('')}
+        </div>
+      </div>`);
+  });
+
+  // Сводка «что мы видим»
+  if (sumEl) {
+    const planPctAll = totalPlan>0 ? Math.round(totalFact/totalPlan*100) : 0;
+    sumEl.innerHTML = `
+      <div class="kpi-card blue"><div class="kpi-label">Раздано за спринт</div><div class="kpi-val">${totalFact.toLocaleString('ru')}</div><div class="kpi-sub">план ${totalPlan.toLocaleString('ru')} шт · ${planPctAll}%</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Работает</div><div class="kpi-val val-green">${nOk}</div><div class="kpi-sub">товаров в норме</div></div>
+      <div class="kpi-card yellow"><div class="kpi-label">Требуют внимания</div><div class="kpi-val val-yellow">${nWarn}</div><div class="kpi-sub">есть что улучшить</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Проблемы</div><div class="kpi-val val-red">${nBad}</div><div class="kpi-sub">срочные действия</div></div>
+      <div class="kpi-card ${nMissing>0?'red':'green'}"><div class="kpi-label">Не заполнен факт</div><div class="kpi-val ${nMissing>0?'val-red':'val-green'}">${nMissing}</div><div class="kpi-sub">за вчера</div></div>`;
+  }
+
+  el.innerHTML = cards.length ? cards.join('') : '<div style="color:var(--text2)">Нет данных по товарам.</div>';
 }
 
 function renderFunnel(data) {
@@ -2374,6 +2585,7 @@ function switchTab(tab, el) {
   el.classList.add('active');
   document.getElementById('page-top').classList.toggle('active', tab==='top');
   document.getElementById('page-novinka').classList.toggle('active', tab==='novinka');
+  document.getElementById('page-advisor').classList.toggle('active', tab==='advisor');
 }
 
 // Загружаем data.json (без кэша)
