@@ -507,9 +507,15 @@
     </div>
 
     <div class="section">
-      <div class="section-header">
+      <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div class="section-title">&#128230; Плановые новинки к поставке</div>
-        <div id="novosti-count" style="font-size:12px;color:var(--text2)"></div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer;user-select:none">
+            <input type="checkbox" id="novostiOnlyAds" onchange="novostiOnlyAds=this.checked;renderNovosti(window.rawData)" style="cursor:pointer">
+            Только с РК
+          </label>
+          <div id="novosti-count" style="font-size:12px;color:var(--text2)"></div>
+        </div>
       </div>
       <div class="section-body"><div id="novosti-table"></div></div>
     </div>
@@ -616,6 +622,7 @@
 
 <script>
 let rawData = null; // полные данные из data.json
+let novostiOnlyAds = false; // фильтр «Только с РК» на вкладке Новинки
 
 function filterDataByDates(data, from, to) {
   if (!from && !to) return data;
@@ -1085,8 +1092,8 @@ function closeBestCards() {
 function renderNovosti(data) {
   const container = document.getElementById('novosti-table');
   const countEl = document.getElementById('novosti-count');
-  if (!container) return;
-  const items = (data.novosti || []).filter(i => i.name);
+  if (!container || !data) return;
+  let items = (data.novosti || []).filter(i => i.name);
   if (!items.length) {
     container.innerHTML = '<p style="color:var(--text2);padding:12px">Нет данных — запустите wb_fetch.py</p>';
     return;
@@ -1099,12 +1106,25 @@ function renderNovosti(data) {
   } else {
     (data.ads || []).forEach(a => { if (a.nmId) adsByNm[String(a.nmId)] = a; });
   }
+
+  // Фильтр «Только с РК» — оставляем товары с рекламной кампанией (spend > 0)
+  const totalCount = items.length;
+  if (novostiOnlyAds) {
+    items = items.filter(i => i.nm && adsByNm[String(i.nm)]);
+  }
   const pricesByNm = {};
   (data.products || []).forEach(p => { if (p.nmId) pricesByNm[String(p.nmId)] = p; });
 
   const notes = novostiNotes();
 
-  if (countEl) countEl.textContent = items.length + ' товаров';
+  if (countEl) countEl.textContent = novostiOnlyAds
+    ? `${items.length} из ${totalCount} товаров с РК`
+    : `${items.length} товаров`;
+
+  if (!items.length) {
+    container.innerHTML = '<p style="color:var(--text2);padding:12px">Нет товаров с активной рекламой. Снимите фильтр «Только с РК».</p>';
+    return;
+  }
 
   // Товары с артикулом WB — отдельная группа наверху
   const withNm = items.filter(i => i.nm);
