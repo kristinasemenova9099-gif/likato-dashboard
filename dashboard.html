@@ -510,10 +510,11 @@
       <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div class="section-title">&#128230; Плановые новинки к поставке</div>
         <div style="display:flex;align-items:center;gap:14px">
-          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer;user-select:none">
-            <input type="checkbox" id="novostiOnlyAds" onchange="novostiOnlyAds=this.checked;renderNovosti(window.rawData)" style="cursor:pointer">
-            Только с РК
-          </label>
+          <select id="novostiAdFilter" onchange="novostiAdFilter=this.value;renderNovosti(window.rawData)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;cursor:pointer">
+            <option value="all">Все товары</option>
+            <option value="with">Только с РК</option>
+            <option value="without">Только без РК</option>
+          </select>
           <div id="novosti-count" style="font-size:12px;color:var(--text2)"></div>
         </div>
       </div>
@@ -622,7 +623,7 @@
 
 <script>
 let rawData = null; // полные данные из data.json
-let novostiOnlyAds = false; // фильтр «Только с РК» на вкладке Новинки
+let novostiAdFilter = 'all'; // фильтр РК на вкладке Новинки: all | with | without
 
 function filterDataByDates(data, from, to) {
   if (!from && !to) return data;
@@ -1107,22 +1108,29 @@ function renderNovosti(data) {
     (data.ads || []).forEach(a => { if (a.nmId) adsByNm[String(a.nmId)] = a; });
   }
 
-  // Фильтр «Только с РК» — оставляем товары с рекламной кампанией (spend > 0)
+  // Фильтр по РК: with — только с кампанией (spend>0), without — только без неё
   const totalCount = items.length;
-  if (novostiOnlyAds) {
-    items = items.filter(i => i.nm && adsByNm[String(i.nm)]);
+  const hasAd = i => !!(i.nm && adsByNm[String(i.nm)]);
+  if (novostiAdFilter === 'with') {
+    items = items.filter(hasAd);
+  } else if (novostiAdFilter === 'without') {
+    items = items.filter(i => !hasAd(i));
   }
   const pricesByNm = {};
   (data.products || []).forEach(p => { if (p.nmId) pricesByNm[String(p.nmId)] = p; });
 
   const notes = novostiNotes();
 
-  if (countEl) countEl.textContent = novostiOnlyAds
-    ? `${items.length} из ${totalCount} товаров с РК`
-    : `${items.length} товаров`;
+  if (countEl) {
+    const suffix = novostiAdFilter === 'with' ? ' с РК' : novostiAdFilter === 'without' ? ' без РК' : '';
+    countEl.textContent = novostiAdFilter === 'all'
+      ? `${items.length} товаров`
+      : `${items.length} из ${totalCount} товаров${suffix}`;
+  }
 
   if (!items.length) {
-    container.innerHTML = '<p style="color:var(--text2);padding:12px">Нет товаров с активной рекламой. Снимите фильтр «Только с РК».</p>';
+    const msg = novostiAdFilter === 'with' ? 'Нет товаров с активной рекламой.' : 'Нет товаров без рекламы.';
+    container.innerHTML = `<p style="color:var(--text2);padding:12px">${msg} Выберите «Все товары», чтобы снять фильтр.</p>`;
     return;
   }
 
