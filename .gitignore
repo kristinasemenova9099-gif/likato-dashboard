@@ -13,6 +13,9 @@ __pycache__/
 *.docx
 
 # Временные и служебные файлы
+*.cmd
+fetch_log.txt
+prices_cache.json
 funnel_temp.json
 novosti_temp.json
 dist_from_sheet.json

@@ -321,15 +321,15 @@
     </div>
 
     <div class="kpi-grid">
-      <div class="kpi-card blue"><div class="kpi-label">Товаров в работе</div><div class="kpi-val">4</div><div class="kpi-sub">ТОП-товары</div></div>
-      <div class="kpi-card green"><div class="kpi-label">Раздано всего</div><div class="kpi-val val-green">2 140</div><div class="kpi-sub">план 2 800 шт</div></div>
-      <div class="kpi-card yellow"><div class="kpi-label">% выполнения</div><div class="kpi-val val-yellow">76.4%</div><div class="kpi-sub">от плана спринта</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">Товаров в работе</div><div class="kpi-val" id="kpi-products-count">—</div><div class="kpi-sub">ТОП-товары</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Раздано всего</div><div class="kpi-val val-green" id="kpi-dist-fact">—</div><div class="kpi-sub" id="kpi-dist-plan">план — шт</div></div>
+      <div class="kpi-card yellow"><div class="kpi-label">% выполнения</div><div class="kpi-val val-yellow" id="kpi-dist-pct">—</div><div class="kpi-sub">от плана периода</div></div>
       <div class="kpi-card blue"><div class="kpi-label">Заказы всего</div><div class="kpi-val" id="kpi-orders">—</div><div class="kpi-sub" id="kpi-orders-period">из WB Аналитика</div></div>
       <div class="kpi-card green"><div class="kpi-label">Выручка (−комиссия WB)</div><div class="kpi-val val-green" id="kpi-revenue">—</div><div class="kpi-sub" id="kpi-revenue-period">из WB Аналитика</div></div>
       <div class="kpi-card purple"><div class="kpi-label">Расход РК</div><div class="kpi-val" id="kpi-ad-spend">—</div><div class="kpi-sub">из кабинета WB</div></div>
       <div class="kpi-card purple"><div class="kpi-label">Заказы с РК</div><div class="kpi-val" id="kpi-ad-orders">—</div><div class="kpi-sub">из кабинета WB</div></div>
       <div class="kpi-card yellow"><div class="kpi-label">Кампаний</div><div class="kpi-val val-yellow" id="kpi-ads-count">—</div><div class="kpi-sub">активных</div></div>
-      <div class="kpi-card blue"><div class="kpi-label">Дней до конца</div><div class="kpi-val">4</div><div class="kpi-sub">из 14 дней спринта</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">Период</div><div class="kpi-val" id="kpi-period">—</div><div class="kpi-sub" id="kpi-period-sub">дней данных</div></div>
       <div class="kpi-card red"><div class="kpi-label">Нарушений цены</div><div class="kpi-val val-red" id="kpi-price-violations">—</div><div class="kpi-sub">цена ниже МРЦ</div></div>
     </div>
 
@@ -394,7 +394,7 @@
         </div>
         <div style="margin-top:16px" class="table-wrap">
           <table>
-            <thead><tr><th>Товар</th><th>Д1</th><th>Д2</th><th>Д3</th><th>Д4</th><th>Д5</th><th>Д6</th><th>Д7</th><th>Д8</th><th>Д9</th><th>Д10</th><th>Д11</th><th>Д12</th><th>Д13</th><th>Д14</th><th>Итого</th><th>% вып.</th></tr></thead>
+            <thead><tr id="distTableHead"><th>Товар</th><th>Итого</th><th>% вып.</th></tr></thead>
             <tbody id="distTable"></tbody>
           </table>
         </div>
@@ -734,6 +734,17 @@ function renderDashboard(data) {
   }
   document.querySelector('#kpi-price-violations').textContent = data.summary.price_violations;
 
+  // Динамические KPI периода и раздач
+  const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  setTxt('kpi-products-count', prods.length);
+  const distFactTotal = prods.reduce((s,p)=> s + (p.dist_fact||0), 0);
+  const distPlanTotal = prods.reduce((s,p)=> s + (p.dist_plan||0), 0);
+  setTxt('kpi-dist-fact', distFactTotal.toLocaleString('ru'));
+  setTxt('kpi-dist-plan', 'план ' + distPlanTotal.toLocaleString('ru') + ' шт');
+  setTxt('kpi-dist-pct', distPlanTotal > 0 ? Math.round(distFactTotal/distPlanTotal*100) + '%' : '—');
+  setTxt('kpi-period', (data.sprint_days || (prods[0]?.days?.length) || 0) + ' дн');
+  setTxt('kpi-period-sub', 'с ' + (data.sprint_start || '—'));
+
   // Ключи и позиции — из data.json (единственный источник правды)
   if (data.keywords) {
     kwData = kwFromServer(data.keywords);
@@ -847,6 +858,12 @@ function renderDashboard(data) {
   // Таблица по дням (заказы WB + план/факт раздач)
   const tbody = document.getElementById('distTable');
   tbody.innerHTML = '';
+  // Динамический заголовок по датам периода
+  const headRow = document.getElementById('distTableHead');
+  if (headRow && prods[0]?.days) {
+    const dayThs = prods[0].days.map(d => `<th style="font-size:10px;min-width:32px">${d.date.slice(5).replace('-','.')}</th>`).join('');
+    headRow.innerHTML = `<th>Товар</th>${dayThs}<th>Итого</th><th>% вып.</th>`;
+  }
   const cellStyle = 'text-align:center;padding:4px 6px';
   const subStyle = 'color:var(--text2);font-size:11px';
   prods.forEach((p, i) => {
@@ -1564,7 +1581,7 @@ function renderDistEfficiency(data) {
     products.forEach((p, pi) => {
       const canvas = document.getElementById('distEffChart_' + pi);
       if (!canvas) return;
-      const days = (p.days || []).slice(-14);
+      const days = (p.days || []);
       const kwList = (kwAll[String(p.nmId)] || {}).keywords || [];
       const kwWithHistory = kwList.filter(k => Object.values(k.history || {}).some(v => v > 0));
       const kw = kwWithHistory[0] || kwList[0];
@@ -1726,7 +1743,7 @@ function renderDistAdvisor(data) {
   const cards = [];
 
   products.forEach(p => {
-    const days = (p.days || []).slice(-14);
+    const days = (p.days || []);
     if (!days.length) return;
 
     // Раздачи план/факт за спринт
@@ -1740,9 +1757,11 @@ function renderDistAdvisor(data) {
     const dFact = days.map(d => d.dist_fact||0);
     const organic = days.map((d,i)=> Math.max(0, totalOrders[i]-dFact[i]));
     const firstDistIdx = dFact.findIndex(v=>v>0);
-    const orgBefore = firstDistIdx>0 ? avg(organic.slice(0,firstDistIdx).filter(v=>v>0)) : null;
+    // База «до раздач» — последние 5 дней перед стартом раздач (а не весь период запуска)
+    const orgBefore = firstDistIdx>0 ? avg(organic.slice(Math.max(0,firstDistIdx-5),firstDistIdx).filter(v=>v>0)) : null;
     const orgRecent = avg(organic.filter(v=>v>0).slice(-3));
-    const orgTrend = (orgBefore && orgRecent) ? Math.round((orgRecent-orgBefore)/orgBefore*100) : null;
+    // Тренд считаем только если база достаточная (иначе раздачи стартовали на запуске — деление на ~0)
+    const orgTrend = (orgBefore >= 15 && orgRecent) ? Math.round((orgRecent-orgBefore)/orgBefore*100) : null;
 
     // Позиция по главному ключу (было → стало)
     const kwList = (kwAll[String(p.nmId)]||{}).keywords || [];
@@ -2076,37 +2095,7 @@ function renderDistSummary() {
     </div>`;
   }).join('');
 
-  // Таблица по дням
-  const tbody = document.getElementById('distTable');
-  if (!tbody) return;
-  const thead = tbody.closest('table').querySelector('thead tr');
-  if (thead) {
-    let ths = '<th>Товар</th>';
-    for (let i = 1; i <= DIST_DAYS; i++) ths += `<th>Д${i}</th>`;
-    ths += '<th>Итого</th><th>% вып.</th>';
-    thead.innerHTML = ths;
-  }
-
-  tbody.innerHTML = DIST_PRODUCTS.map((p, pi) => {
-    let vals, planTotal;
-    if (sheetDistData && sheetDistData[pi] && sheetDistData[pi].days) {
-      vals = sheetDistData[pi].days.map(d => d.dist_fact !== null ? d.dist_fact : '—');
-      planTotal = sheetDistData[pi].dist_plan || p.plan;
-    } else {
-      vals = distData[pi];
-      planTotal = p.plan;
-    }
-    const factTotal = vals.reduce((a,b) => typeof b === 'number' ? a+b : a, 0);
-    const pct = planTotal > 0 ? Math.round(factTotal / planTotal * 100) : 0;
-    const cls = pct >= 80 ? 'badge-green' : 'badge-yellow';
-    let tr = `<tr><td><b>${p.name}</b><br><small style="color:var(--text2)">${p.nmId}</small></td>`;
-    for (let i = 0; i < DIST_DAYS; i++) {
-      const v = vals[i];
-      tr += `<td>${v !== undefined && v !== null && v !== '' ? v : '—'}</td>`;
-    }
-    tr += `<td><b>${factTotal.toLocaleString('ru')}</b></td><td><span class="badge ${cls}">${pct}%</span></td></tr>`;
-    return tr;
-  }).join('');
+  // Таблицу по дням (distTable) рисует авторитетный рендер в renderDashboard — здесь только прогресс-бары
 }
 // ── КЛЮЧЕВЫЕ ЗАПРОСЫ ПО ТОВАРАМ ─────────────────────────────
 const KW_PRODUCTS = [
