@@ -1194,8 +1194,9 @@ function renderNovosti(data) {
       const drrCell = drr === null ? '—'
         : `<span class="badge ${drr>30?'badge-red':drr>20?'badge-yellow':'badge-green'}">${drr}%</span>`;
       const novinkaRef = nm ? novinkaList.find(n => n.nm === nm) : null;
-      const rrcVal = novinkaRef?.rrc || prod?.rrts || null;
-      const mrcVal = novinkaRef?.mrc || prod?.mrts || null;
+      const numOrNull = v => { const n = parseFloat(String(v).replace(/[^\d.,]/g,'').replace(',','.')); return isFinite(n) && n > 0 ? n : null; };
+      const rrcVal = numOrNull(r.rrc) || novinkaRef?.rrc || prod?.rrts || null;
+      const mrcVal = numOrNull(r.mrc) || novinkaRef?.mrc || prod?.mrts || null;
       const rrts = rrcVal ? rrcVal.toLocaleString('ru') : '—';
       const mrts = mrcVal ? mrcVal.toLocaleString('ru') : '—';
       // Цена: сначала из novosti (WB API батч), потом из products (топ-4)
