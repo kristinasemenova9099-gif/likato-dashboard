@@ -308,6 +308,7 @@
   <div class="tab active" onclick="switchTab('top', this)">ТОП-товары</div>
   <div class="tab" onclick="switchTab('novinka', this)">Новинки</div>
   <div class="tab" onclick="switchTab('advisor', this)">🎯 Советник по раздачам</div>
+  <div class="tab" onclick="switchTab('archive', this)">📒 Архив раздач</div>
 </div>
 
 <div class="main">
@@ -618,6 +619,27 @@
     <!-- Карточки-советы по товарам -->
     <div id="advisorContent" style="display:flex;flex-direction:column;gap:12px"></div>
   </div><!-- /page-advisor -->
+
+  <!-- === ARCHIVE PAGE (Архив раздач) === -->
+  <div class="page" id="page-archive">
+    <div style="margin-bottom:14px">
+      <div style="font-size:18px;font-weight:700;color:var(--text)">📒 Архив раздач</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px">Все товары, по которым велись раздачи (из дневника). Потрачено = раздачи × РРЦ. Заказы и позиции по запросам, на которых раздавались.</div>
+    </div>
+    <div id="archiveSummary" class="kpi-grid" style="margin-bottom:16px"></div>
+    <div class="table-wrap">
+      <table style="font-size:12px;width:100%">
+        <thead><tr>
+          <th style="min-width:180px">Товар</th>
+          <th style="text-align:right">Раздачи, шт</th>
+          <th style="text-align:right">Потрачено, ₽</th>
+          <th style="text-align:right">Заказы</th>
+          <th style="min-width:240px">Запросы и позиции (было → стало)</th>
+        </tr></thead>
+        <tbody id="archiveTable"><tr><td colspan="5" style="color:var(--text2);padding:12px">Загрузка...</td></tr></tbody>
+      </table>
+    </div>
+  </div><!-- /page-archive -->
 
 </div><!-- /main -->
 
@@ -1004,6 +1026,7 @@ function renderDashboard(data) {
   renderNovosti(data);
   renderDistEfficiency(data);
   try { renderDistAdvisor(data); } catch(e) { console.error('renderDistAdvisor error:', e); }
+  try { renderRazdachiArchive(data); } catch(e) { console.error('renderRazdachiArchive error:', e); }
 }
 
 const NOVOSTI_NOTES_KEY = 'novosti_notes_v1';
@@ -1893,6 +1916,53 @@ function renderDistAdvisor(data) {
   el.innerHTML = cards.length ? cards.join('') : '<div style="color:var(--text2)">Нет данных по товарам.</div>';
 }
 
+// ── АРХИВ РАЗДАЧ ──────────────────────────────────────────────
+function renderRazdachiArchive(data) {
+  const tbody = document.getElementById('archiveTable');
+  const sumEl = document.getElementById('archiveSummary');
+  if (!tbody) return;
+  const items = (data.razdachi_archive || []);
+  if (!items.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text2);padding:12px">Нет данных. Проверьте дневник раздач.</td></tr>';
+    if (sumEl) sumEl.innerHTML = '';
+    return;
+  }
+
+  const totalRaz   = items.reduce((s,x)=> s + (x.razdachi||0), 0);
+  const totalMoney = items.reduce((s,x)=> s + (x.money||0), 0);
+  const totalOrd   = items.reduce((s,x)=> s + (x.orders||0), 0);
+  if (sumEl) {
+    sumEl.innerHTML = `
+      <div class="kpi-card blue"><div class="kpi-label">Товаров в архиве</div><div class="kpi-val">${items.length}</div><div class="kpi-sub">с раздачами</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Роздано всего</div><div class="kpi-val val-green">${totalRaz.toLocaleString('ru')}</div><div class="kpi-sub">шт за всё время</div></div>
+      <div class="kpi-card yellow"><div class="kpi-label">Потрачено на раздачи</div><div class="kpi-val val-yellow">${totalMoney.toLocaleString('ru')} ₽</div><div class="kpi-sub">раздачи × РРЦ</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">Заказы (сумма)</div><div class="kpi-val">${totalOrd.toLocaleString('ru')}</div><div class="kpi-sub">по этим товарам</div></div>`;
+  }
+
+  tbody.innerHTML = items.map((x, idx) => {
+    const rowBg = idx % 2 ? 'background:rgba(255,255,255,0.02)' : '';
+    const posHtml = (x.positions || []).map(p => {
+      let posStr;
+      if (p.first != null && p.now != null) {
+        const d = p.first - p.now;
+        const arrow = d > 0 ? `<span style="color:#22c55e">▲${d}</span>` : d < 0 ? `<span style="color:#ef4444">▼${-d}</span>` : '';
+        posStr = `#${p.first} → <b style="color:var(--text)">#${p.now}</b> ${arrow}`;
+      } else {
+        posStr = '<span style="color:var(--text2)">нет позиции</span>';
+      }
+      return `<div style="margin:2px 0"><span style="color:var(--text2)">«${p.q}»</span> — ${posStr}</div>`;
+    }).join('') || '<span style="color:var(--text2)">—</span>';
+    const money = (x.money||0) > 0 ? (x.money).toLocaleString('ru') + ' ₽' : '<span style="color:var(--text2)">—</span>';
+    return `<tr style="${rowBg}">
+      <td style="padding:8px 10px"><b>${x.name}</b><br><small style="color:var(--text2)">${x.nmId} · дней раздач: ${x.days||0}</small></td>
+      <td style="text-align:right;font-weight:700">${(x.razdachi||0).toLocaleString('ru')}</td>
+      <td style="text-align:right">${money}</td>
+      <td style="text-align:right">${(x.orders||0).toLocaleString('ru')}</td>
+      <td style="padding:6px 10px;font-size:11px;line-height:1.5">${posHtml}</td>
+    </tr>`;
+  }).join('');
+}
+
 function renderFunnel(data) {
   const el = document.getElementById('funnelContent');
   if (!el) return;
@@ -2619,6 +2689,7 @@ function switchTab(tab, el) {
   document.getElementById('page-top').classList.toggle('active', tab==='top');
   document.getElementById('page-novinka').classList.toggle('active', tab==='novinka');
   document.getElementById('page-advisor').classList.toggle('active', tab==='advisor');
+  document.getElementById('page-archive').classList.toggle('active', tab==='archive');
 }
 
 // Загружаем data.json (без кэша)
