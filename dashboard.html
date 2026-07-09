@@ -396,11 +396,7 @@
     <div class="section">
       <div class="section-header"><div class="section-title">&#128200; Органика, раздачи и заказы</div></div>
       <div class="section-body">
-        <div class="chart-row">
-          <div class="chart-box"><div class="chart-box-title">Keraglow мист — органика / раздачи / заказы</div><div class="chart-canvas-wrap"><canvas id="chartOrg0"></canvas></div></div>
-          <div class="chart-box"><div class="chart-box-title">Динамика органики — все товары</div><div class="chart-canvas-wrap"><canvas id="chartOrgAll"></canvas></div></div>
-        </div>
-        <div style="margin-top:14px" class="table-wrap">
+        <div class="table-wrap">
           <table>
             <thead><tr>
               <th>Товар</th><th>Заказов за спринт</th><th>Выручка</th><th>В среднем/день</th>
@@ -894,40 +890,6 @@ function renderDashboard(data) {
   tbody.innerHTML += `<tr><td colspan="17" style="padding:6px 10px;font-size:11px;color:var(--text2)">
     Строки: <b>Заказы WB</b> · <span style="color:var(--text2)">план раздач</span> · <span style="color:#f59e0b">факт раздач</span>
   </td></tr>`;
-
-  // График: заказы по всем товарам по дням
-  const orgAllCtx = document.getElementById('chartOrgAll');
-  if (orgAllCtx) {
-    if (charts['orgAll']) charts['orgAll'].destroy();
-    charts['orgAll'] = new Chart(orgAllCtx, {
-      type: 'line',
-      data: {
-        labels: prods[0].days.map(d => d.label),
-        datasets: prods.map((p, i) => ({
-          label: p.name.split(' ').slice(0,2).join(' '),
-          borderColor: colors[i], borderWidth:2, tension:.3,
-          data: p.days.map(d => d.orders)
-        }))
-      }, options: baseOpts
-    });
-  }
-
-  // График: первый товар детально
-  const org0Ctx = document.getElementById('chartOrg0');
-  if (org0Ctx && prods[0]) {
-    const p0 = prods[0];
-    if (charts['org0']) charts['org0'].destroy();
-    charts['org0'] = new Chart(org0Ctx, {
-      type: 'line',
-      data: {
-        labels: p0.days.map(d => d.label),
-        datasets: [
-          { label: 'Заказы/день', data: p0.days.map(d => d.orders), borderColor:'#06b6d4', borderWidth:2, tension:.3 },
-          { label: 'Выручка (тыс.₽)', data: p0.days.map(d => Math.round(d.revenue/1000)), borderColor:'#22c55e', borderWidth:2, tension:.3 },
-        ]
-      }, options: baseOpts
-    });
-  }
 
   // Таблица органики / заказов
   const orgBody = document.getElementById('orgTable');
