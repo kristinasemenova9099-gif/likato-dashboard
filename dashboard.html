@@ -417,8 +417,10 @@
               <th style="background:rgba(251,191,36,0.08);text-align:right">Расход РК, ₽</th>
               <th style="background:rgba(251,191,36,0.08);text-align:right">Заказы с РК</th>
               <th style="background:rgba(251,191,36,0.08);text-align:center">ДРР</th>
+              <th style="background:rgba(34,197,94,0.08);text-align:right">Раздачи, шт</th>
+              <th style="background:rgba(34,197,94,0.08);text-align:right">На раздачи, ₽</th>
             </tr></thead>
-            <tbody id="orgTable"><tr><td colspan="7" style="color:var(--text2)">Загрузка...</td></tr></tbody>
+            <tbody id="orgTable"><tr><td colspan="9" style="color:var(--text2)">Загрузка...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -965,11 +967,17 @@ function renderDashboard(data) {
   // Таблица органики / заказов
   const orgBody = document.getElementById('orgTable');
   if (orgBody) {
+    // деньги/штуки раздач по товару — из архива раздач
+    const razByNm = {};
+    (data.razdachi_archive || []).forEach(a => { razByNm[String(a.nmId)] = a; });
     orgBody.innerHTML = prods.map(p => {
       const rev = Math.round(p.total_revenue).toLocaleString('ru');
       const spend = p.ad_spend || 0;
       const adOrders = p.ad_orders || 0;
       const drr = p.ad_drr || 0;
+      const raz = razByNm[String(p.nmId)] || {};
+      const razCount = raz.razdachi || 0;
+      const razMoney = raz.money || 0;
       const drrColor = drr === 0 ? 'var(--text2)' : drr <= 20 ? '#22c55e' : drr <= 30 ? '#3b82f6' : drr <= 40 ? '#f59e0b' : drr <= 50 ? '#ef4444' : '#a855f7';
       const drrCell = spend > 0
         ? `<span style="font-weight:700;color:${drrColor}">${drr}%</span>`
@@ -982,6 +990,8 @@ function renderDashboard(data) {
         <td style="text-align:right;background:rgba(251,191,36,0.05)">${spend > 0 ? spend.toLocaleString('ru') + ' ₽' : '<span style="color:var(--text2)">—</span>'}</td>
         <td style="text-align:right;background:rgba(251,191,36,0.05)">${spend > 0 ? adOrders.toLocaleString('ru') : '<span style="color:var(--text2)">—</span>'}</td>
         <td style="text-align:center;background:rgba(251,191,36,0.05)">${drrCell}</td>
+        <td style="text-align:right;background:rgba(34,197,94,0.05)">${razCount > 0 ? razCount.toLocaleString('ru') : '<span style="color:var(--text2)">—</span>'}</td>
+        <td style="text-align:right;background:rgba(34,197,94,0.05)">${razMoney > 0 ? razMoney.toLocaleString('ru') + ' ₽' : '<span style="color:var(--text2)">—</span>'}</td>
       </tr>`;
     }).join('');
   }
