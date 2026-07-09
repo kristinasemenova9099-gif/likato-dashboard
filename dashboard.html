@@ -2492,43 +2492,71 @@ function calcRun() {
   setCoef('calcCompCoef',     competitors);
   setCoef('calcRedemptCoef',  redemptCoef);
 
-  // Итоговый расчёт
   const totalCoef  = season * ratingCoef * ctrCoef * convCoef * competitors * redemptCoef * rankCoef;
-  const basePerDay = freq / (targetPos * 30);
-  const perDay     = Math.ceil(basePerDay * totalCoef);
-  const total      = perDay * days;
-  const price      = avgPrice > 0 ? Math.round(avgPrice * (1 - discountPct / 100)) : 0;
-  const cost       = price > 0 ? total * price : 0;
+
+  // Реальный якорь: сколько раздач/день товар делает сейчас (среднее по последним дням с фактом)
+  const recentDays = (p.days || []).filter(d => d.dist_fact != null && d.dist_fact > 0).slice(-7);
+  const recentRazPerDay = recentDays.length
+    ? Math.round(recentDays.reduce((s, d) => s + d.dist_fact, 0) / recentDays.length) : 0;
+  const posNow = currentPos || 0;
+
+  // Основной режим — ЭМПИРИЧЕСКИЙ (калибровка по факту товара): заказы ∝ 1/позиция.
+  // Если истории нет — фолбэк на формулу по частоте (рекалибровано, мягче).
+  let perDay, basePerDay, empirical;
+  if (recentRazPerDay > 0 && posNow > 0) {
+    empirical = true;
+    basePerDay = recentRazPerDay * (posNow / targetPos);
+    perDay = Math.max(1, Math.ceil(basePerDay));
+  } else {
+    empirical = false;
+    basePerDay = freq / (targetPos * 90);   // рекалибровано на реальных данных LIKATO
+    perDay = Math.max(1, Math.ceil(basePerDay * totalCoef));
+  }
+  const total = perDay * days;
+  const price = avgPrice > 0 ? Math.round(avgPrice * (1 - discountPct / 100)) : 0;
+  const cost  = price > 0 ? total * price : 0;
 
   document.getElementById('calcResPerDay').textContent = perDay.toLocaleString('ru');
   document.getElementById('calcResTotal').textContent  = total.toLocaleString('ru');
   document.getElementById('calcResCost').textContent   = cost > 0 ? Math.round(cost/1000).toLocaleString('ru') + ' тыс ₽' : '—';
 
-  // Разбивка коэффициентов
-  const factors = [
-    { label: 'База', v: Math.round(basePerDay), unit: 'шт/д', neutral: true },
-    { label: 'Сезон', v: season },
-    { label: 'Рейтинг', v: ratingCoef },
-    { label: 'CTR', v: ctrCoef },
-    { label: 'Конверсия', v: convCoef },
-    { label: 'Конкуренты', v: competitors },
-    { label: 'Выкуп', v: redemptCoef },
-    { label: rankType === 'redemption' ? 'По выкупу' : 'По заказам', v: rankCoef },
-    { label: 'Итого ×', v: totalCoef, bold: true },
-  ];
+  // Разбивка
+  let factors;
+  if (empirical) {
+    factors = [
+      { label: 'Сейчас раздаём', v: recentRazPerDay, unit: 'шт/д', neutral: true },
+      { label: 'Позиция сейчас', v: posNow, unit: '#', neutral: true },
+      { label: 'Цель', v: targetPos, unit: '#', neutral: true },
+      { label: 'Множитель позиции', v: (posNow / targetPos), bold: true },
+    ];
+  } else {
+    factors = [
+      { label: 'База', v: Math.round(basePerDay), unit: 'шт/д', neutral: true },
+      { label: 'Сезон', v: season }, { label: 'Рейтинг', v: ratingCoef },
+      { label: 'CTR', v: ctrCoef }, { label: 'Конверсия', v: convCoef },
+      { label: 'Конкуренты', v: competitors }, { label: 'Выкуп', v: redemptCoef },
+      { label: 'Итого ×', v: totalCoef, bold: true },
+    ];
+  }
   document.getElementById('calcCoefBreakdown').innerHTML = factors.map(f => {
     const color = f.neutral || f.bold ? 'var(--text2)' : _coefColor(f.v);
     const bg = f.bold ? 'rgba(99,102,241,.2)' : 'var(--surface)';
-    const val = f.unit ? f.v + ' ' + f.unit : '×' + f.v.toFixed(2);
+    const val = f.unit ? f.v.toLocaleString('ru') + ' ' + f.unit : '×' + f.v.toFixed(2);
     return `<span style="background:${bg};border:1px solid var(--border);border-radius:20px;padding:3px 9px;font-size:10px;color:${color};font-weight:${f.bold?700:400}">${f.label}: <b>${val}</b></span>`;
   }).join('');
 
   // Детали
-  let detail = `<b>Ключ:</b> «${kw.q}» · частота ${freq.toLocaleString('ru')}`;
-  if (currentPos > 0) detail += ` · текущая позиция: ${currentPos} → цель: ${targetPos}`;
-  detail += `<br><b>Итог:</b> ${perDay} шт/день × ${days} дней = <b>${total.toLocaleString('ru')} шт</b>`;
+  let detail;
+  if (empirical) {
+    detail = `<b>Расчёт по факту товара:</b> сейчас ~${recentRazPerDay} раздач/день удерживают «${kw.q}» на #${posNow}.`;
+    detail += `<br>Чтобы дойти до #${targetPos}, масштабируем по правилу «заказы ∝ 1/позиция»: ${recentRazPerDay} × ${posNow}/${targetPos} ≈ <b>${perDay} шт/день</b>.`;
+  } else {
+    detail = `<b>Оценка по частоте</b> (нет истории раздач по товару): «${kw.q}» · ${freq.toLocaleString('ru')}/мес → цель #${targetPos}.`;
+    detail += `<br><b>Итог:</b> ${perDay} шт/день (с учётом коэффициентов).`;
+  }
+  detail += `<br><b>Всего:</b> ${perDay} × ${days} дней = <b>${total.toLocaleString('ru')} шт</b>`;
   if (avgPrice > 0) detail += `<br><b>Цена покупателя (скидка ${discountPct}%):</b> ${price} ₽ · затраты ~${cost.toLocaleString('ru')} ₽`;
-  detail += `<br><span style="color:var(--text2);font-size:10px">Точность ±40–50% — используй как стартовую точку, корректируй по результату</span>`;
+  detail += `<br><span style="color:var(--text2);font-size:10px">${empirical ? 'Калибровано по реальным раздачам этого товара' : 'Оценка по частоте, точность ±50%'} — корректируй по результату</span>`;
 
   document.getElementById('calcResDetail').innerHTML = detail;
   document.getElementById('calcResult').style.display = 'block';
