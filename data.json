@@ -798,14 +798,17 @@
           "avg_price": null
         }
       ],
-      "ad_spend": 0,
-      "ad_orders": 0,
+      "ad_spend": 1272197,
+      "ad_orders": 6207,
       "ad_clicks": 0,
       "ad_shows": 0,
-      "ad_ctr": 0,
-      "ad_cpc": 0,
-      "ad_drr": 0.0,
-      "ad_campaigns": []
+      "ad_ctr": 2.77,
+      "ad_cpc": 13.3,
+      "ad_drr": 12.1,
+      "ad_campaigns": [
+        35734410,
+        35734429
+      ]
     },
     {
       "name": "Крем-спрей с вишней 17в1",
@@ -1602,14 +1605,17 @@
           "avg_price": null
         }
       ],
-      "ad_spend": 0,
-      "ad_orders": 0,
+      "ad_spend": 324669,
+      "ad_orders": 2864,
       "ad_clicks": 0,
       "ad_shows": 0,
-      "ad_ctr": 0,
-      "ad_cpc": 0,
-      "ad_drr": 0.0,
-      "ad_campaigns": []
+      "ad_ctr": 2.73,
+      "ad_cpc": 10.2,
+      "ad_drr": 20.2,
+      "ad_campaigns": [
+        35686247,
+        35734743
+      ]
     },
     {
       "name": "Гель для душа OH MY CHERRY",
@@ -4003,14 +4009,17 @@
           "avg_price": null
         }
       ],
-      "ad_spend": 0,
-      "ad_orders": 0,
+      "ad_spend": 32476,
+      "ad_orders": 385,
       "ad_clicks": 0,
       "ad_shows": 0,
-      "ad_ctr": 0,
-      "ad_cpc": 0,
-      "ad_drr": 0.0,
-      "ad_campaigns": []
+      "ad_ctr": 3.32,
+      "ad_cpc": 11.8,
+      "ad_drr": 9.1,
+      "ad_campaigns": [
+        37270989,
+        37272770
+      ]
     }
   ],
   "ads": [
@@ -19141,10 +19150,10 @@
     "total_orders": 18172,
     "total_revenue": 13856715.0,
     "price_violations": 0,
-    "ad_spend": 0,
-    "ad_orders": 0,
-    "drr": 0.0,
-    "ads_count": 0
+    "ad_spend": 1629342,
+    "ad_orders": 9456,
+    "drr": 11.8,
+    "ads_count": 3
   },
   "novosti": [],
   "keywords": {},
