@@ -309,6 +309,7 @@
   <div class="tab" onclick="switchTab('novinka', this)">Новинки</div>
   <div class="tab" onclick="switchTab('advisor', this)">🎯 Советник по раздачам</div>
   <div class="tab" onclick="switchTab('archive', this)">📒 Архив раздач</div>
+  <div class="tab" onclick="switchTab('vyvody', this)">📊 Выводы</div>
 </div>
 
 <div class="main">
@@ -628,6 +629,59 @@
       </table>
     </div>
   </div><!-- /page-archive -->
+
+  <!-- === ВЫВОДЫ (сводка для руководителя) === -->
+  <div class="page" id="page-vyvody">
+
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px">
+      <div>
+        <div style="font-size:18px;font-weight:700;color:var(--text)">📊 Выводы</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">Картина спринта одним экраном. Цвет = приоритет: сначала красное.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--text2)">План на спринт:</span>
+        <label style="font-size:11px;color:var(--text2)">выручка, млн
+          <input id="planRevenue" type="number" step="0.1" min="0"
+                 style="width:70px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 7px;border-radius:6px;font-size:12px;margin-left:4px">
+        </label>
+        <label style="font-size:11px;color:var(--text2)">заказы
+          <input id="planOrders" type="number" step="100" min="0"
+                 style="width:80px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 7px;border-radius:6px;font-size:12px;margin-left:4px">
+        </label>
+        <button class="btn" onclick="saveVyvodyPlan()">Сохранить</button>
+      </div>
+    </div>
+
+    <div id="vyvodyKpi" class="kpi-grid" style="margin-bottom:18px"></div>
+
+    <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Светофор по товарам</div>
+    <div class="table-wrap" style="margin-bottom:18px">
+      <table style="font-size:12px;width:100%">
+        <thead><tr>
+          <th style="min-width:190px">Товар</th>
+          <th style="text-align:right">Заказы</th>
+          <th style="text-align:right">Выручка</th>
+          <th style="text-align:right">Остаток</th>
+          <th style="text-align:right">ДРР</th>
+          <th style="text-align:right">Раздачи</th>
+          <th style="min-width:210px">Что делаем</th>
+        </tr></thead>
+        <tbody id="vyvodyTable"><tr><td colspan="7" style="color:var(--text2);padding:12px">Загрузка...</td></tr></tbody>
+      </table>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:8px;padding:13px 15px">
+        <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Требует решения</div>
+        <div id="vyvodyAlerts" style="font-size:12px;line-height:1.6"></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:8px;padding:13px 15px">
+        <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Качество данных</div>
+        <div id="vyvodyQuality" style="font-size:12px;line-height:1.6"></div>
+      </div>
+    </div>
+
+  </div><!-- /page-vyvody -->
 
 </div><!-- /main -->
 
@@ -2648,6 +2702,207 @@ function loadNovinkaJson() {
 }
 // ─────────────────────────────────────────────────────────────
 
+// ═══════════ ЛИСТ «ВЫВОДЫ» ═══════════
+// Пороги светофора. Норма ДРР для LIKATO — 20%.
+const VYVODY_THRESHOLDS = {
+  drr:        { yellow: 20, red: 25 },   // выше нормы — жёлтый, сильно выше — красный
+  stockDays:  { low_red: 10, low_yellow: 21, high_yellow: 90, high_red: 120 },
+  distPct:    { yellow: 50, red: 30 },   // ниже порога — жёлтый/красный
+  convDropPp: 10                          // падение конверсии в заказ, п.п.
+};
+// Расчёт по факту спринта 01.06.2026 (49 дней): осторожно по флагману —
+// у набора Daily тренд 7/7 = -17%, базово по растущим новинкам (+42% и +57%).
+const VYVODY_PLAN_DEFAULT = { revenue: 20, orders: 27000 };
+
+function getVyvodyPlan() {
+  try {
+    const s = localStorage.getItem('likato_plans');
+    if (s) return Object.assign({}, VYVODY_PLAN_DEFAULT, JSON.parse(s));
+  } catch (e) { /* localStorage недоступен — используем дефолт */ }
+  return Object.assign({}, VYVODY_PLAN_DEFAULT);
+}
+
+function saveVyvodyPlan() {
+  const plan = {
+    revenue: parseFloat(document.getElementById('planRevenue').value) || 0,
+    orders:  parseInt(document.getElementById('planOrders').value, 10) || 0
+  };
+  try { localStorage.setItem('likato_plans', JSON.stringify(plan)); } catch (e) { /* приватный режим */ }
+  if (window.rawData) renderVyvody(window.rawData);
+}
+
+// Возвращает {level, reasons[]} — level: 'red' | 'yellow' | 'green'
+function vyvodyStatus(p) {
+  const T = VYVODY_THRESHOLDS, reasons = [];
+  let level = 'green';
+  const bump = (lv) => { if (lv === 'red' || level === 'green') level = lv; };
+
+  const drr = p.ad_drr || 0;
+  if (drr > T.drr.red)         { bump('red');    reasons.push(`ДРР ${drr}% — сильно выше нормы 20%`); }
+  else if (drr > T.drr.yellow) { bump('yellow'); reasons.push(`ДРР ${drr}% — выше нормы 20%`); }
+
+  const d = p.days_of_stock;
+  if (d != null) {
+    if (d < T.stockDays.low_red)          { bump('red');    reasons.push(`запас ${d} дн — рискуем вымыться`); }
+    else if (d < T.stockDays.low_yellow)  { bump('yellow'); reasons.push(`запас ${d} дн — пора довозить`); }
+    else if (d > T.stockDays.high_red)    { bump('red');    reasons.push(`запас ${d} дн — затоварка`); }
+    else if (d > T.stockDays.high_yellow) { bump('yellow'); reasons.push(`запас ${d} дн — многовато`); }
+  }
+
+  const dp = p.dist_plan ? Math.round(p.dist_fact * 100 / p.dist_plan) : null;
+  if (dp != null) {
+    if (dp < T.distPct.red)         { bump('red');    reasons.push(`раздачи ${dp}% плана`); }
+    else if (dp < T.distPct.yellow) { bump('yellow'); reasons.push(`раздачи ${dp}% плана`); }
+  }
+
+  if (p.price_status && p.price_status !== 'OK') { bump('red'); reasons.push('нарушение цены'); }
+
+  const f = p.funnel || {};
+  if (f.conv_order != null && f.conv_order_prev != null &&
+      f.conv_order_prev - f.conv_order >= T.convDropPp) {
+    bump('yellow');
+    reasons.push(`конверсия в заказ ${f.conv_order_prev}% → ${f.conv_order}%`);
+  }
+
+  return { level, reasons, distPct: dp };
+}
+
+function vyvodyAction(p, st) {
+  if (st.reasons.length === 0) return 'Идёт по плану. Наблюдаем.';
+  const a = [];
+  const drr = p.ad_drr || 0;
+  if (drr > VYVODY_THRESHOLDS.drr.yellow) a.push('пересмотреть ставки РК');
+  if (p.days_of_stock > VYVODY_THRESHOLDS.stockDays.high_yellow)
+    a.push((p.ad_spend ? 'усилить продвижение' : 'запустить РК') + ' или не довозить партию');
+  if (p.days_of_stock < VYVODY_THRESHOLDS.stockDays.low_yellow) a.push('срочно довезти товар');
+  if (st.distPct != null && st.distPct < VYVODY_THRESHOLDS.distPct.yellow) a.push('добить раздачи до плана');
+  if (p.price_status && p.price_status !== 'OK') a.push('вернуть цену в РРЦ/МРЦ');
+  const f = p.funnel || {};
+  if (f.conv_order != null && f.conv_order_prev - f.conv_order >= VYVODY_THRESHOLDS.convDropPp)
+    a.push('карточка не конвертит — контент и цена');
+  return a.length ? (a.join(', ').replace(/^./, c => c.toUpperCase()) + '.') : st.reasons.join('; ') + '.';
+}
+
+function renderVyvody(data) {
+  const products = data.products || [];
+  const s = data.summary || {};
+  const plan = getVyvodyPlan();
+  const money = n => (n / 1e6).toFixed(2) + ' млн';
+  const num = n => Number(n || 0).toLocaleString('ru-RU');
+
+  const rInp = document.getElementById('planRevenue');
+  const oInp = document.getElementById('planOrders');
+  if (rInp && document.activeElement !== rInp) rInp.value = plan.revenue;
+  if (oInp && document.activeElement !== oInp) oInp.value = plan.orders;
+
+  // ── KPI-плитки
+  const rev = s.total_revenue || 0, ord = s.total_orders || 0, drr = s.drr || 0;
+  const revPct = plan.revenue ? Math.round(rev / (plan.revenue * 1e6) * 100) : null;
+  const ordPct = plan.orders  ? Math.round(ord / plan.orders * 100) : null;
+  const pctCls = p => p == null ? 'blue' : (p >= 100 ? 'green' : p >= 75 ? 'yellow' : 'red');
+  const drrCls = drr > VYVODY_THRESHOLDS.drr.red ? 'red'
+               : drr > VYVODY_THRESHOLDS.drr.yellow ? 'yellow' : 'green';
+  const viol = s.price_violations || 0;
+
+  document.getElementById('vyvodyKpi').innerHTML = `
+    <div class="kpi-card ${pctCls(revPct)}">
+      <div class="kpi-label">Выручка, спринт</div>
+      <div class="kpi-val">${money(rev)}</div>
+      <div class="kpi-sub">${revPct != null ? `${revPct}% от плана ${plan.revenue} млн` : 'план не задан'}</div>
+    </div>
+    <div class="kpi-card ${pctCls(ordPct)}">
+      <div class="kpi-label">Заказы</div>
+      <div class="kpi-val">${num(ord)}</div>
+      <div class="kpi-sub">${ordPct != null ? `${ordPct}% от плана ${num(plan.orders)}` : 'план не задан'}</div>
+    </div>
+    <div class="kpi-card ${drrCls}">
+      <div class="kpi-label">ДРР общий</div>
+      <div class="kpi-val">${drr}%</div>
+      <div class="kpi-sub">норма до ${VYVODY_THRESHOLDS.drr.yellow}%</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Расход РК</div>
+      <div class="kpi-val">${money(s.ad_spend || 0)}</div>
+      <div class="kpi-sub">${s.ads_count || 0} кампаний</div>
+    </div>
+    <div class="kpi-card ${viol ? 'red' : 'green'}">
+      <div class="kpi-label">Нарушения цены</div>
+      <div class="kpi-val">${viol}</div>
+      <div class="kpi-sub">из ${products.length} товаров</div>
+    </div>`;
+
+  // ── Светофор
+  const DOT = { red: 'var(--red)', yellow: 'var(--yellow)', green: 'var(--green)' };
+  const BADGE = { red: 'badge-red', yellow: 'badge-yellow', green: 'badge-green' };
+  const ORDER = { red: 0, yellow: 1, green: 2 };
+
+  const rows = products.map(p => ({ p, st: vyvodyStatus(p) }))
+    .sort((a, b) => ORDER[a.st.level] - ORDER[b.st.level] ||
+                    (b.p.total_revenue || 0) - (a.p.total_revenue || 0));
+
+  const totalRev = products.reduce((acc, p) => acc + (p.total_revenue || 0), 0);
+
+  document.getElementById('vyvodyTable').innerHTML = rows.map(({ p, st }) => {
+    const share = totalRev ? Math.round((p.total_revenue || 0) * 100 / totalRev) : 0;
+    const dp = st.distPct;
+    const dpCls = dp == null ? 'var(--text2)'
+                : dp < VYVODY_THRESHOLDS.distPct.red ? 'var(--red)'
+                : dp < VYVODY_THRESHOLDS.distPct.yellow ? 'var(--yellow)' : 'var(--green)';
+    const drrV = p.ad_drr || 0;
+    const drrBadge = !p.ad_spend ? '<span class="badge badge-gray">нет РК</span>'
+      : `<span class="badge ${drrV > VYVODY_THRESHOLDS.drr.red ? 'badge-red'
+          : drrV > VYVODY_THRESHOLDS.drr.yellow ? 'badge-yellow' : 'badge-green'}">${drrV}%</span>`;
+    const dDays = p.days_of_stock;
+    const dCls = dDays == null ? 'var(--text2)'
+               : (dDays > VYVODY_THRESHOLDS.stockDays.high_red || dDays < VYVODY_THRESHOLDS.stockDays.low_red) ? 'var(--red)'
+               : (dDays > VYVODY_THRESHOLDS.stockDays.high_yellow || dDays < VYVODY_THRESHOLDS.stockDays.low_yellow) ? 'var(--yellow)'
+               : 'var(--text2)';
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;font-weight:600">
+          <span style="width:9px;height:9px;border-radius:50%;flex:none;background:${DOT[st.level]}"></span>
+          <span>${p.name || '—'}</span>
+        </div>
+        <div style="color:var(--text2);font-size:11px;margin-left:17px">${p.nmId} · рейт ${p.rating ?? '—'}</div>
+      </td>
+      <td style="text-align:right;font-weight:600">${num(p.total_orders)}</td>
+      <td style="text-align:right;font-weight:600">${money(p.total_revenue || 0)}
+        <div style="color:var(--text2);font-size:11px;font-weight:400">${share}% выручки</div></td>
+      <td style="text-align:right">${num(p.stock_total)}
+        <div style="color:${dCls};font-size:11px">${dDays != null ? dDays + ' дн' : '—'}</div></td>
+      <td style="text-align:right">${drrBadge}</td>
+      <td style="text-align:right;color:${dpCls};font-weight:600">${dp != null ? dp + '%' : '—'}
+        <div style="color:var(--text2);font-size:11px;font-weight:400">${num(p.dist_fact)}/${num(p.dist_plan)}</div></td>
+      <td style="font-size:11.5px;line-height:1.45">${vyvodyAction(p, st)}</td>
+    </tr>`;
+  }).join('');
+
+  // ── Требует решения
+  const alerts = rows.filter(r => r.st.level !== 'green')
+    .map(r => `<div style="margin-bottom:7px">● <b>${r.p.name}</b> — ${r.st.reasons.join('; ')}</div>`);
+  const distFact = products.reduce((a, p) => a + (p.dist_fact || 0), 0);
+  const distPlan = products.reduce((a, p) => a + (p.dist_plan || 0), 0);
+  if (distPlan) {
+    const pct = Math.round(distFact * 100 / distPlan);
+    if (pct < 90) alerts.push(`<div style="margin-bottom:7px">● <b>Раздачи</b> — общий план выполнен на ${pct}% (${num(distFact)} из ${num(distPlan)})</div>`);
+  }
+  document.getElementById('vyvodyAlerts').innerHTML =
+    alerts.length ? alerts.join('') : '<div style="color:var(--green)">Всё в норме — красных и жёлтых нет.</div>';
+
+  // ── Качество данных
+  const q = [];
+  const zeroRedeem = products.filter(p => (p.funnel?.redemption_pct === 0) && (p.funnel?.redemption_prev > 0));
+  if (zeroRedeem.length)
+    q.push(`Выкуп = 0% у ${zeroRedeem.length} из ${products.length} товаров при 92–100% ранее — период собран не полностью.`);
+  const noAds = products.filter(p => !p.ad_spend).length;
+  if (noAds) q.push(`У ${noAds} товаров нет данных по РК — либо кампании не запущены, либо не отдал ad-API.`);
+  if (!data.keywords || Object.keys(data.keywords).length === 0)
+    q.push('Позиции по ключевым словам не загрузились — MPStats/Sheets были недоступны.');
+  q.push(`Данные обновлены: ${data.updated_at || '—'}.`);
+  document.getElementById('vyvodyQuality').innerHTML =
+    q.map(t => `<div style="margin-bottom:7px">● ${t}</div>`).join('');
+}
+
 function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
@@ -2655,6 +2910,7 @@ function switchTab(tab, el) {
   document.getElementById('page-novinka').classList.toggle('active', tab==='novinka');
   document.getElementById('page-advisor').classList.toggle('active', tab==='advisor');
   document.getElementById('page-archive').classList.toggle('active', tab==='archive');
+  document.getElementById('page-vyvody').classList.toggle('active', tab==='vyvody');
 }
 
 // Загружаем data.json (без кэша)
@@ -2671,6 +2927,7 @@ function loadData() {
       document.getElementById('dateTo').value   = allDays[allDays.length-1].date;
     }
     try { renderDashboard(data); } catch(e) { console.error('renderDashboard error:', e); }
+    try { renderVyvody(data); } catch(e) { console.error('renderVyvody error:', e); }
     try { renderStaticCharts(); } catch(e) { console.error('renderStaticCharts error:', e); }
     loadNovinkaJson();
   })
