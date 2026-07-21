@@ -804,6 +804,9 @@ function checkDataHealth(data) {
   // Реклама тоже из внешнего источника — проверяем отдельно
   if (!(data.ads || []).length) lost.push('статистика РК');
 
+  // Флаг читают другие блоки, чтобы не выдавать выводы по битым данным
+  window.__dataIncomplete = lost.length > 0;
+
   if (!lost.length) { el.style.display = 'none'; return; }
 
   el.style.cssText = 'display:block;margin:0 20px 14px;padding:10px 14px;border-radius:8px;'
@@ -923,7 +926,16 @@ function renderDashboard(data) {
   const el = id => document.getElementById(id);
   if (el('kpi-ad-spend'))  el('kpi-ad-spend').textContent  = Math.round(rkSpend).toLocaleString('ru') + ' ₽';
   if (el('kpi-ad-orders')) el('kpi-ad-orders').textContent = rkOrders.toLocaleString('ru');
-  if (el('kpi-ads-count')) el('kpi-ads-count').textContent = topRows.filter(a=>a.spend>0).length + ' из 4';
+  // Кампании по ТОП-товарам: статус 9 — идут показы, 11 — на паузе.
+  // Раньше здесь считались товары с расходом против жёстко вписанной «4»,
+  // из-за чего выходило «5 из 4».
+  if (el('kpi-ads-count')) {
+    const topAds = (data.ads || []).filter(a => a.is_top);
+    const active = topAds.filter(a => a.status === 9).length;
+    el('kpi-ads-count').textContent = topAds.length
+      ? active + ' из ' + topAds.length
+      : '—';
+  }
 
   // Прогресс-бары раздач — из data.json (дневник) или localStorage
   sheetDistData = prods.map(p => ({
@@ -1531,7 +1543,11 @@ function renderAlerts(data) {
     `<div class="alert ${a.type}"><span class="alert-icon">${a.icon}</span><span class="alert-body"><span class="alert-product">${a.product}</span><span class="alert-msg">${a.msg}</span></span></div>`;
 
   if (alerts.length === 0) {
-    el.innerHTML = '<div class="alert green"><span class="alert-icon">✅</span><span class="alert-body"><span class="alert-msg">Всё в норме — критичных отклонений не обнаружено</span></span></div>';
+    // «Всё в норме» честно только на полных данных: если сбор не донёс
+    // воронку и раздачи, отклонениям просто неоткуда взяться.
+    el.innerHTML = window.__dataIncomplete
+      ? '<div class="alert yellow"><span class="alert-icon">⚠️</span><span class="alert-body"><span class="alert-msg">Проверка невозможна — данные неполные, см. предупреждение выше</span></span></div>'
+      : '<div class="alert green"><span class="alert-icon">✅</span><span class="alert-body"><span class="alert-msg">Всё в норме — критичных отклонений не обнаружено</span></span></div>';
     return;
   }
 
