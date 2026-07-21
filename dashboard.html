@@ -1787,7 +1787,25 @@ function renderDistEfficiency(data) {
             }
           },
           scales: {
-            x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+            x: {
+              ticks: {
+                color: '#64748b', font: { size: 10 },
+                // Chart.js прореживает подписи (каждая 3-я из 50), из-за чего
+                // ось обрывалась на 7.19 и казалось, что последнего дня нет.
+                // Последнюю дату подписываем всегда — столбик за неё есть.
+                // autoSkip выключен: он срабатывает ПОСЛЕ callback и всё равно
+                // выбрасывал последнюю дату. Прореживаем вручную.
+                autoSkip: false, maxRotation: 45, minRotation: 45,
+                callback(value, index, ticks) {
+                  const label = this.getLabelForValue(value);
+                  const last = this.chart.data.labels.length - 1;
+                  if (index === last) return label;          // последний день — всегда
+                  if (last - index < 3) return '';           // чтобы не налезал на него
+                  return index % 3 === 0 ? label : '';
+                }
+              },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            },
             yOrders: {
               position: 'left',
               stacked: true,
