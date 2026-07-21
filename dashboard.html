@@ -144,6 +144,10 @@
   </div>
 </div>
 
+<!-- Предупреждение о неполных данных: показывается, если сбор не донёс
+     воронку/раздачи/показы из Google Sheets (см. checkDataHealth) -->
+<div id="dataHealth" style="display:none"></div>
+
 <!-- MODAL: Калькулятор раздач -->
 <div id="distCalcModal" onclick="if(event.target===this)closeDistCalc()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;overflow-y:auto;padding:30px 16px">
   <div style="max-width:680px;margin:0 auto;background:var(--surface);border-radius:16px;padding:28px;position:relative">
@@ -778,9 +782,44 @@ const baseOpts = {
 function cumsum(arr) { let s=0; return arr.map(v=>(s+=v)); }
 const charts = {};
 
+// Проверяет, всё ли донёс последний сбор. Заказы и выручка приходят из API WB
+// напрямую, а воронка, раздачи и цены — из Google Sheets: если при прогоне
+// рвётся сеть, эти поля молча обнуляются, а дашборд выглядит правдоподобно.
+function checkDataHealth(data) {
+  const el = document.getElementById('dataHealth');
+  if (!el) return;
+
+  const prods = data.products || [];
+  const allDays = prods.flatMap(p => p.days || []);
+  if (!allDays.length) return;
+
+  const filled = f => allDays.filter(d => d[f] !== null && d[f] !== 0).length;
+  const SOURCES = [
+    { field: 'order_sum', label: 'воронка продаж' },
+    { field: 'dist_fact', label: 'раздачи по дням' },
+    { field: 'shows',     label: 'показы и CTR' }
+  ];
+  const lost = SOURCES.filter(s => filled(s.field) === 0).map(s => s.label);
+
+  // Реклама тоже из внешнего источника — проверяем отдельно
+  if (!(data.ads || []).length) lost.push('статистика РК');
+
+  if (!lost.length) { el.style.display = 'none'; return; }
+
+  el.style.cssText = 'display:block;margin:0 20px 14px;padding:10px 14px;border-radius:8px;'
+    + 'background:rgba(245,158,11,.13);border-left:3px solid #f59e0b;'
+    + 'color:#fbbf24;font-size:12.5px;line-height:1.55';
+  el.innerHTML = '<b>Данные неполные.</b> Последний сбор не получил: '
+    + lost.join(', ') + '. '
+    + 'Заказы и выручка верны, остальное показано частично или нулями. '
+    + 'Причина — обрыв связи с Google Sheets во время сбора. '
+    + 'Запустите <b>run_fetch.cmd</b> заново, когда будет стабильный интернет.';
+}
+
 function renderDashboard(data) {
   // Обновляем время
   document.querySelector('.last-update').textContent = '↻ Обновлено: ' + data.updated_at;
+  try { checkDataHealth(data); } catch (e) { console.warn('checkDataHealth:', e); }
 
   const prods = data.products;
   const totalOrders = data.summary.total_orders;
