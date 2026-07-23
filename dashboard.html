@@ -1674,8 +1674,13 @@ function renderDistEfficiency(data) {
         return (dt.getMonth()+1) + '.' + String(dt.getDate()).padStart(2,'0');
       });
 
-      // Расчёт органических заказов: total = order_sum / avg_price, organic = total - dist_fact
+      // Всего заказов за день: основной источник — WB API (поле orders, есть за
+      // все дни спринта). Прежний расчёт order_sum/avg_price брался из листа
+      // «Воронка по дням» и покрывал лишь ~29 дней из 52, из-за чего график
+      // органики обрывался в начале спринта и на последних днях.
+      // Расхождение между источниками ~4%, поэтому Sheets оставлен запасным.
       const totalOrders = days.map(d => {
+        if (d.orders) return d.orders;
         const avg = d.avg_price || 0;
         const sum = d.order_sum || 0;
         return avg > 0 ? Math.round(sum / avg) : 0;
