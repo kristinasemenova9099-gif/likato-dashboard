@@ -156,20 +156,49 @@
       <button onclick="closeDistCalc()" style="background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px 8px">✕</button>
     </div>
 
-    <!-- Блок 1: Товар и ключ -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+    <!-- Блок 1: Артикул и запрос — любые, не только из дашборда -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
       <div>
-        <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Товар</div>
-        <select id="calcProduct" onchange="calcUpdateKeywords()" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:12px">
-          <option value="">— выбрать —</option>
-        </select>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Артикул (nm)</div>
+        <input id="calcArtikul" type="text" list="calcArtikulList" placeholder="напр. 955506932" oninput="calcArtikulChanged()"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:13px;box-sizing:border-box">
+        <datalist id="calcArtikulList"></datalist>
       </div>
       <div>
         <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Ключевой запрос</div>
-        <select id="calcKeyword" onchange="calcAutoFill()" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:12px">
-          <option value="">— сначала выберите товар —</option>
-        </select>
+        <input id="calcKeywordText" type="text" list="calcKeywordList" placeholder="любой запрос, необязательно из дашборда" oninput="calcKeywordChanged()"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();calcCheckPositionLive();}"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:13px;box-sizing:border-box">
+        <datalist id="calcKeywordList"></datalist>
       </div>
+    </div>
+
+    <!-- Блок 1b: Позиция / частотность / цена — вручную или живой поиск по WB -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px">
+      <div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Текущая позиция</div>
+        <input id="calcCurrentPos" type="number" min="0" max="5000" placeholder="0 — не знаю" oninput="calcRun()"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:14px;font-weight:700;box-sizing:border-box;text-align:center">
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Частотность/мес</div>
+        <input id="calcFreq" type="number" min="0" placeholder="из WB Аналитики" oninput="calcRun()"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:14px;font-weight:700;box-sizing:border-box;text-align:center">
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Цена, ₽</div>
+        <input id="calcPrice" type="number" min="0" placeholder="0" oninput="calcRun()"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:14px;font-weight:700;box-sizing:border-box;text-align:center">
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <button class="btn" onclick="calcCheckPositionLive()" id="calcCheckBtn" style="font-size:11px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);color:var(--text)">🔎 Проверить позицию на WB сейчас</button>
+      <span id="calcPosStatus" style="font-size:11px;color:var(--text2)"></span>
+    </div>
+    <div style="margin-bottom:18px">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Уже раздаём сейчас, шт/день <span style="font-weight:400">(если раздачи по этому товару уже идут — впишите факт для точного расчёта; для трекаемых товаров подставится автоматически)</span></div>
+      <input id="calcManualRate" type="number" min="0" placeholder="0 — раздач ещё не было" oninput="calcRun()"
+        style="width:160px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:14px;font-weight:700;box-sizing:border-box;text-align:center">
     </div>
 
     <!-- Блок 2: Основные параметры -->
@@ -2440,17 +2469,23 @@ renderKW();
 renderDistSummary();
 
 // ── КАЛЬКУЛЯТОР РАЗДАЧ ────────────────────────────────────────
+// Работает по ЛЮБОМУ артикулу/запросу, не только по трекаемым ТОП-товарам:
+// если артикул есть в rawData.products — подставляем известные данные
+// (рейтинг, CTR, цену, историю раздач), иначе все поля вводятся вручную,
+// а текущую позицию можно проверить live через поиск WB (search.wb.ru, CORS открыт).
 function openDistCalc() {
   document.getElementById('distCalcModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
-  const sel = document.getElementById('calcProduct');
-  sel.innerHTML = '<option value="">— выбрать —</option>';
+  document.getElementById('calcResult').style.display = 'none';
+  document.getElementById('calcPosStatus').textContent = '';
+  const dl = document.getElementById('calcArtikulList');
+  dl.innerHTML = '';
   if (rawData) {
-    (rawData.products || []).forEach((p, i) => {
+    (rawData.products || []).forEach(p => {
       const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = p.name;
-      sel.appendChild(opt);
+      opt.value = String(p.nmId);
+      opt.label = p.name;
+      dl.appendChild(opt);
     });
   }
 }
@@ -2460,41 +2495,120 @@ function closeDistCalc() {
   document.body.style.overflow = '';
 }
 
-function calcUpdateKeywords() {
-  const pi = document.getElementById('calcProduct').value;
-  const sel = document.getElementById('calcKeyword');
-  sel.innerHTML = '<option value="">— выбрать ключ —</option>';
-  document.getElementById('calcResult').style.display = 'none';
-  if (pi === '' || !rawData) return;
-  const p = rawData.products[parseInt(pi)];
-  const nm = String(p.nmId);
-  const kwList = ((rawData.keywords || {})[nm] || {}).keywords || [];
-  kwList.forEach((k, i) => {
-    const opt = document.createElement('option');
-    opt.value = i;
-    const posText = k.pos > 0 ? ` · поз. ${k.pos}` : ' · не найден';
-    opt.textContent = `${k.q} (${(k.freq||0).toLocaleString('ru')}${posText})`;
-    sel.appendChild(opt);
-  });
-  const bestIdx = kwList.findIndex(k => k.pos > 0);
-  if (bestIdx >= 0) sel.value = bestIdx;
-  calcAutoFill();
+// Значения по умолчанию для полей, которые нормально автозаполняются из карточки
+// трекаемого товара — используются как сброс, когда артикул/запрос не найден в данных,
+// чтобы не оставлять "прилипшие" цифры от предыдущего товара.
+const CALC_DEFAULTS = { rating: 4.5, ctr: 4, conv: 20, redemption: 90 };
+
+// Артикул совпал с трекаемым товаром? Подставляем известные данные карточки
+// и список его отслеживаемых запросов (для подсказки), но не ограничиваем ввод ими.
+// Если это новый артикул вне дашборда — сбрасываем поля к дефолтам для ручного ввода.
+function calcArtikulChanged() {
+  const nm = document.getElementById('calcArtikul').value.trim();
+  const kwDl = document.getElementById('calcKeywordList');
+  kwDl.innerHTML = '';
+  document.getElementById('calcPosStatus').textContent = '';
+  if (!rawData || !nm) { calcRun(); return; }
+  const p = (rawData.products || []).find(pp => String(pp.nmId) === nm);
+  if (p) {
+    const fn = p.funnel || {};
+    document.getElementById('calcRating').value     = p.rating > 0 ? p.rating : CALC_DEFAULTS.rating;
+    document.getElementById('calcCtr').value        = fn.ctr > 0 ? fn.ctr : CALC_DEFAULTS.ctr;
+    document.getElementById('calcConv').value       = fn.conv_order > 0 ? fn.conv_order : CALC_DEFAULTS.conv;
+    document.getElementById('calcRedemption').value = fn.redemption_pct > 0 ? fn.redemption_pct : CALC_DEFAULTS.redemption;
+    document.getElementById('calcPrice').value      = fn.avg_price > 0 ? Math.round(fn.avg_price) : '';
+    document.getElementById('calcRankType').value   = (fn.redemption_pct > 0 && fn.redemption_pct < 70) ? 'redemption' : 'orders';
+    ((rawData.keywords || {})[nm] || {}).keywords?.forEach(k => {
+      const opt = document.createElement('option');
+      opt.value = k.q;
+      kwDl.appendChild(opt);
+    });
+  } else {
+    // Неизвестный артикул — сбрасываем к дефолтам, чтобы не тянуть данные предыдущего товара
+    document.getElementById('calcRating').value     = CALC_DEFAULTS.rating;
+    document.getElementById('calcCtr').value        = CALC_DEFAULTS.ctr;
+    document.getElementById('calcConv').value       = CALC_DEFAULTS.conv;
+    document.getElementById('calcRedemption').value = CALC_DEFAULTS.redemption;
+    document.getElementById('calcPrice').value      = '';
+    document.getElementById('calcRankType').value   = 'orders';
+  }
+  calcKeywordChanged();
 }
 
-function calcAutoFill() {
-  const pi = document.getElementById('calcProduct').value;
-  if (pi === '' || !rawData) { calcRun(); return; }
-  const p = rawData.products[parseInt(pi)];
-  const fn = p.funnel || {};
-  // Авто-заполняем из данных карточки
-  if (p.rating > 0)        document.getElementById('calcRating').value    = p.rating;
-  if (fn.ctr > 0)          document.getElementById('calcCtr').value       = fn.ctr;
-  if (fn.conv_order > 0)   document.getElementById('calcConv').value      = fn.conv_order;
-  if (fn.redemption_pct > 0) document.getElementById('calcRedemption').value = fn.redemption_pct;
-  // Тип ранжирования — если выкуп <70% → скорее всего по выкупу
-  if (fn.redemption_pct > 0 && fn.redemption_pct < 70)
-    document.getElementById('calcRankType').value = 'redemption';
+// Если у этого артикула этот же запрос уже отслеживается — подставляем
+// известную позицию/частотность/темп раздач; иначе очищаем поля для ручного ввода
+// (или живой проверки кнопкой), чтобы не оставались значения от прошлой пары арт/запрос.
+function calcKeywordChanged() {
+  const nm = document.getElementById('calcArtikul').value.trim();
+  const q  = document.getElementById('calcKeywordText').value.trim().toLowerCase();
+  document.getElementById('calcPosStatus').textContent = '';
+  let kw = null, p = null;
+  if (rawData && nm && q) {
+    p = (rawData.products || []).find(pp => String(pp.nmId) === nm);
+    const kwList = p ? (((rawData.keywords || {})[nm] || {}).keywords || []) : [];
+    kw = kwList.find(k => (k.q || '').toLowerCase() === q);
+  }
+  if (kw) {
+    document.getElementById('calcCurrentPos').value = kw.pos > 0 ? kw.pos : '';
+    document.getElementById('calcFreq').value = kw.freq || '';
+    const recentDays = (p.days || []).filter(d => d.dist_fact != null && d.dist_fact > 0).slice(-7);
+    document.getElementById('calcManualRate').value = recentDays.length
+      ? Math.round(recentDays.reduce((s, d) => s + d.dist_fact, 0) / recentDays.length) : '';
+  } else {
+    document.getElementById('calcCurrentPos').value = '';
+    document.getElementById('calcFreq').value = '';
+    document.getElementById('calcManualRate').value = '';
+  }
   calcRun();
+}
+
+// Живая проверка позиции на WB для любого артикул+запрос (тот же публичный
+// endpoint, что использует wb_position_checker.py; CORS у него открыт — access-control-allow-origin: *).
+async function calcCheckPositionLive() {
+  const nmRaw = document.getElementById('calcArtikul').value.trim();
+  const q     = document.getElementById('calcKeywordText').value.trim();
+  const statusEl = document.getElementById('calcPosStatus');
+  const btn = document.getElementById('calcCheckBtn');
+  if (!/^\d+$/.test(nmRaw)) { statusEl.style.color = 'var(--red)'; statusEl.textContent = 'Укажите числовой артикул'; return; }
+  if (!q) { statusEl.style.color = 'var(--red)'; statusEl.textContent = 'Укажите запрос'; return; }
+  const artNum = parseInt(nmRaw, 10);
+  btn.disabled = true;
+  try {
+    for (let page = 1; page <= 5; page++) {
+      statusEl.style.color = 'var(--text2)';
+      statusEl.textContent = `Ищем на WB… страница ${page}/5`;
+      const url = `https://search.wb.ru/exactmatch/ru/common/v5/search?query=${encodeURIComponent(q)}&resultset=catalog&limit=100&sort=popular&page=${page}&dest=-1257786`;
+      let resp;
+      try {
+        resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      } catch (e) {
+        statusEl.style.color = 'var(--red)'; statusEl.textContent = 'Ошибка сети при обращении к WB: ' + e.message; return;
+      }
+      if (resp.status === 429) {
+        statusEl.style.color = 'var(--red)'; statusEl.textContent = 'WB ограничил частоту запросов — подождите немного и попробуйте снова'; return;
+      }
+      if (!resp.ok) {
+        statusEl.style.color = 'var(--red)'; statusEl.textContent = `WB вернул ошибку ${resp.status}`; return;
+      }
+      const data = await resp.json();
+      const prods = (data.data && data.data.products) || [];
+      if (!prods.length) break;
+      const idx = prods.findIndex(pr => parseInt(pr.id, 10) === artNum);
+      if (idx >= 0) {
+        const pos = (page - 1) * 100 + idx + 1;
+        document.getElementById('calcCurrentPos').value = pos;
+        statusEl.style.color = 'var(--green)';
+        statusEl.textContent = `Найдено сейчас: позиция #${pos}`;
+        calcRun();
+        return;
+      }
+      if (page < 5) await new Promise(r => setTimeout(r, 600));
+    }
+    statusEl.style.color = 'var(--yellow)';
+    statusEl.textContent = 'Не найден в топ-500 по этому запросу';
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 function _coefColor(v) {
@@ -2505,23 +2619,19 @@ function _coefColor(v) {
 }
 
 function calcRun() {
-  const pi = document.getElementById('calcProduct').value;
-  const ki = document.getElementById('calcKeyword').value;
-  if (pi === '' || !rawData) return;
-
-  const p = rawData.products[parseInt(pi)];
-  const nm = String(p.nmId);
-  const kwList = ((rawData.keywords || {})[nm] || {}).keywords || [];
-  const kw = ki !== '' ? kwList[parseInt(ki)] : null;
+  if (!rawData) return;
+  const nm = document.getElementById('calcArtikul').value.trim();
+  const q  = document.getElementById('calcKeywordText').value.trim();
 
   const targetPos   = parseInt(document.getElementById('calcTargetPos').value)   || 10;
   const days        = parseInt(document.getElementById('calcDays').value)         || 7;
   const discountPct = parseInt(document.getElementById('calcDiscount').value)     || 80;
-  const freq        = kw ? (kw.freq || 0) : 0;
-  const currentPos  = kw ? (kw.pos  || 0) : 0;
-  const avgPrice    = (p.funnel?.avg_price) || 0;
+  const freq        = parseInt(document.getElementById('calcFreq').value)         || 0;
+  const currentPos  = parseInt(document.getElementById('calcCurrentPos').value)   || 0;
+  const avgPrice    = parseInt(document.getElementById('calcPrice').value)        || 0;
+  const manualRate  = parseInt(document.getElementById('calcManualRate').value)   || 0;
 
-  if (!kw || freq === 0) return;
+  if (!nm || !q || freq === 0) { document.getElementById('calcResult').style.display = 'none'; return; }
 
   // Коэффициенты
   const season      = parseFloat(document.getElementById('calcSeason').value)       || 1.0;
@@ -2553,10 +2663,14 @@ function calcRun() {
 
   const totalCoef  = season * ratingCoef * ctrCoef * convCoef * competitors * redemptCoef * rankCoef;
 
-  // Реальный якорь: сколько раздач/день товар делает сейчас (среднее по последним дням с фактом)
-  const recentDays = (p.days || []).filter(d => d.dist_fact != null && d.dist_fact > 0).slice(-7);
-  const recentRazPerDay = recentDays.length
-    ? Math.round(recentDays.reduce((s, d) => s + d.dist_fact, 0) / recentDays.length) : 0;
+  // Реальный якорь: сколько раздач/день товар делает сейчас. Приоритет — ручной ввод
+  // (обязателен для товаров вне дашборда); для трекаемых товаров есть фолбэк на историю.
+  let recentRazPerDay = manualRate;
+  if (!recentRazPerDay) {
+    const p = (rawData.products || []).find(pp => String(pp.nmId) === nm);
+    const recentDays = p ? (p.days || []).filter(d => d.dist_fact != null && d.dist_fact > 0).slice(-7) : [];
+    if (recentDays.length) recentRazPerDay = Math.round(recentDays.reduce((s, d) => s + d.dist_fact, 0) / recentDays.length);
+  }
   const posNow = currentPos || 0;
 
   // Основной режим — ЭМПИРИЧЕСКИЙ (калибровка по факту товара): заказы ∝ 1/позиция.
@@ -2607,10 +2721,10 @@ function calcRun() {
   // Детали
   let detail;
   if (empirical) {
-    detail = `<b>Расчёт по факту товара:</b> сейчас ~${recentRazPerDay} раздач/день удерживают «${kw.q}» на #${posNow}.`;
+    detail = `<b>Расчёт по факту товара:</b> сейчас ~${recentRazPerDay} раздач/день удерживают «${q}» на #${posNow}.`;
     detail += `<br>Чтобы дойти до #${targetPos}, масштабируем по правилу «заказы ∝ 1/позиция»: ${recentRazPerDay} × ${posNow}/${targetPos} ≈ <b>${perDay} шт/день</b>.`;
   } else {
-    detail = `<b>Оценка по частоте</b> (нет истории раздач по товару): «${kw.q}» · ${freq.toLocaleString('ru')}/мес → цель #${targetPos}.`;
+    detail = `<b>Оценка по частоте</b> (нет данных о текущем темпе раздач): «${q}» · ${freq.toLocaleString('ru')}/мес → цель #${targetPos}.`;
     detail += `<br><b>Итог:</b> ${perDay} шт/день (с учётом коэффициентов).`;
   }
   detail += `<br><b>Всего:</b> ${perDay} × ${days} дней = <b>${total.toLocaleString('ru')} шт</b>`;
