@@ -7,112 +7,186 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --border: #2e3348;
-    --text: #e8eaf0;
-    --text2: #8b93b0;
-    --accent: #6c63ff;
-    --green: #22c55e;
-    --yellow: #f59e0b;
-    --red: #ef4444;
-    --blue: #3b82f6;
-    --purple: #a855f7;
-    --cyan: #06b6d4;
-    --font: 'Segoe UI', system-ui, sans-serif;
+    color-scheme: dark;
+    --bg: #0d0d0d;
+    --surface: #1a1a19;
+    --surface2: #232322;
+    --border: #2c2c2a;
+    --border-strong: #383835;
+    --text: #f4f4f2;
+    --text2: #c3c2b7;
+    --muted: #898781;
+    --accent: #3987e5;
+    --accent-soft: rgba(57,135,229,.14);
+    --green: #0ca30c;
+    --green-text: #4cc94c;
+    --yellow: #fab219;
+    --orange: #ec835a;
+    --red: #d03b3b;
+    --red-text: #f07a7a;
+    --blue: #3987e5;
+    --purple: #9085e9;
+    --cyan: #199e70;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --font: system-ui, -apple-system, 'Segoe UI', sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px; line-height: 1.5; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 13px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  input, select, button { font-family: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-  .header-left { display: flex; align-items: center; gap: 16px; }
-  .logo { font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
-  .logo span { color: var(--text2); font-weight: 400; font-size: 12px; margin-left: 8px; }
-  .last-update { color: var(--text2); font-size: 11px; }
-  .header-right { display: flex; align-items: center; gap: 10px; }
-  select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  /* ── Шапка ── */
+  .header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+  .header-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .logo { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: .08em; }
+  .logo span { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 8px; letter-spacing: 0; }
+  .last-update { color: var(--muted); font-size: 11px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border); }
+  .last-update.stale { color: #ffd27a; border-color: rgba(250,178,25,.45); background: rgba(250,178,25,.10); }
+  .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .date-input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 5px 8px; border-radius: 6px; font-size: 12px; color-scheme: dark; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; }
+  .seg button { background: transparent; border: none; color: var(--text2); padding: 5px 10px; font-size: 11px; cursor: pointer; border-right: 1px solid var(--border); }
+  .seg button:last-child { border-right: none; }
+  .seg button:hover { background: var(--surface2); color: var(--text); }
+  .seg button.on { background: var(--surface2); color: var(--text); font-weight: 600; }
+
+  select { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
   select:focus { outline: none; border-color: var(--accent); }
-  .btn { background: var(--accent); color: #fff; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 600; }
-  .btn:hover { opacity: 0.85; }
+  .btn { background: var(--accent); color: #fff; border: 1px solid transparent; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 600; }
+  .btn:hover { filter: brightness(1.1); }
+  .btn-ghost { background: transparent !important; border: 1px solid var(--border) !important; color: var(--text2) !important; font-weight: 500; }
+  .btn-ghost:hover { background: var(--surface2) !important; color: var(--text) !important; filter: none; }
+  .btn-sm { padding: 4px 10px; font-size: 11px; }
 
-  .tabs { display: flex; gap: 4px; padding: 12px 20px 0; border-bottom: 1px solid var(--border); background: var(--surface); }
-  .tab { padding: 8px 18px; cursor: pointer; color: var(--text2); border-bottom: 2px solid transparent; font-size: 13px; font-weight: 500; transition: all .15s; }
-  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  /* ── Вкладки ── */
+  .tabs { display: flex; gap: 2px; padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--bg); overflow-x: auto; scrollbar-width: none; }
+  .tab { padding: 11px 14px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; font-size: 13px; font-weight: 500; white-space: nowrap; transition: color .15s; }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
   .tab:hover { color: var(--text); }
+  .tab-sep { width: 1px; background: var(--border); margin: 10px 6px; flex-shrink: 0; }
 
-  .main { padding: 16px 20px; display: flex; flex-direction: column; gap: 16px; max-width: 1600px; margin: 0 auto; }
+  .main { padding: 20px 24px 40px; display: flex; flex-direction: column; gap: 16px; max-width: 1600px; margin: 0 auto; }
 
-  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
-  .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
-  .kpi-label { color: var(--text2); font-size: 11px; margin-bottom: 4px; }
-  .kpi-val { font-size: 22px; font-weight: 700; line-height: 1.1; }
-  .kpi-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .kpi-card.green { border-left: 3px solid var(--green); }
-  .kpi-card.yellow { border-left: 3px solid var(--yellow); }
-  .kpi-card.red { border-left: 3px solid var(--red); }
-  .kpi-card.blue { border-left: 3px solid var(--blue); }
-  .kpi-card.purple { border-left: 3px solid var(--purple); }
-  .val-green { color: var(--green); }
+  /* ── Заголовок страницы ── */
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .page-title { font-size: 20px; font-weight: 700; color: var(--text); }
+  .page-sub { font-size: 12px; color: var(--muted); margin-top: 3px; max-width: 760px; }
+  .eyebrow { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 8px; }
+
+  /* ── KPI ── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
+  .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; }
+  .kpi-label { color: var(--muted); font-size: 11px; margin-bottom: 6px; }
+  .kpi-val { font-size: 22px; font-weight: 700; line-height: 1.1; color: var(--text); }
+  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .kpi-card.flag-red { box-shadow: inset 3px 0 0 var(--red); }
+  .kpi-card.flag-yellow { box-shadow: inset 3px 0 0 var(--yellow); }
+  .kpi-card.flag-green { box-shadow: inset 3px 0 0 var(--green); }
+  .val-green { color: var(--green-text); }
   .val-yellow { color: var(--yellow); }
-  .val-red { color: var(--red); }
+  .val-red { color: var(--red-text); }
+  .kpi-card .kpi-val.val-green, .kpi-card .kpi-val.val-yellow { color: var(--text); }
 
+  /* ── Алерты ── */
   .alerts { display: flex; flex-direction: column; gap: 4px; }
-  .alert { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; border-radius: 6px; font-size: 12px; line-height: 1.4; }
-  .alert-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .alert { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; border-radius: 8px; font-size: 12px; line-height: 1.45; background: var(--surface); border: 1px solid var(--border); color: var(--text2); }
+  .alert-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
   .alert-body { flex: 1; }
-  .alert-product { font-weight: 700; margin-right: 4px; }
-  .alert-msg { opacity: 0.85; }
-  .alert.red { background: rgba(239,68,68,.12); border-left: 3px solid #ef4444; color: #fca5a5; }
-  .alert.yellow { background: rgba(245,158,11,.12); border-left: 3px solid #f59e0b; color: #fcd34d; }
-  .alert.green { background: rgba(34,197,94,.10); border-left: 3px solid #22c55e; color: #86efac; }
-  .alerts-toggle { font-size: 11px; color: var(--text2); cursor: pointer; padding: 4px 0; text-decoration: underline; text-underline-offset: 2px; }
+  .alert-product { font-weight: 600; margin-right: 4px; color: var(--text); }
+  .alert.red { box-shadow: inset 3px 0 0 var(--red); }
+  .alert.yellow { box-shadow: inset 3px 0 0 var(--yellow); }
+  .alert.green { box-shadow: inset 3px 0 0 var(--green); }
+  .alerts-toggle { font-size: 11px; color: var(--muted); cursor: pointer; padding: 4px 0; text-decoration: underline; text-underline-offset: 2px; }
   .alerts-toggle:hover { color: var(--text); }
+  .banner { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; border-radius: 10px; font-size: 12px; line-height: 1.5; border: 1px solid rgba(250,178,25,.4); background: rgba(250,178,25,.08); color: #ffe1a3; }
+  .banner b { color: #fff; }
 
-  .section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-  .section-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .section-title { font-size: 14px; font-weight: 600; }
+  /* ── Секции ── */
+  .section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .section-header { padding: 13px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .section-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .section-note { font-size: 11px; color: var(--muted); }
   .section-body { padding: 16px; }
 
   .product-progress { display: flex; flex-direction: column; gap: 14px; }
   .prod-row { display: flex; flex-direction: column; gap: 6px; }
   .prod-name { font-size: 12px; color: var(--text2); display: flex; justify-content: space-between; }
   .prod-name strong { color: var(--text); }
-  .progress-bar-bg { background: var(--surface2); border-radius: 4px; height: 10px; overflow: hidden; }
+  .progress-bar-bg { background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; }
   .progress-bar-fill { height: 100%; border-radius: 4px; transition: width .3s; }
   .prog-green { background: var(--green); }
   .prog-yellow { background: var(--yellow); }
   .prog-red { background: var(--red); }
-  .prod-stats { display: flex; gap: 16px; font-size: 11px; color: var(--text2); }
+  .prod-stats { display: flex; gap: 16px; font-size: 11px; color: var(--muted); }
 
+  /* ── Таблицы ── */
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  th { background: var(--surface2); color: var(--text2); font-weight: 500; padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  td { padding: 7px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; vertical-align: middle; }
+  th { background: transparent; color: var(--muted); font-weight: 500; font-size: 11px; padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-strong); white-space: nowrap; }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; vertical-align: middle; font-variant-numeric: tabular-nums; }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,.03); }
-  .badge { display: inline-block; padding: 2px 7px; border-radius: 12px; font-size: 10px; font-weight: 600; }
-  .badge-green { background: rgba(34,197,94,.2); color: #86efac; }
-  .badge-red { background: rgba(239,68,68,.2); color: #fca5a5; }
-  .badge-yellow { background: rgba(245,158,11,.2); color: #fcd34d; }
-  .badge-blue { background: rgba(59,130,246,.2); color: #93c5fd; }
-  .badge-gray { background: rgba(139,147,176,.15); color: var(--text2); }
+  tbody tr:hover td { background: rgba(255,255,255,.025); }
+  td.num, th.num { text-align: right; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+  .badge-green { background: rgba(12,163,12,.16); color: #7bdc7b; }
+  .badge-red { background: rgba(208,59,59,.18); color: #f59a9a; }
+  .badge-yellow { background: rgba(250,178,25,.16); color: #ffd27a; }
+  .badge-blue { background: rgba(57,135,229,.16); color: #9cc6f5; }
+  .badge-gray { background: rgba(137,135,129,.16); color: var(--text2); }
 
   .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .chart-box { background: var(--surface2); border-radius: 8px; padding: 14px; }
+  .chart-box { background: var(--surface2); border-radius: 10px; padding: 14px; }
   .chart-box-title { font-size: 12px; color: var(--text2); margin-bottom: 10px; font-weight: 500; }
-  .chart-canvas-wrap { position: relative; height: 200px; }
+  .chart-canvas-wrap { position: relative; height: 220px; }
 
   .page { display: none; flex-direction: column; gap: 16px; }
   .page.active { display: flex; }
 
-  .filter-bar { display: flex; gap: 8px; align-items: center; }
-  .tag { padding: 3px 10px; border-radius: 12px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); color: var(--text2); background: transparent; }
-  .tag.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .filter-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .tag { padding: 3px 10px; border-radius: 999px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); color: var(--text2); background: transparent; }
+  .tag.active { background: var(--surface2); color: var(--text); border-color: var(--border-strong); }
+
+  /* ── Поля ввода ── */
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label, .field-label { font-size: 11px; color: var(--muted); }
+  .inp { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 6px 9px; border-radius: 6px; font-size: 12px; min-width: 0; }
+  .inp:focus { outline: none; border-color: var(--accent); }
+  .inp-cell { width: 76px; text-align: right; padding: 4px 7px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 5px; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .inp-cell:focus { outline: none; border-color: var(--accent); }
+  .inp-cell.empty { border-style: dashed; border-color: var(--border-strong); }
+
+  /* ── Статус: цвет + подпись, никогда не только цвет ── */
+  .st { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .st-good { color: #7bdc7b; } .st-warn { color: #ffd27a; } .st-bad { color: #f59a9a; } .st-na { color: var(--muted); }
+  .delta-up { color: #7bdc7b; } .delta-down { color: #f59a9a; } .delta-flat { color: var(--muted); }
+
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface2); font-size: 11px; color: var(--text2); }
+  .chip b { color: var(--text); font-weight: 600; }
+  .chip button { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 12px; padding: 0 4px; line-height: 1; }
+  .chip button:hover { color: var(--red-text); }
+
+  .rk-row { cursor: pointer; }
+  .rk-row.sel td { background: var(--accent-soft) !important; }
+  .verdict { font-size: 11px; color: var(--text2); white-space: normal; min-width: 220px; max-width: 360px; line-height: 1.4; }
+  .funnel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+  .funnel-step { background: var(--surface2); border-radius: 8px; padding: 10px 12px; }
+  .funnel-step .fs-label { font-size: 11px; color: var(--muted); }
+  .funnel-step .fs-val { font-size: 17px; font-weight: 700; margin-top: 2px; }
+  .funnel-step .fs-delta { font-size: 11px; margin-top: 2px; }
+  .funnel-step.weak { box-shadow: inset 0 -2px 0 var(--red); }
+  .help { font-size: 12px; color: var(--text2); line-height: 1.6; }
+  .help b { color: var(--text); }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--text2); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .muted { color: var(--muted); }
 
   @media (max-width: 900px) {
     .chart-row { grid-template-columns: 1fr; }
-    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .header, .tabs, .main { padding-left: 16px; padding-right: 16px; }
   }
 </style>
 </head>
@@ -120,27 +194,25 @@
 
 <div class="header">
   <div class="header-left">
-    <div class="logo">LIKATO <span>Трекер продвижения ТОП-товаров &middot; Wildberries</span></div>
-    <div class="last-update">&#x21BB; Обновлено: 26.06.2026, 08:00</div>
+    <div class="logo">LIKATO <span>Трекер продвижения · Wildberries</span></div>
+    <div class="last-update" id="lastUpdate">Обновлено: —</div>
   </div>
   <div class="header-right">
-    <div style="display:flex;align-items:center;gap:6px">
-      <span style="color:var(--text2);font-size:11px">Период:</span>
-      <input type="date" id="dateFrom" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:6px;font-size:12px;cursor:pointer">
-      <span style="color:var(--text2);font-size:11px">—</span>
-      <input type="date" id="dateTo" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:6px;font-size:12px;cursor:pointer">
-      <button class="btn" onclick="applyDateFilter()" style="padding:4px 12px">Применить</button>
-      <button class="btn" onclick="resetDateFilter()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:4px 10px">Сброс</button>
-      <span style="color:var(--text2);font-size:10px;white-space:nowrap" id="dateRangeLabel">весь спринт</span>
+    <span class="muted" style="font-size:11px">Период</span>
+    <input type="date" id="dateFrom" class="date-input">
+    <span class="muted">—</span>
+    <input type="date" id="dateTo" class="date-input">
+    <button class="btn btn-sm" onclick="applyDateFilter()">Применить</button>
+    <div class="seg" id="quickSeg">
+      <button onclick="setQuickPeriod(1,this)">1д</button>
+      <button onclick="setQuickPeriod(3,this)">3д</button>
+      <button onclick="setQuickPeriod(7,this)">7д</button>
+      <button onclick="setQuickPeriod(14,this)">14д</button>
+      <button onclick="resetDateFilter(this)" class="on">Весь</button>
     </div>
-    <div style="display:flex;align-items:center;gap:4px">
-      <button class="btn" onclick="setQuickPeriod(1)"  style="padding:3px 9px;font-size:11px;background:var(--surface2);border:1px solid var(--border);color:var(--text2)">1д</button>
-      <button class="btn" onclick="setQuickPeriod(3)"  style="padding:3px 9px;font-size:11px;background:var(--surface2);border:1px solid var(--border);color:var(--text2)">3д</button>
-      <button class="btn" onclick="setQuickPeriod(7)"  style="padding:3px 9px;font-size:11px;background:var(--surface2);border:1px solid var(--border);color:var(--text2)">7д</button>
-      <button class="btn" onclick="setQuickPeriod(14)" style="padding:3px 9px;font-size:11px;background:var(--surface2);border:1px solid var(--border);color:var(--text2)">14д</button>
-    </div>
-    <button class="btn" onclick="openDistCalc()" style="background:linear-gradient(135deg,#6366f1,#4f46e5);border:none;color:#fff">🧮 Калькулятор раздач</button>
-    <button class="btn" onclick="window.location.reload()">&#8635; Обновить</button>
+    <span class="muted" style="font-size:11px;white-space:nowrap" id="dateRangeLabel">весь спринт</span>
+    <button class="btn btn-ghost btn-sm" onclick="openDistCalc()">Калькулятор раздач</button>
+    <button class="btn btn-ghost btn-sm" onclick="openSettings()">Мои настройки</button>
   </div>
 </div>
 
@@ -236,7 +308,7 @@
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="font-size:11px;color:var(--text2)">🌡 Сезонность</div>
-          <div id="calcSeasonCoef" style="font-size:11px;font-weight:600;color:#6366f1">×1.0</div>
+          <div id="calcSeasonCoef" style="font-size:11px;font-weight:600;color:var(--accent)">×1.0</div>
         </div>
         <select id="calcSeason" onchange="calcRun()" style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:12px">
           <option value="0.7">Низкий сезон (×0.7)</option>
@@ -250,7 +322,7 @@
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="font-size:11px;color:var(--text2)">⭐ Рейтинг карточки</div>
-          <div id="calcRatingCoef" style="font-size:11px;font-weight:600;color:#6366f1">×1.0</div>
+          <div id="calcRatingCoef" style="font-size:11px;font-weight:600;color:var(--accent)">×1.0</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <input id="calcRating" type="number" min="1" max="5" step="0.1" value="4.5" oninput="calcRun()"
@@ -263,7 +335,7 @@
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="font-size:11px;color:var(--text2)">👁 CTR карточки, %</div>
-          <div id="calcCtrCoef" style="font-size:11px;font-weight:600;color:#6366f1">×1.0</div>
+          <div id="calcCtrCoef" style="font-size:11px;font-weight:600;color:var(--accent)">×1.0</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <input id="calcCtr" type="number" min="0" max="30" step="0.5" value="4" oninput="calcRun()"
@@ -276,7 +348,7 @@
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="font-size:11px;color:var(--text2)">🛒 Конверсия в заказ, %</div>
-          <div id="calcConvCoef" style="font-size:11px;font-weight:600;color:#6366f1">×1.0</div>
+          <div id="calcConvCoef" style="font-size:11px;font-weight:600;color:var(--accent)">×1.0</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <input id="calcConv" type="number" min="0" max="100" step="1" value="20" oninput="calcRun()"
@@ -289,7 +361,7 @@
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="font-size:11px;color:var(--text2)">⚔️ Активность конкурентов</div>
-          <div id="calcCompCoef" style="font-size:11px;font-weight:600;color:#6366f1">×1.0</div>
+          <div id="calcCompCoef" style="font-size:11px;font-weight:600;color:var(--accent)">×1.0</div>
         </div>
         <select id="calcCompetitors" onchange="calcRun()" style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:12px">
           <option value="0.9">Низкая — конкуренты не делают раздачи (×0.9)</option>
@@ -303,7 +375,7 @@
       <div style="background:var(--surface2);border-radius:8px;padding:10px 12px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="font-size:11px;color:var(--text2)">📦 Процент выкупа, %</div>
-          <div id="calcRedemptCoef" style="font-size:11px;font-weight:600;color:#6366f1">×1.0</div>
+          <div id="calcRedemptCoef" style="font-size:11px;font-weight:600;color:var(--accent)">×1.0</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <input id="calcRedemption" type="number" min="0" max="100" step="1" value="90" oninput="calcRun()"
@@ -315,13 +387,13 @@
     </div>
 
     <!-- Результат -->
-    <div id="calcResult" style="background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(79,70,229,.06));border:1px solid rgba(99,102,241,.3);border-radius:12px;padding:18px;display:none">
+    <div id="calcResult" style="background:linear-gradient(135deg,var(--accent-soft),var(--accent-soft));border:1px solid var(--border-strong);border-radius:12px;padding:18px;display:none">
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px">
         <div style="text-align:center">
-          <div style="font-size:28px;font-weight:700;color:#6366f1" id="calcResPerDay">—</div>
+          <div style="font-size:28px;font-weight:700;color:var(--accent)" id="calcResPerDay">—</div>
           <div style="font-size:11px;color:var(--text2);margin-top:2px">шт / день</div>
         </div>
-        <div style="text-align:center;border-left:1px solid rgba(99,102,241,.3);border-right:1px solid rgba(99,102,241,.3)">
+        <div style="text-align:center;border-left:1px solid var(--border-strong);border-right:1px solid var(--border-strong)">
           <div style="font-size:28px;font-weight:700;color:var(--text)" id="calcResTotal">—</div>
           <div style="font-size:11px;color:var(--text2);margin-top:2px">всего штук</div>
         </div>
@@ -332,20 +404,25 @@
       </div>
       <!-- Разбивка коэффициентов -->
       <div id="calcCoefBreakdown" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
-      <div id="calcResDetail" style="font-size:11px;color:var(--text2);line-height:1.8;border-top:1px solid rgba(99,102,241,.2);padding-top:10px"></div>
+      <div id="calcResDetail" style="font-size:11px;color:var(--text2);line-height:1.8;border-top:1px solid var(--border);padding-top:10px"></div>
     </div>
   </div>
 </div>
 
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('top', this)">ТОП-товары</div>
-  <div class="tab" onclick="switchTab('novinka', this)">Новинки</div>
-  <div class="tab" onclick="switchTab('advisor', this)">🎯 Советник по раздачам</div>
-  <div class="tab" onclick="switchTab('archive', this)">📒 Архив раздач</div>
-  <div class="tab" onclick="switchTab('vyvody', this)">📊 Выводы</div>
+<div class="tabs" role="tablist">
+  <div class="tab active" data-tab="top" onclick="switchTab('top', this)">ТОП-товары</div>
+  <div class="tab" data-tab="rk" onclick="switchTab('rk', this)">Рекламные кампании</div>
+  <div class="tab" data-tab="unit" onclick="switchTab('unit', this)">Юнит-экономика</div>
+  <div class="tab" data-tab="kw" onclick="switchTab('kw', this)">Позиции: выдача и полки</div>
+  <div class="tab-sep"></div>
+  <div class="tab" data-tab="novinka" onclick="switchTab('novinka', this)">Новинки</div>
+  <div class="tab" data-tab="advisor" onclick="switchTab('advisor', this)">Советник по раздачам</div>
+  <div class="tab" data-tab="archive" onclick="switchTab('archive', this)">Архив раздач</div>
+  <div class="tab" data-tab="vyvody" onclick="switchTab('vyvody', this)">Выводы</div>
 </div>
 
 <div class="main">
+  <div id="staleBanner"></div>
 
   <!-- === TOP PRODUCTS === -->
   <div class="page active" id="page-top">
@@ -479,15 +556,6 @@
       </div>
       <div class="section-body" id="distEffContent" style="display:flex;flex-wrap:wrap;gap:16px;padding:4px"></div>
     </div>
-
-    <!-- KEYWORDS -->
-    <div class="section">
-      <div class="section-header">
-        <div class="section-title">&#128269; Ключевые запросы по товарам</div>
-      </div>
-      <div class="section-body" id="kwProductSections" style="display:flex;flex-direction:column;gap:16px"></div>
-    </div>
-
 
   </div><!-- /page-top -->
 
@@ -716,6 +784,218 @@
 
   </div><!-- /page-vyvody -->
 
+  <!-- === РЕКЛАМНЫЕ КАМПАНИИ === -->
+  <div class="page" id="page-rk">
+    <div class="page-head">
+      <div>
+        <div class="page-title">Рекламные кампании</div>
+        <div class="page-sub">Только твои РК: добавь номера кампаний ниже. Порядок чтения: сначала статус (окупается ли заказ), потом — какое звено воронки просело относительно прошлого такого же периода.</div>
+      </div>
+      <div class="seg" id="rkPeriodSeg">
+        <button data-days="1" onclick="setRkPeriod(1)">Вчера</button>
+        <button data-days="3" onclick="setRkPeriod(3)">3 дня</button>
+        <button data-days="7" onclick="setRkPeriod(7)">7 дней</button>
+        <button data-days="14" onclick="setRkPeriod(14)">14 дней</button>
+        <button data-days="30" onclick="setRkPeriod(30)">30 дней</button>
+      </div>
+    </div>
+
+    <div id="rkBanner"></div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Мои кампании</div>
+        <div class="section-note">Хранятся в этом браузере · резервная копия — «Мои настройки»</div>
+      </div>
+      <div class="section-body" style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+          <div class="field"><label for="rkAddId">ID кампании (можно несколько через запятую)</label>
+            <input id="rkAddId" class="inp" style="width:260px" placeholder="напр. 35734410, 35734429" onkeydown="if(event.key==='Enter')rkAdd()"></div>
+          <div class="field"><label for="rkAddLabel">Подпись (необязательно)</label>
+            <input id="rkAddLabel" class="inp" style="width:200px" placeholder="напр. Daily — поиск" onkeydown="if(event.key==='Enter')rkAdd()"></div>
+          <button class="btn" onclick="rkAdd()">Добавить</button>
+          <span class="muted" style="font-size:11px;margin:0 4px">или</span>
+          <div class="field"><label for="rkAddNm">Все РК по артикулу</label>
+            <input id="rkAddNm" class="inp" style="width:150px" placeholder="артикул WB" onkeydown="if(event.key==='Enter')rkAddByNm()"></div>
+          <button class="btn btn-ghost" onclick="rkAddByNm()">Найти и добавить</button>
+          <span id="rkAddMsg" style="font-size:11px" class="muted"></span>
+        </div>
+        <div id="rkChips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
+    </div>
+
+    <div class="kpi-grid" id="rkKpi"></div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Светофор по кампаниям</div>
+        <div class="legend">
+          <span><span class="st st-good">окупается</span></span>
+          <span><span class="st st-warn">на грани</span></span>
+          <span><span class="st st-bad">в минусе</span></span>
+          <span><span class="st st-na">мало данных</span></span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Кампания</th><th>Статус</th>
+            <th class="num">Расход, ₽</th><th class="num">Показы</th><th class="num">CTR</th><th class="num">CPC, ₽</th>
+            <th class="num">Клики</th><th class="num">Корзины</th><th class="num">Заказы</th><th class="num">CR клик→заказ</th>
+            <th class="num">CPO, ₽</th><th class="num">Допуст. CPO</th><th class="num">ДРР</th>
+            <th>Что проверить</th>
+          </tr></thead>
+          <tbody id="rkBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section" id="rkDetail" style="display:none">
+      <div class="section-header">
+        <div class="section-title" id="rkDetailTitle">Кампания</div>
+        <div class="section-note">Сравнение с предыдущим периодом такой же длины</div>
+      </div>
+      <div class="section-body" style="display:flex;flex-direction:column;gap:14px">
+        <div class="funnel-grid" id="rkFunnel"></div>
+        <div class="chart-row">
+          <div class="chart-box"><div class="chart-box-title">Расход по дням, ₽</div><div class="chart-canvas-wrap"><canvas id="rkChartSpend"></canvas></div></div>
+          <div class="chart-box"><div class="chart-box-title">CPO по дням, ₽ <span class="muted">— пунктир: допустимый CPO</span></div><div class="chart-canvas-wrap"><canvas id="rkChartCpo"></canvas></div></div>
+        </div>
+        <div class="table-wrap" id="rkDaysTable"></div>
+      </div>
+    </div>
+
+    <details class="section">
+      <summary class="section-header" style="cursor:pointer;list-style:none"><div class="section-title">Как читать эту вкладку</div><span class="section-note">развернуть</span></summary>
+      <div class="section-body help">
+        <p><b>1. Статус (2 минуты).</b> Главная цифра — <b>CPO</b> (расход ÷ заказы). Сравниваем с <b>допустимым CPO</b> из вкладки «Юнит-экономика»: это сколько можно заплатить за заказ и остаться в нуле. Если себестоимость не заполнена — статус считается по ДРР против цели <span id="rkDrrTargetHelp">15%</span>.</p>
+        <p style="margin-top:8px"><b>2. Где сломалось (только для красных).</b> Идём по воронке сверху вниз и ищем первое просевшее звено: показы (ставку перебили / кончился бюджет / OOS) → CTR (фото, цена в выдаче) → CPC (конкуренты подняли ставки) → клик→корзина (цена, СПП, отзывы) → корзина→заказ (цена при оформлении, сроки доставки, остатки по складам).</p>
+        <p style="margin-top:8px"><b>3. Контекст.</b> Перед тем как трогать ставку — проверь остатки, цену/СПП и не шли ли раздачи (они завышают CR).</p>
+        <p style="margin-top:8px"><b>Ловушки.</b> Меньше ~100 кликов за период — CR ещё шум, решения не принимаем. Заказы ≠ выкупы: реальный ДРР от выкупов хуже на % невыкупа.</p>
+      </div>
+    </details>
+  </div><!-- /page-rk -->
+
+  <!-- === ЮНИТ-ЭКОНОМИКА === -->
+  <div class="page" id="page-unit">
+    <div class="page-head">
+      <div>
+        <div class="page-title">Юнит-экономика</div>
+        <div class="page-sub">Заполни пунктирные ячейки — остальное посчитается. Главный выход таблицы — <b style="color:var(--text)">допустимый CPO</b>: его использует светофор на вкладке «Рекламные кампании».</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+        <div class="field"><label for="unitAddNm">Добавить артикул</label>
+          <input id="unitAddNm" class="inp" style="width:150px" placeholder="артикул WB" onkeydown="if(event.key==='Enter')unitAdd()"></div>
+        <button class="btn btn-ghost" onclick="unitAdd()">Добавить</button>
+        <div class="field"><label for="rkDrrTarget">Цель ДРР, если нет с/с</label>
+          <input id="rkDrrTarget" class="inp" style="width:90px" type="number" min="1" max="100" step="1" onchange="setDrrTarget(this.value)"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Товар</th>
+            <th class="num">Цена продавца, ₽</th><th class="num">Себестоимость, ₽</th><th class="num">Комиссия WB, %</th>
+            <th class="num">Логистика, ₽/заказ</th><th class="num">Обратная логистика, ₽</th><th class="num">Хранение, ₽/шт</th>
+            <th class="num">Налог, %</th><th class="num">Прочее, ₽/шт</th><th class="num">% выкупа</th>
+            <th class="num">Прибыль до рекламы, ₽/выкуп</th><th class="num">Маржа до рекламы</th>
+            <th class="num">Допуст. CPO, ₽</th><th class="num">CPO факт, ₽</th><th>Статус</th><th></th>
+          </tr></thead>
+          <tbody id="unitBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <details class="section" open>
+      <summary class="section-header" style="cursor:pointer;list-style:none"><div class="section-title">Как считается</div><span class="section-note">свернуть</span></summary>
+      <div class="section-body help">
+        <p><b>Логистика на один выкуп</b> = логистика + (1 − выкуп) ÷ выкуп × (логистика + обратная логистика). Невыкупленные заказы тоже едут к клиенту и обратно — и за них платит выкупленный товар.</p>
+        <p style="margin-top:6px"><b>Прибыль до рекламы на выкуп</b> = цена × (1 − комиссия − налог) − себестоимость − логистика на выкуп − хранение − прочее.</p>
+        <p style="margin-top:6px"><b>Допустимый CPO</b> = прибыль до рекламы × % выкупа. Это максимум, который можно отдать рекламе за один <i>заказ</i>, чтобы выйти в ноль. Хочешь зарабатывать — целься в CPO заметно ниже.</p>
+        <p style="margin-top:6px"><b>CPO факт</b> — все РК артикула за 30 дней (расход ÷ заказы с рекламы). Цены и % выкупа подставлены из данных WB, их можно переписать.</p>
+      </div>
+    </details>
+  </div><!-- /page-unit -->
+
+  <!-- === ПОЗИЦИИ ПО КЛЮЧАМ === -->
+  <div class="page" id="page-kw">
+    <div class="page-head">
+      <div>
+        <div class="page-title">Позиции: выдача и полки</div>
+        <div class="page-sub">Место товара в поиске WB по запросам (выдача) и в категориях каталога (полки): сейчас, неделю назад и динамика. Позиции вносятся вручную — раз в день или когда проверила.</div>
+      </div>
+      <select id="kwProductFilter" onchange="renderKwPage()"><option value="all">Все товары</option></select>
+    </div>
+    <div id="kwBanner"></div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Внести позиции за день</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <label class="field-label" for="posDate">Дата</label>
+          <input type="date" id="posDate" class="date-input" onchange="renderKwPage()">
+          <button class="btn" onclick="savePositions()">Сохранить позиции</button>
+          <span id="posSaveMsg" style="font-size:11px"></span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Товар</th><th>Тип</th><th>Запрос / полка</th><th class="num">Прошлая позиция</th><th class="num">Позиция на дату</th><th></th></tr></thead>
+          <tbody id="posEntryBody"></tbody>
+        </table>
+      </div>
+      <div class="section-body" style="border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+        <div class="field"><label for="shelfProduct">Добавить полку для товара</label><select id="shelfProduct" style="max-width:260px"></select></div>
+        <div class="field"><label for="shelfName">Полка (категория каталога)</label>
+          <input id="shelfName" class="inp" style="width:280px" placeholder="напр. Красота / Волосы / Шампуни" onkeydown="if(event.key==='Enter')shelfAdd()"></div>
+        <button class="btn btn-ghost" onclick="shelfAdd()">+ Полка</button>
+        <span class="muted" style="font-size:11px;margin:0 6px">·</span>
+        <div class="field"><label for="posNewNm">Другой товар: артикул</label><input id="posNewNm" class="inp" style="width:130px" placeholder="артикул WB"></div>
+        <div class="field"><label for="posNewName">Название</label><input id="posNewName" class="inp" style="width:200px" placeholder="необязательно" onkeydown="if(event.key==='Enter')posProductAdd()"></div>
+        <button class="btn btn-ghost" onclick="posProductAdd()">+ Товар</button>
+      </div>
+      <div class="section-body help" style="border-top:1px solid var(--border);padding-top:10px;padding-bottom:12px">Enter — переход к следующему полю, на последнем — сохранение. Пустое поле = за этот день позиции нет (запись за дату удаляется). Ручная запись важнее автоматической за тот же день. Новые запросы для выдачи добавляются в блоке «Запросы» внизу.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-title">Сводка</div>
+        <div class="legend"><span><span class="st st-good">топ-10</span></span><span><span class="st st-warn">11–30</span></span><span><span class="st st-bad">ниже 30</span></span></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Товар</th><th>Тип</th><th>Запрос / полка</th><th class="num">Частотность</th><th class="num">Сейчас</th><th class="num">7 дн. назад</th><th class="num">Изм.</th><th>Динамика (выше = лучше)</th><th>Последняя запись</th></tr></thead>
+          <tbody id="kwSummaryBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Запросы</div>
+        <div class="section-note">Добавить, переименовать, удалить запрос. Правки хранятся в этом браузере.</div>
+      </div>
+      <div class="section-body" id="kwProductSections" style="display:flex;flex-direction:column;gap:16px"></div>
+    </div>
+  </div><!-- /page-kw -->
+
+  <!-- === НАСТРОЙКИ === -->
+  <div id="settingsModal" onclick="if(event.target===this)closeSettings()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;overflow-y:auto;padding:40px 16px">
+    <div style="max-width:560px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-size:16px;font-weight:700">Мои настройки</div>
+        <button onclick="closeSettings()" class="btn btn-ghost btn-sm" aria-label="Закрыть">✕</button>
+      </div>
+      <div class="help">Всё, что ты вводишь в дашборде (номера РК, себестоимость, заметки, планы, правки ключей), хранится <b>только в этом браузере</b>. Сохрани файл-копию — и на другом компьютере или после очистки браузера просто загрузи его обратно.</div>
+      <div id="settingsStats" class="muted" style="font-size:12px;margin:12px 0"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" onclick="exportSettings()">Сохранить в файл</button>
+        <label class="btn btn-ghost" style="cursor:pointer">Загрузить из файла<input type="file" accept=".json,application/json" style="display:none" onchange="importSettings(this.files[0])"></label>
+      </div>
+      <div id="settingsMsg" style="font-size:12px;margin-top:10px"></div>
+    </div>
+  </div>
+
 </div><!-- /main -->
 
 <script>
@@ -781,31 +1061,44 @@ function applyDateFilter() {
   renderDashboard(filtered);
 }
 
-function resetDateFilter() {
+function resetDateFilter(btn) {
   document.getElementById('dateFrom').value = '';
   document.getElementById('dateTo').value   = '';
   document.getElementById('dateRangeLabel').textContent = 'весь спринт';
+  markSeg(btn);
   if (rawData) renderDashboard(rawData);
 }
 
+function markSeg(btn) {
+  document.querySelectorAll('#quickSeg button').forEach(b => b.classList.toggle('on', b === btn));
+}
+
+// Последняя дата, за которую есть данные (а не «сегодня»: если сбор упал,
+// быстрые периоды иначе показывали бы пустоту)
+function lastDataDate() {
+  const days = rawData?.products?.[0]?.days || [];
+  return days.length ? new Date(days[days.length - 1].date + 'T12:00:00') : new Date();
+}
+
 // Быстрые кнопки периода
-function setQuickPeriod(days) {
-  const today = new Date();
-  const from  = new Date(today);
-  from.setDate(today.getDate() - days + 1);
+function setQuickPeriod(days, btn) {
+  const to   = lastDataDate();
+  const from = new Date(to);
+  from.setDate(to.getDate() - days + 1);
   const fmt = d => d.toISOString().slice(0,10);
   document.getElementById('dateFrom').value = fmt(from);
-  document.getElementById('dateTo').value   = fmt(today);
+  document.getElementById('dateTo').value   = fmt(to);
+  markSeg(btn);
   applyDateFilter();
 }
 
-const colors = ['#6c63ff','#06b6d4','#f59e0b','#22c55e'];
+const colors = ['#3987e5','#d95926','#199e70','#c98500'];
 const baseOpts = {
   responsive: true, maintainAspectRatio: false,
-  plugins: { legend: { labels: { color: '#8b93b0', font: { size: 11 }, boxWidth: 12 } } },
+  plugins: { legend: { labels: { color: '#c3c2b7', font: { size: 11 }, boxWidth: 10 } } },
   scales: {
-    x: { ticks: { color: '#8b93b0', font:{size:10} }, grid: { color: 'rgba(255,255,255,.05)' } },
-    y: { ticks: { color: '#8b93b0', font:{size:10} }, grid: { color: 'rgba(255,255,255,.05)' } }
+    x: { ticks: { color: '#898781', font:{size:10} }, grid: { color: '#2c2c2a' } },
+    y: { ticks: { color: '#898781', font:{size:10} }, grid: { color: '#2c2c2a' } }
   }
 };
 function cumsum(arr) { let s=0; return arr.map(v=>(s+=v)); }
@@ -850,7 +1143,7 @@ function checkDataHealth(data) {
 
 function renderDashboard(data) {
   // Обновляем время
-  document.querySelector('.last-update').textContent = '↻ Обновлено: ' + data.updated_at;
+  showUpdatedAt(data.updated_at);
   try { checkDataHealth(data); } catch (e) { console.warn('checkDataHealth:', e); }
 
   const prods = data.products;
@@ -2122,39 +2415,6 @@ function renderFunnel(data) {
 }
 
 // Заглушки для блоков которые ещё не в data.json
-function renderStaticCharts() {
-  const days10 = ['Д1','Д2','Д3','Д4','Д5','Д6','Д7','Д8','Д9','Д10'];
-  new Chart(document.getElementById('chartCTR'), {
-    type: 'line',
-    data: { labels: days10, datasets: [
-      { label: 'CTR %', data:[2.8,2.9,3.0,2.9,3.1,3.0,2.8,3.0,3.1,3.0], borderColor:'#6c63ff', borderWidth:2, tension:.3 },
-      { label: 'CR %', data:[7.8,8.1,8.4,8.2,8.6,8.5,8.3,8.4,8.7,8.4], borderColor:'#22c55e', borderWidth:2, tension:.3 },
-    ]}, options: baseOpts
-  });
-  new Chart(document.getElementById('chartDRR'), {
-    type: 'line',
-    data: { labels: days10, datasets: [
-      { label: 'Keraglow', data:[28,29,28,27,29,28,30,29,28,29], borderColor:'#6c63ff', borderWidth:2, tension:.3 },
-      { label: 'Крем-спрей', data:[32,33,34,33,35,34,33,34,33,34], borderColor:'#06b6d4', borderWidth:2, tension:.3 },
-    ]}, options: { ...baseOpts, scales:{...baseOpts.scales, y:{...baseOpts.scales.y, min:20, max:46}}}
-  });
-  new Chart(document.getElementById('chartPos'), {
-    type: 'line',
-    data: { labels: days10, datasets: [
-      { label: 'мист для волос', data:[14,13,12,11,10,9,9,8,8,8], borderColor:'#6c63ff', borderWidth:2, tension:.3 },
-      { label: 'гель для душа', data:[10,11,13,14,15,16,16,17,17,17], borderColor:'#ef4444', borderWidth:2, tension:.3 },
-    ]}, options: {...baseOpts, scales:{...baseOpts.scales, y:{...baseOpts.scales.y, reverse:true, min:1, suggestedMax:25}}}
-  });
-  new Chart(document.getElementById('chartKWBar'), {
-    type: 'bar',
-    data: { labels: ['мист для волос','крем-спрей','гель для душа','кератин набор'],
-      datasets: [
-        { label: 'Органика', data:[34,18,15,22], backgroundColor:'#22c55e99' },
-        { label: 'РК', data:[18,22,19,15], backgroundColor:'#6c63ff99' },
-    ]}, options: { ...baseOpts, indexAxis:'y' }
-  });
-}
-
 // Keywords — данные с ручной частотностью
 const KW_KEY = 'likato_kw_data';
 const DIST_KEY = 'likato_dist_data';
@@ -2288,6 +2548,8 @@ const KW_PRODUCTS = [
   { key: 'termo',    nmId: 1221264210, name: 'Термотушь для ресниц LAVANT MANIFEST' },
   { key: 'brow',     nmId: 1113143990, name: 'Гель для бровей KERABROW' },
 ];
+// Товары, добавленные вручную на вкладке «Позиции» (например новинки)
+try { (JSON.parse(localStorage.getItem('likato_pos_products') || '[]')).forEach(x => KW_PRODUCTS.push({ key: 'nm' + x.nmId, nmId: x.nmId, name: x.name, manual: true })); } catch (e) {}
 
 const kwDefaults = {
   keraglow: [
@@ -2312,41 +2574,52 @@ const kwDefaults = {
 // Ключи хранятся только на сервере (keywords.json через data.json)
 // localStorage для ключей больше не используется
 
+const KW_EDITS_KEY = 'likato_kw_edits'; // локальные правки списка запросов {key: [{q,type,freq}]}
+
 function kwFromServer(serverKW) {
   const result = {};
+  const edits = LS.get(KW_EDITS_KEY, {});
   KW_PRODUCTS.forEach(p => {
     const entry = serverKW[p.key] || serverKW[String(p.nmId)] || {};
-    const list = entry.keywords || [];
-    result[p.key] = list.map(sk => ({
+    const list = (entry.keywords || []).map(sk => ({
       q:       sk.q || '',
       type:    sk.type || 'СЧ',
       freq:    sk.freq || 0,
       pos:     sk.pos || 0,
       delta:   sk.delta || 0,
       history: sk.history || {},
+      last_checked: sk.last_checked || '',
     }));
+    // Правки из браузера поверх серверного списка: позиции/историю берём с сервера по тексту запроса
+    if (Array.isArray(edits[p.key])) {
+      result[p.key] = edits[p.key].map(e => {
+        const srv = list.find(x => x.q.toLowerCase().trim() === String(e.q).toLowerCase().trim());
+        return srv ? { ...srv, type: e.type || srv.type, freq: e.freq || srv.freq }
+                   : { q: e.q, type: e.type || 'СЧ', freq: e.freq || 0, pos: 0, delta: 0, history: {}, last_checked: '' };
+      });
+    } else {
+      result[p.key] = list;
+    }
   });
   return result;
 }
 
-// Сохраняет keywords.json на сервер — включая history (скрипты парсинга историю не сотрут)
+// Сохраняем правки в браузере (GitHub Pages не принимает запись на сервер —
+// раньше правки уходили на /save-keywords и молча терялись после перезагрузки).
+// Локальный server.py, если запущен, тоже получит изменения.
 function saveKW(d) {
-  const payload = {};
-  KW_PRODUCTS.forEach(p => {
-    payload[p.key] = {
-      nmId: p.nmId,
-      keywords: (d[p.key] || []).map(r => ({
-        q: r.q, type: r.type, freq: r.freq || 0,
-        pos: r.pos || 0, delta: r.delta || 0,
-        history: r.history || {},
-      }))
-    };
-  });
-  fetch('/save-keywords', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(payload)
-  }).catch(e => console.warn('save-keywords:', e));
+  const edits = {};
+  KW_PRODUCTS.forEach(p => { edits[p.key] = (d[p.key] || []).map(r => ({ q: r.q, type: r.type, freq: r.freq || 0 })); });
+  LS.set(KW_EDITS_KEY, edits);
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    const payload = {};
+    KW_PRODUCTS.forEach(p => {
+      payload[p.key] = { nmId: p.nmId, keywords: (d[p.key] || []).map(r => ({
+        q: r.q, type: r.type, freq: r.freq || 0, pos: r.pos || 0, delta: r.delta || 0, history: r.history || {}, last_checked: r.last_checked || '' })) };
+    });
+    fetch('/save-keywords', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
+      .catch(e => console.warn('save-keywords:', e));
+  }
 }
 
 let kwData = {};
@@ -2361,19 +2634,19 @@ function kwSaveField(key, idx, field, val) {
     kwData[key][idx].type = val;
   }
   saveKW(kwData);
-  renderKW();
+  renderKwPage();
 }
 
 function kwAdd(key) {
   kwData[key].push({ q: 'новый запрос', type: 'СЧ', freq: 0, pos: 0, delta: 0, history: {} });
   saveKW(kwData);
-  renderKW();
+  renderKwPage();
 }
 
 function kwDelete(key, idx) {
   kwData[key].splice(idx, 1);
   saveKW(kwData);
-  renderKW();
+  renderKwPage();
 }
 
 function posColor(p) {
@@ -2713,7 +2986,7 @@ function calcRun() {
   }
   document.getElementById('calcCoefBreakdown').innerHTML = factors.map(f => {
     const color = f.neutral || f.bold ? 'var(--text2)' : _coefColor(f.v);
-    const bg = f.bold ? 'rgba(99,102,241,.2)' : 'var(--surface)';
+    const bg = f.bold ? 'var(--border)' : 'var(--surface)';
     const val = f.unit ? f.v.toLocaleString('ru') + ' ' + f.unit : '×' + f.v.toFixed(2);
     return `<span style="background:${bg};border:1px solid var(--border);border-radius:20px;padding:3px 9px;font-size:10px;color:${color};font-weight:${f.bold?700:400}">${f.label}: <b>${val}</b></span>`;
   }).join('');
@@ -3096,13 +3369,734 @@ function renderVyvody(data) {
 }
 
 function switchTab(tab, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('page-top').classList.toggle('active', tab==='top');
-  document.getElementById('page-novinka').classList.toggle('active', tab==='novinka');
-  document.getElementById('page-advisor').classList.toggle('active', tab==='advisor');
-  document.getElementById('page-archive').classList.toggle('active', tab==='archive');
-  document.getElementById('page-vyvody').classList.toggle('active', tab==='vyvody');
+  el = el || document.querySelector(`.tab[data-tab="${tab}"]`);
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === el));
+  document.querySelectorAll('.page').forEach(pg => pg.classList.toggle('active', pg.id === 'page-' + tab));
+  LS.set('likato_tab', tab);
+  try { history.replaceState(null, '', '#' + tab); } catch (e) {}
+  if (tab === 'rk') renderRK();
+  if (tab === 'unit') renderUnit();
+  if (tab === 'kw') renderKwPage();
+}
+
+// ════════════════════════════════════════════════════════════════
+// ОБЩИЕ ПОМОЩНИКИ для новых вкладок (РК, юнит-экономика, позиции)
+// ════════════════════════════════════════════════════════════════
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* приватный режим */ } },
+};
+const nf  = n => (n == null || !isFinite(n)) ? '—' : Math.round(n).toLocaleString('ru-RU');
+const nf1 = n => (n == null || !isFinite(n)) ? '—' : n.toLocaleString('ru-RU', { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+const pctf = (n, d = 1) => (n == null || !isFinite(n)) ? '—' : n.toLocaleString('ru-RU', { maximumFractionDigits: d, minimumFractionDigits: d }) + '%';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ddmm = iso => iso ? `${iso.slice(8, 10)}.${iso.slice(5, 7)}` : '—';
+function addDays(iso, n) { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
+function daysBetween(a, b) { return Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 864e5); }
+
+// Изменение в % (null, если сравнивать не с чем)
+function chg(cur, prev) { return (cur == null || prev == null || !isFinite(cur) || !isFinite(prev) || prev === 0) ? null : (cur / prev - 1) * 100; }
+// Дельта со стрелкой; goodUp = рост — это хорошо
+function deltaHtml(ch, goodUp = true) {
+  if (ch == null) return '<span class="delta-flat">—</span>';
+  if (Math.abs(ch) < 3) return '<span class="delta-flat">≈ без изменений</span>';
+  // goodUp = null — нейтральная метрика (расход): направление без оценки
+  const cls = goodUp == null ? 'delta-flat' : ((goodUp ? ch > 0 : ch < 0) ? 'delta-up' : 'delta-down');
+  return `<span class="${cls}">${ch > 0 ? '▲ +' : '▼ '}${pctf(ch, 0)}</span>`;
+}
+
+function productName(nm) {
+  nm = String(nm);
+  const p = (rawData?.products || []).find(x => String(x.nmId) === nm);
+  if (p) return p.name;
+  const n = (rawData?.novosti || []).find(x => String(x.nm) === nm);
+  if (n) return n.name;
+  return 'Артикул ' + nm;
+}
+function shortName(nm, max = 34) { const s = productName(nm); return s.length > max ? s.slice(0, max - 1) + '…' : s; }
+
+// ── Дата обновления + предупреждение, если данные устарели ──
+function showUpdatedAt(str) {
+  const el = document.getElementById('lastUpdate');
+  const ban = document.getElementById('staleBanner');
+  if (!el) return;
+  el.textContent = 'Обновлено: ' + (str || '—');
+  const m = /(\d{2})\.(\d{2})\.(\d{4})/.exec(str || '');
+  if (!m) return;
+  const upd = new Date(+m[3], +m[2] - 1, +m[1]);
+  const age = Math.floor((Date.now() - upd) / 864e5);
+  const stale = age >= 2;
+  el.classList.toggle('stale', stale);
+  if (stale) el.textContent = `Данные от ${m[1]}.${m[2]} · ${age} дн. назад`;
+  if (ban) ban.innerHTML = stale ? `<div class="banner"><span>⚠</span><div><b>Данные не обновлялись ${age} дн. (последний сбор — ${esc(str)}).</b> Скрипт сбора запускается, но не сохраняет данные. Посмотри <code>fetch_log.txt</code> в папке Cosmo2026: ошибка <b>HTTP 401</b> означает, что токен WB отозван — выпусти новый в кабинете WB и вставь в <code>wb_fetch.py</code>.</div></div>` : '';
+}
+
+// ════════════════════════════════════════════════════════════════
+// ЮНИТ-ЭКОНОМИКА
+// ════════════════════════════════════════════════════════════════
+const UNIT_KEY = 'likato_unit';          // {nm: {price,cost,comm,log,logRet,storage,tax,other,buyout}}
+const UNIT_NMS_KEY = 'likato_unit_nms';  // артикулы, добавленные вручную
+const DRR_TARGET_KEY = 'likato_drr_target';
+const UNIT_FIELDS = [
+  { f: 'price',   ph: 'цена' },
+  { f: 'cost',    ph: '₽' },
+  { f: 'comm',    ph: '%' },
+  { f: 'log',     ph: '₽' },
+  { f: 'logRet',  ph: '0' },
+  { f: 'storage', ph: '0' },
+  { f: 'tax',     ph: '0' },
+  { f: 'other',   ph: '0' },
+  { f: 'buyout',  ph: '%' },
+];
+
+function drrTarget() { const v = parseFloat(LS.get(DRR_TARGET_KEY, 15)); return v > 0 ? v : 15; }
+function setDrrTarget(v) { const n = parseFloat(v); if (n > 0) LS.set(DRR_TARGET_KEY, n); renderUnit(); }
+
+function unitDefaults(nm) {
+  const p = (rawData?.products || []).find(x => String(x.nmId) === String(nm));
+  const na = rawData?.nm_ads?.[String(nm)];
+  const buy = p?.funnel?.redemption_pct || p?.funnel?.redemption_prev || null;
+  let price = p?.current_price || null;
+  if (!price) { const n = (rawData?.novosti || []).find(x => String(x.nm) === String(nm)); price = n?.price || null; }
+  if (!price && na?.revenue && na?.orders) price = Math.round(na.revenue / na.orders);
+  return { price, buyout: buy };
+}
+
+function unitNms() {
+  const set = new Set();
+  (rawData?.products || []).forEach(p => set.add(String(p.nmId)));
+  LS.get(UNIT_NMS_KEY, []).forEach(n => set.add(String(n)));
+  rkMine().forEach(c => { const s = rkSource(c.id); if (s?.nms?.[0]) set.add(String(s.nms[0])); });
+  Object.keys(LS.get(UNIT_KEY, {})).forEach(n => set.add(String(n)));
+  return [...set];
+}
+
+// Считает экономику артикула. cpoMax = null, если не хватает обязательных полей.
+function unitCalc(nm) {
+  const inp = LS.get(UNIT_KEY, {})[String(nm)] || {};
+  const def = unitDefaults(nm);
+  const num = (v, d) => { const n = parseFloat(String(v ?? '').replace(',', '.')); return isFinite(n) ? n : d; };
+  const price  = num(inp.price, def.price);
+  const cost   = num(inp.cost, null);
+  const comm   = num(inp.comm, null);
+  const log    = num(inp.log, null);
+  const logRet = num(inp.logRet, 0);
+  const storage = num(inp.storage, 0);
+  const tax    = num(inp.tax, 0);
+  const other  = num(inp.other, 0);
+  const buyout = num(inp.buyout, def.buyout ?? 90);
+  const na = rawData?.nm_ads?.[String(nm)];
+  const cpoFact = na && na.orders ? na.spend / na.orders : null;
+  const res = { price, buyout, cpoFact, complete: false, profit: null, margin: null, cpoMax: null, missing: [] };
+  if (!price) res.missing.push('цена');
+  if (cost == null) res.missing.push('себестоимость');
+  if (comm == null) res.missing.push('комиссия');
+  if (log == null) res.missing.push('логистика');
+  if (res.missing.length || !(buyout > 0)) return res;
+  const b = Math.min(buyout, 100) / 100;
+  const logPer = log + (1 - b) / b * (log + logRet);
+  res.profit = price * (1 - comm / 100 - tax / 100) - cost - logPer - storage - other;
+  res.margin = res.profit / price * 100;
+  res.cpoMax = res.profit * b;
+  res.complete = true;
+  return res;
+}
+
+function unitStatusHtml(u) {
+  if (!u.complete) return `<span class="st st-na">заполни: ${esc(u.missing.join(', '))}</span>`;
+  if (u.cpoMax <= 0) return '<span class="st st-bad">убыточен до рекламы</span>';
+  if (u.cpoFact == null) return '<span class="st st-na">нет рекламы</span>';
+  const r = u.cpoFact / u.cpoMax;
+  return r <= 0.8 ? '<span class="st st-good">реклама окупается</span>'
+       : r <= 1   ? '<span class="st st-warn">на грани</span>'
+       : '<span class="st st-bad">реклама в минусе</span>';
+}
+
+function unitCalcCells(nm) {
+  const u = unitCalc(nm);
+  return {
+    profit: u.profit == null ? '—' : nf(u.profit),
+    margin: u.margin == null ? '—' : pctf(u.margin),
+    cpoMax: u.cpoMax == null ? '—' : `<b>${nf(u.cpoMax)}</b>`,
+    cpoFact: u.cpoFact == null ? '—' : nf(u.cpoFact),
+    status: unitStatusHtml(u),
+  };
+}
+
+function renderUnit() {
+  const body = document.getElementById('unitBody');
+  if (!body) return;
+  const t = document.getElementById('rkDrrTarget'); if (t && document.activeElement !== t) t.value = drrTarget();
+  const inputs = LS.get(UNIT_KEY, {});
+  const manual = LS.get(UNIT_NMS_KEY, []).map(String);
+  body.innerHTML = unitNms().map(nm => {
+    const inp = inputs[nm] || {};
+    const def = unitDefaults(nm);
+    const cells = UNIT_FIELDS.map(({ f, ph }) => {
+      const v = inp[f] ?? '';
+      const autoVal = f === 'price' ? def.price : f === 'buyout' ? def.buyout : null;
+      const placeholder = autoVal ? String(Math.round(autoVal)) : ph;
+      const required = ['cost', 'comm', 'log'].includes(f) || (f === 'price' && !def.price);
+      return `<td class="num"><input class="inp-cell ${v === '' && required ? 'empty' : ''}" inputmode="decimal" value="${esc(v)}" placeholder="${esc(placeholder)}"
+        title="${autoVal ? 'Подставлено из данных WB — можно переписать' : ''}" onchange="unitSet('${nm}','${f}',this.value)"></td>`;
+    }).join('');
+    const c = unitCalcCells(nm);
+    const canDel = manual.includes(nm) || !(rawData?.products || []).some(p => String(p.nmId) === nm);
+    return `<tr id="unit-row-${nm}">
+      <td><div style="font-weight:600;color:var(--text)">${esc(shortName(nm, 38))}</div><div class="muted" style="font-size:11px">${nm}</div></td>
+      ${cells}
+      <td class="num" data-c="profit">${c.profit}</td><td class="num" data-c="margin">${c.margin}</td>
+      <td class="num" data-c="cpoMax">${c.cpoMax}</td><td class="num" data-c="cpoFact">${c.cpoFact}</td>
+      <td data-c="status">${c.status}</td>
+      <td>${canDel ? `<button class="btn btn-ghost btn-sm" onclick="unitRemove('${nm}')" title="Убрать из таблицы">✕</button>` : ''}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="16" class="muted" style="padding:16px;text-align:center">Нет артикулов</td></tr>';
+}
+
+function unitSet(nm, field, val) {
+  const all = LS.get(UNIT_KEY, {});
+  all[nm] = all[nm] || {};
+  const v = String(val).trim();
+  if (v === '') delete all[nm][field]; else all[nm][field] = v.replace(',', '.');
+  LS.set(UNIT_KEY, all);
+  // Обновляем только расчётные ячейки строки — фокус и Tab не сбиваются
+  const row = document.getElementById('unit-row-' + nm);
+  if (row) {
+    const c = unitCalcCells(nm);
+    Object.entries(c).forEach(([k, html]) => { const td = row.querySelector(`[data-c="${k}"]`); if (td) td.innerHTML = html; });
+    const inp = row.querySelector(`input[onchange*="'${field}'"]`);
+    if (inp) inp.classList.toggle('empty', v === '' && ['cost', 'comm', 'log'].includes(field));
+  }
+}
+
+function unitAdd() {
+  const el = document.getElementById('unitAddNm');
+  const nm = el.value.replace(/\D/g, '');
+  if (!nm) return;
+  const list = LS.get(UNIT_NMS_KEY, []).map(String);
+  if (!list.includes(nm)) { list.push(nm); LS.set(UNIT_NMS_KEY, list); }
+  el.value = '';
+  renderUnit();
+}
+
+function unitRemove(nm) {
+  if (!confirm(`Убрать ${shortName(nm)} из таблицы? Введённые цифры тоже удалятся.`)) return;
+  LS.set(UNIT_NMS_KEY, LS.get(UNIT_NMS_KEY, []).map(String).filter(x => x !== nm));
+  const all = LS.get(UNIT_KEY, {}); delete all[nm]; LS.set(UNIT_KEY, all);
+  renderUnit();
+}
+
+// ════════════════════════════════════════════════════════════════
+// РЕКЛАМНЫЕ КАМПАНИИ
+// ════════════════════════════════════════════════════════════════
+const RK_KEY = 'likato_rk_mine';          // [{id, label}]
+const RK_PERIOD_KEY = 'likato_rk_period';
+let rkSelected = null;
+let rkCharts = [];
+
+function rkMine() { return LS.get(RK_KEY, []); }
+function rkPeriod() { return LS.get(RK_PERIOD_KEY, 7); }
+function setRkPeriod(n) { LS.set(RK_PERIOD_KEY, n); renderRK(); }
+
+// Источник данных кампании: дневная разбивка (ads_daily) или итог за 30 дней (ads)
+function rkSource(id) {
+  id = String(id);
+  const dd = rawData?.ads_daily?.[id];
+  if (dd) return { mode: 'daily', status: dd.status, nms: dd.nms || [], days: dd.days || [] };
+  const a = (rawData?.ads || []).find(x => String(x.id) === id);
+  // В старом формате у мультитоварных РК nmId = 0 — артикул берём из привязки товаров
+  const owner = (rawData?.products || []).find(p => (p.ad_campaigns || []).map(String).includes(id));
+  if (a) return { mode: 'total', status: a.status, nms: a.nmId ? [a.nmId] : owner ? [owner.nmId] : [],
+    tot: { shows: a.shows, clicks: a.clicks, spend: a.spend, atbs: null, orders: a.orders, rev: a.revenue } };
+  return null;
+}
+
+function rkEndDate() {
+  let end = '';
+  Object.values(rawData?.ads_daily || {}).forEach(c => { const d = c.days?.[c.days.length - 1]?.[0]; if (d && d > end) end = d; });
+  return end || null;
+}
+
+function sumDays(days, from, to) {
+  const t = { shows: 0, clicks: 0, spend: 0, atbs: 0, orders: 0, rev: 0, n: 0 };
+  (days || []).forEach(r => {
+    if (r[0] < from || r[0] > to) return;
+    t.shows += r[1]; t.clicks += r[2]; t.spend += r[3]; t.atbs += r[4]; t.orders += r[5]; t.rev += r[6]; t.n++;
+  });
+  return t;
+}
+
+function rkMetrics(t) {
+  if (!t) return null;
+  const m = { ...t };
+  m.ctr = t.shows ? t.clicks / t.shows * 100 : null;
+  m.cpc = t.clicks ? t.spend / t.clicks : null;
+  m.cr  = t.clicks ? t.orders / t.clicks * 100 : null;
+  m.cpo = t.orders ? t.spend / t.orders : null;
+  m.drr = t.rev ? t.spend / t.rev * 100 : null;
+  m.c2cart = (t.atbs != null && t.clicks) ? t.atbs / t.clicks * 100 : null;
+  m.cart2o = (t.atbs) ? t.orders / t.atbs * 100 : null;
+  return m;
+}
+
+function rkStatus(m, target) {
+  if (!m || !m.spend) return { cls: 'st-na', label: 'нет расхода', rank: 4 };
+  if (m.clicks < 100) return { cls: 'st-na', label: 'мало данных', rank: 3 };
+  if (target != null) {
+    if (target <= 0) return { cls: 'st-bad', label: 'товар в минусе до рекламы', rank: 0 };
+    if (!m.orders) return { cls: 'st-bad', label: 'нет заказов', rank: 0 };
+    const r = m.cpo / target;
+    return r <= 0.8 ? { cls: 'st-good', label: 'окупается', rank: 2 } : r <= 1 ? { cls: 'st-warn', label: 'на грани', rank: 1 } : { cls: 'st-bad', label: 'в минусе', rank: 0 };
+  }
+  if (m.drr == null) return { cls: 'st-bad', label: 'нет заказов', rank: 0 };
+  const r = m.drr / drrTarget();
+  return r <= 0.8 ? { cls: 'st-good', label: 'ок по ДРР', rank: 2 } : r <= 1 ? { cls: 'st-warn', label: 'на грани по ДРР', rank: 1 } : { cls: 'st-bad', label: 'ДРР выше цели', rank: 0 };
+}
+
+// Ищем первое просевшее звено воронки (сверху вниз)
+function rkDiagnose(cur, prev) {
+  if (!cur || !prev || !prev.spend || prev.clicks < 50) return null;
+  const checks = [
+    { key: 'shows',  ch: chg(cur.shows / Math.max(cur.n, 1), prev.shows / Math.max(prev.n, 1)), bad: c => c < -30,
+      msg: c => `Показы/день ${pctf(c, 0)}: ставку перебили, кончился бюджет или товар уходит в OOS` },
+    { key: 'ctr',    ch: chg(cur.ctr, prev.ctr), bad: c => c < -20,
+      msg: c => `CTR ${pctf(c, 0)}: проверь главное фото, цену в выдаче, позицию показа` },
+    { key: 'cpc',    ch: chg(cur.cpc, prev.cpc), bad: c => c > 20,
+      msg: c => `CPC +${pctf(c, 0)}: конкуренты подняли ставки — проверь ставку и кластеры` },
+    { key: 'c2cart', ch: chg(cur.c2cart, prev.c2cart), bad: c => c < -20,
+      msg: c => `Клик→корзина ${pctf(c, 0)}: цена/СПП, рейтинг, свежие отзывы` },
+    { key: 'cart2o', ch: chg(cur.cart2o, prev.cart2o), bad: c => c < -20,
+      msg: c => `Корзина→заказ ${pctf(c, 0)}: цена при оформлении, сроки доставки, остатки по складам` },
+  ];
+  if (cur.c2cart == null) checks.push({ key: 'cr', ch: chg(cur.cr, prev.cr), bad: c => c < -20,
+      msg: c => `CR клик→заказ ${pctf(c, 0)}: цена, отзывы, остатки` });
+  return checks.find(x => x.ch != null && x.bad(x.ch)) || null;
+}
+
+function rkStockNote(nm) {
+  const p = (rawData?.products || []).find(x => String(x.nmId) === String(nm));
+  return (p && p.days_of_stock != null && p.days_of_stock < 14) ? `Остатка на ${p.days_of_stock} дн. — не разгоняй рекламу.` : '';
+}
+
+function rkCompute() {
+  const period = rkPeriod();
+  const end = rkEndDate();
+  const from = end ? addDays(end, -(period - 1)) : null;
+  const pFrom = end ? addDays(end, -(2 * period - 1)) : null, pTo = end ? addDays(end, -period) : null;
+  return rkMine().map(c => {
+    const src = rkSource(c.id);
+    const nm = src?.nms?.[0] || null;
+    const unit = nm ? unitCalc(nm) : null;
+    const target = unit?.complete ? unit.cpoMax : null;
+    let cur = null, prev = null;
+    if (src?.mode === 'daily' && end) { cur = rkMetrics(sumDays(src.days, from, end)); prev = rkMetrics(sumDays(src.days, pFrom, pTo)); }
+    else if (src?.mode === 'total') cur = rkMetrics(src.tot);
+    const st = rkStatus(cur, target);
+    const diag = src?.mode === 'daily' ? rkDiagnose(cur, prev) : null;
+    let verdict;
+    if (!src) verdict = 'Кампании нет в данных: проверь номер или дождись следующего сбора.';
+    else if (src.mode === 'total') verdict = 'Пока только итог за 30 дней — разбивка по дням появится после сбора с рабочим токеном.';
+    else if (!cur.spend) verdict = src.status === 11 ? 'На паузе.' : 'За период нет расхода.';
+    else if (st.cls === 'st-na') verdict = `Меньше 100 кликов — CR ещё шум, подожди ${period < 7 ? 'или возьми период длиннее' : 'с выводами'}.`;
+    else if (diag) verdict = diag.msg(diag.ch);
+    else if (st.cls === 'st-bad') verdict = 'Воронка стабильна, но заказ стоит дороже допустимого: снизь ставку, почисти кластеры или пересмотри цену.';
+    else if (st.cls === 'st-warn') verdict = 'Близко к пределу — следи за CPO, ставку не поднимай.';
+    else verdict = 'В норме — не трогаем.';
+    const stock = nm ? rkStockNote(nm) : '';
+    if (stock) verdict += ' ' + stock;
+    return { c, src, nm, unit, target, cur, prev, st, diag, verdict, statusLbl: src?.status === 9 ? 'активна' : src?.status === 11 ? 'пауза' : '' };
+  });
+}
+
+function renderRK() {
+  const body = document.getElementById('rkBody');
+  if (!body || !rawData) return;
+  const period = rkPeriod();
+  document.querySelectorAll('#rkPeriodSeg button').forEach(b => b.classList.toggle('on', +b.dataset.days === period));
+  const helpT = document.getElementById('rkDrrTargetHelp'); if (helpT) helpT.textContent = pctf(drrTarget(), 0);
+
+  const hasDaily = rawData.ads_daily && Object.keys(rawData.ads_daily).length;
+  const end = rkEndDate();
+  document.getElementById('rkBanner').innerHTML = !hasDaily
+    ? `<div class="banner"><span>ℹ</span><div><b>Разбивки РК по дням пока нет.</b> Её собирает обновлённый скрипт — появится после первого успешного сбора. До этого по каждой кампании показан итог за 30 дней до ${esc(rawData.updated_at || '—')} без сравнения периодов.</div></div>`
+    : `<div class="muted" style="font-size:12px">Период: ${ddmm(addDays(end, -(period - 1)))} — ${ddmm(end)} · сравнение с ${ddmm(addDays(end, -(2 * period - 1)))} — ${ddmm(addDays(end, -period))}</div>`;
+
+  // Чипы кампаний
+  const mine = rkMine();
+  document.getElementById('rkChips').innerHTML = mine.length ? mine.map(c => {
+    const src = rkSource(c.id);
+    const nm = src?.nms?.[0];
+    const title = c.label || (nm ? shortName(nm, 26) : 'нет в данных');
+    return `<span class="chip"><b style="cursor:pointer" title="Переименовать" onclick="rkRename('${c.id}')">${esc(title)}</b> ${c.id}<button onclick="rkRemove('${c.id}')" aria-label="Удалить" title="Убрать">✕</button></span>`;
+  }).join('') : '<span class="muted" style="font-size:12px">Пока пусто — добавь номера своих кампаний (кабинет WB → Продвижение → номер РК) или найди все РК по артикулу.</span>';
+
+  const rows = rkCompute();
+  // KPI по всем моим РК
+  const sum = (which) => { const t = { shows: 0, clicks: 0, spend: 0, atbs: 0, orders: 0, rev: 0, n: 1 }; rows.forEach(r => { const m = r[which]; if (m) ['shows', 'clicks', 'spend', 'atbs', 'orders', 'rev'].forEach(k => t[k] += m[k] || 0); }); return rkMetrics(t); };
+  const T = sum('cur'), P = hasDaily ? sum('prev') : null;
+  const bad = rows.filter(r => r.st.cls === 'st-bad').length;
+  const kpi = (label, val, ch, goodUp, sub = '', flag = '') => `<div class="kpi-card ${flag}"><div class="kpi-label">${label}</div><div class="kpi-val">${val}</div><div class="kpi-sub">${P ? deltaHtml(ch, goodUp) + ' к прошлому периоду' : sub}</div></div>`;
+  document.getElementById('rkKpi').innerHTML = mine.length ? [
+    kpi('Расход', nf(T.spend) + ' ₽', chg(T.spend, P?.spend), null),
+    kpi('Заказы с рекламы', nf(T.orders), chg(T.orders, P?.orders), true),
+    kpi('CPO', T.cpo ? nf(T.cpo) + ' ₽' : '—', chg(T.cpo, P?.cpo), false),
+    kpi('ДРР', pctf(T.drr), chg(T.drr, P?.drr), false),
+    kpi('CTR', pctf(T.ctr, 2), chg(T.ctr, P?.ctr), true),
+    kpi('CR клик→заказ', pctf(T.cr), chg(T.cr, P?.cr), true),
+    `<div class="kpi-card ${bad ? 'flag-red' : 'flag-green'}"><div class="kpi-label">Требуют внимания</div><div class="kpi-val">${bad} из ${rows.length}</div><div class="kpi-sub">кампаний в минусе</div></div>`,
+  ].join('') : '';
+
+  rows.sort((a, b) => a.st.rank - b.st.rank || (b.cur?.spend || 0) - (a.cur?.spend || 0));
+  body.innerHTML = rows.length ? rows.map(r => {
+    const m = r.cur || {};
+    const d = (k, up) => r.prev ? `<div style="font-size:10px">${deltaHtml(chg(m[k], r.prev[k]), up)}</div>` : '';
+    const name = r.c.label || (r.nm ? shortName(r.nm, 30) : '—');
+    return `<tr class="rk-row ${rkSelected === r.c.id ? 'sel' : ''}" onclick="rkSelect('${r.c.id}')">
+      <td><div style="font-weight:600;color:var(--text)">${esc(name)}</div><div class="muted" style="font-size:11px">РК ${r.c.id}${r.statusLbl ? ' · ' + r.statusLbl : ''}${r.nm ? ' · ' + r.nm : ''}</div></td>
+      <td><span class="st ${r.st.cls}">${r.st.label}</span></td>
+      <td class="num">${nf(m.spend)}${d('spend', null)}</td>
+      <td class="num">${nf(m.shows)}${d('shows', true)}</td>
+      <td class="num">${pctf(m.ctr, 2)}${d('ctr', true)}</td>
+      <td class="num">${m.cpc == null ? '—' : nf1(m.cpc)}${d('cpc', false)}</td>
+      <td class="num">${nf(m.clicks)}</td>
+      <td class="num">${m.atbs == null ? '—' : nf(m.atbs)}</td>
+      <td class="num">${nf(m.orders)}${d('orders', true)}</td>
+      <td class="num">${pctf(m.cr)}${d('cr', true)}</td>
+      <td class="num"><b>${m.cpo == null ? '—' : nf(m.cpo)}</b>${d('cpo', false)}</td>
+      <td class="num">${r.target == null ? `<span class="muted" title="Заполни юнит-экономику артикула">нет с/с</span>` : nf(r.target)}</td>
+      <td class="num">${pctf(m.drr)}</td>
+      <td class="verdict">${esc(r.verdict)}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="14" class="muted" style="padding:18px;text-align:center">Добавь свои кампании выше</td></tr>';
+
+  if (rkSelected && rows.some(r => r.c.id === rkSelected)) renderRkDetail(rows.find(r => r.c.id === rkSelected));
+  else document.getElementById('rkDetail').style.display = 'none';
+}
+
+function rkAdd() {
+  const idEl = document.getElementById('rkAddId'), lbEl = document.getElementById('rkAddLabel');
+  const ids = idEl.value.split(/[\s,;]+/).map(x => x.replace(/\D/g, '')).filter(Boolean);
+  if (!ids.length) return;
+  const list = rkMine();
+  let added = 0;
+  ids.forEach(id => { if (!list.some(c => c.id === id)) { list.push({ id, label: lbEl.value.trim() }); added++; } });
+  LS.set(RK_KEY, list);
+  const missing = ids.filter(id => !rkSource(id));
+  document.getElementById('rkAddMsg').textContent = `Добавлено: ${added}` + (missing.length ? ` · нет в данных: ${missing.join(', ')} (появятся после сбора)` : '');
+  idEl.value = ''; lbEl.value = '';
+  renderRK();
+}
+
+function rkAddByNm() {
+  const el = document.getElementById('rkAddNm');
+  const nm = el.value.replace(/\D/g, '');
+  if (!nm) return;
+  const found = new Set();
+  Object.entries(rawData?.ads_daily || {}).forEach(([id, c]) => { if ((c.nms || []).map(String).includes(nm)) found.add(id); });
+  (rawData?.ads || []).forEach(a => { if (String(a.nmId) === nm) found.add(String(a.id)); });
+  (rawData?.products || []).forEach(p => { if (String(p.nmId) === nm) (p.ad_campaigns || []).forEach(id => found.add(String(id))); });
+  const list = rkMine();
+  let added = 0;
+  found.forEach(id => { if (!list.some(c => c.id === id)) { list.push({ id, label: '' }); added++; } });
+  LS.set(RK_KEY, list);
+  document.getElementById('rkAddMsg').textContent = found.size ? `По артикулу ${nm} найдено РК: ${found.size}, добавлено новых: ${added}` : `По артикулу ${nm} кампаний с расходом не найдено`;
+  el.value = '';
+  renderRK();
+}
+
+function rkRemove(id) { LS.set(RK_KEY, rkMine().filter(c => c.id !== id)); if (rkSelected === id) rkSelected = null; renderRK(); }
+function rkRename(id) {
+  const list = rkMine(); const c = list.find(x => x.id === id); if (!c) return;
+  const v = prompt('Подпись кампании', c.label || ''); if (v == null) return;
+  c.label = v.trim(); LS.set(RK_KEY, list); renderRK();
+}
+function rkSelect(id) { rkSelected = rkSelected === id ? null : id; renderRK(); if (rkSelected) document.getElementById('rkDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+function renderRkDetail(r) {
+  const box = document.getElementById('rkDetail');
+  box.style.display = '';
+  document.getElementById('rkDetailTitle').textContent = `${r.c.label || (r.nm ? productName(r.nm) : 'Кампания')} · РК ${r.c.id}`;
+  const m = r.cur || {}, p = r.prev;
+  const step = (label, val, k, up, fmt) => {
+    const ch = p ? chg(m[k], p[k]) : null;
+    const weak = r.diag && r.diag.key === k;
+    return `<div class="funnel-step ${weak ? 'weak' : ''}"><div class="fs-label">${label}</div><div class="fs-val">${fmt(val)}</div><div class="fs-delta">${p ? deltaHtml(ch, up) : ''}${weak ? ' <span class="st st-bad" style="margin-left:4px">просело</span>' : ''}</div></div>`;
+  };
+  document.getElementById('rkFunnel').innerHTML = [
+    step('Показы', m.shows, 'shows', true, nf),
+    step('CTR', m.ctr, 'ctr', true, v => pctf(v, 2)),
+    step('CPC', m.cpc, 'cpc', false, v => v == null ? '—' : nf1(v) + ' ₽'),
+    step('Клики', m.clicks, 'clicks', true, nf),
+    step('Клик → корзина', m.c2cart, 'c2cart', true, v => pctf(v)),
+    step('Корзина → заказ', m.cart2o, 'cart2o', true, v => pctf(v)),
+    step('Заказы', m.orders, 'orders', true, nf),
+    step('CPO', m.cpo, 'cpo', false, v => v == null ? '—' : nf(v) + ' ₽'),
+  ].join('');
+
+  rkCharts.forEach(c => c.destroy()); rkCharts = [];
+  const tbl = document.getElementById('rkDaysTable');
+  if (r.src?.mode !== 'daily') { tbl.innerHTML = '<div class="muted" style="font-size:12px">Графики по дням появятся после сбора дневной статистики.</div>'; return; }
+  const days = r.src.days.slice(-30);
+  const labels = days.map(d => ddmm(d[0]));
+  const tip = { backgroundColor: '#232322', borderColor: '#383835', borderWidth: 1, titleColor: '#f4f4f2', bodyColor: '#c3c2b7', padding: 8 };
+  const scales = { x: { ticks: { color: '#898781', font: { size: 10 }, maxRotation: 0, autoSkipPadding: 8 }, grid: { display: false } },
+                   y: { ticks: { color: '#898781', font: { size: 10 } }, grid: { color: '#2c2c2a' }, beginAtZero: true } };
+  rkCharts.push(new Chart(document.getElementById('rkChartSpend'), {
+    type: 'bar',
+    data: { labels, datasets: [{ label: 'Расход, ₽', data: days.map(d => Math.round(d[3])), backgroundColor: '#3987e5', borderRadius: 4, maxBarThickness: 18 }] },
+    options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: false }, tooltip: { ...tip, callbacks: { label: c => ` ${nf(c.raw)} ₽` } } }, scales },
+  }));
+  const cpo = days.map(d => d[5] ? Math.round(d[3] / d[5]) : null);
+  const ds = [{ label: 'CPO, ₽', data: cpo, borderColor: '#3987e5', backgroundColor: '#3987e5', borderWidth: 2, pointRadius: 3, pointHoverRadius: 5, spanGaps: true, tension: 0.25 }];
+  if (r.target > 0) ds.push({ label: 'Допустимый CPO', data: days.map(() => Math.round(r.target)), borderColor: '#c3c2b7', borderDash: [5, 4], borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 0 });
+  rkCharts.push(new Chart(document.getElementById('rkChartCpo'), {
+    type: 'line', data: { labels, datasets: ds },
+    options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: false }, tooltip: { ...tip, callbacks: { label: c => ` ${c.dataset.label}: ${c.raw == null ? 'нет заказов' : nf(c.raw) + ' ₽'}` } } }, scales },
+  }));
+  const last = r.src.days.slice(-14).reverse();
+  tbl.innerHTML = `<table><thead><tr><th>Дата</th><th class="num">Показы</th><th class="num">Клики</th><th class="num">CTR</th><th class="num">Расход, ₽</th><th class="num">Корзины</th><th class="num">Заказы</th><th class="num">CPO, ₽</th><th class="num">ДРР</th></tr></thead><tbody>${
+    last.map(d => `<tr><td>${ddmm(d[0])}</td><td class="num">${nf(d[1])}</td><td class="num">${nf(d[2])}</td><td class="num">${pctf(d[1] ? d[2] / d[1] * 100 : null, 2)}</td><td class="num">${nf(d[3])}</td><td class="num">${nf(d[4])}</td><td class="num">${nf(d[5])}</td><td class="num">${d[5] ? nf(d[3] / d[5]) : '—'}</td><td class="num">${pctf(d[6] ? d[3] / d[6] * 100 : null)}</td></tr>`).join('')
+  }</tbody></table>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+// ПОЗИЦИИ ПО КЛЮЧАМ
+// ════════════════════════════════════════════════════════════════
+// Дата последней РЕАЛЬНОЙ проверки: поле last_checked от скрипта,
+// иначе — последний день, когда позиция менялась (старая история копировала прошлое значение)
+function kwLastReal(r) {
+  if (r.last_checked) return { date: r.last_checked, exact: true };
+  const h = Object.entries(r.history || {}).filter(([, v]) => v > 0).sort(([a], [b]) => a < b ? -1 : 1);
+  if (!h.length) return { date: null, exact: false };
+  let i = h.length - 1;
+  while (i > 0 && h[i - 1][1] === h[i][1]) i--;
+  return { date: h[i][0], exact: i === h.length - 1 };
+}
+
+function kwSparkline(hist) {
+  const pts = Object.entries(hist || {}).filter(([, v]) => v > 0).sort(([a], [b]) => a < b ? -1 : 1).slice(-30);
+  if (pts.length < 2) return '<span class="muted">—</span>';
+  const W = 120, H = 28, vals = pts.map(p => p[1]);
+  const mn = Math.min(...vals), mx = Math.max(...vals), rng = Math.max(mx - mn, 1);
+  // позиция 1 — наверху: меньше = выше
+  const xy = pts.map((p, i) => [i / (pts.length - 1) * (W - 6) + 3, (p[1] - mn) / rng * (H - 8) + 4]);
+  const last = xy[xy.length - 1];
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Динамика позиции: от ${vals[0]} до ${vals[vals.length - 1]}"><title>${pts.map(p => ddmm(p[0]) + ': ' + p[1]).join('\n')}</title>
+    <polyline fill="none" stroke="#3987e5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${xy.map(p => p.join(',')).join(' ')}"/>
+    <circle cx="${last[0]}" cy="${last[1]}" r="3" fill="#3987e5" stroke="#1a1a19" stroke-width="2"/></svg>`;
+}
+
+function posStatus(p) {
+  if (!p) return '<span class="st st-na">нет</span>';
+  return `<span class="st ${p <= 10 ? 'st-good' : p <= 30 ? 'st-warn' : 'st-bad'}">${p}</span>`;
+}
+
+// ── Ручной ввод позиций: выдача (поисковые запросы) и полки (категории каталога) ──
+const POS_MANUAL_KEY = 'likato_pos_manual';   // {"nm|kw|запрос" | "nm|shelf|полка": {"YYYY-MM-DD": позиция}}
+const SHELVES_KEY = 'likato_shelves';         // {nm: ["Красота / Волосы / Шампуни", ...]}
+const POS_PRODUCTS_KEY = 'likato_pos_products'; // товары, добавленные вручную [{nmId, name}]
+
+function todayIso() { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); }
+function posKey(nm, kind, name) { return `${nm}|${kind}|${String(name).toLowerCase().trim()}`; }
+function shelvesOf(nm) { return LS.get(SHELVES_KEY, {})[String(nm)] || []; }
+
+function lastEntry(hist) {
+  const d = Object.keys(hist || {}).filter(k => hist[k] > 0).sort();
+  return d.length ? { date: d[d.length - 1], pos: hist[d[d.length - 1]] } : null;
+}
+function valueDaysAgo(hist, fromDate, n) {
+  const target = addDays(fromDate, -n);
+  const d = Object.keys(hist || {}).filter(k => k <= target && hist[k] > 0).sort();
+  return d.length ? hist[d[d.length - 1]] : null;
+}
+
+// Все строки позиций: запросы (история скрипта + ручные записи) и полки (только ручные)
+function posItems(filterKey) {
+  const manual = LS.get(POS_MANUAL_KEY, {});
+  const items = [];
+  KW_PRODUCTS.filter(p => filterKey === 'all' || p.key === filterKey).forEach(p => {
+    (kwData[p.key] || []).forEach(r => {
+      const man = manual[posKey(p.nmId, 'kw', r.q)] || {};
+      const auto = kwLastReal(r);
+      // ручная запись важнее автоматической за тот же день
+      const hist = { ...Object.fromEntries(Object.entries(r.history || {}).filter(([, v]) => v > 0)), ...man };
+      const lastMan = lastEntry(man);
+      let real = auto;
+      if (lastMan && (!auto.date || lastMan.date >= auto.date)) real = { date: lastMan.date, exact: true, manual: true };
+      items.push({ p, kind: 'kw', name: r.q, freq: r.freq, hist, real, key: posKey(p.nmId, 'kw', r.q) });
+    });
+    shelvesOf(p.nmId).forEach(name => {
+      const hist = manual[posKey(p.nmId, 'shelf', name)] || {};
+      const le = lastEntry(hist);
+      items.push({ p, kind: 'shelf', name, freq: null, hist, real: le ? { date: le.date, exact: true, manual: true } : { date: null }, key: posKey(p.nmId, 'shelf', name) });
+    });
+  });
+  return items;
+}
+
+function renderKwPage() {
+  const body = document.getElementById('kwSummaryBody');
+  if (!body) return;
+  const sel = document.getElementById('kwProductFilter');
+  const cur = sel ? sel.value : 'all';
+  if (sel) sel.innerHTML = '<option value="all">Все товары</option>' + KW_PRODUCTS.map(p => `<option value="${p.key}" ${p.key === cur ? 'selected' : ''}>${esc(p.name)}</option>`).join('');
+  const f = sel ? sel.value : 'all';
+  const shelfSel = document.getElementById('shelfProduct');
+  if (shelfSel) { const v = shelfSel.value; shelfSel.innerHTML = KW_PRODUCTS.map(p => `<option value="${p.nmId}" ${String(p.nmId) === v ? 'selected' : ''}>${esc(p.name)}</option>`).join(''); }
+  const dateEl = document.getElementById('posDate');
+  if (dateEl && !dateEl.value) dateEl.value = todayIso();
+
+  const items = posItems(f);
+  const today = todayIso();
+  const newestAuto = items.filter(x => x.kind === 'kw' && !x.real.manual).map(x => x.real.date).filter(Boolean).sort().pop();
+  const staleCnt = items.filter(x => !x.real.date || daysBetween(x.real.date, today) > 3).length;
+  document.getElementById('kwBanner').innerHTML = staleCnt
+    ? `<div class="banner"><span>⚠</span><div><b>Устарело позиций: ${staleCnt} из ${items.length}</b> (не обновлялись больше 3 дней). Автоматический сбор${newestAuto ? ' стоит с ' + ddmm(newestAuto) : ' не работает'} — MPStats отвечает ошибкой 403. Вноси позиции вручную в блоке «Внести позиции за день».</div></div>` : '';
+
+  const kindLbl = k => k === 'kw' ? '<span class="badge badge-blue">выдача</span>' : '<span class="badge badge-gray">полка</span>';
+  body.innerHTML = items.length ? items.map(it => {
+    const last = lastEntry(it.hist);
+    const now = last ? last.pos : null;
+    const ago = last ? valueDaysAgo(it.hist, last.date, 7) : null;
+    const change = (ago && now) ? ago - now : null;
+    const chHtml = change == null ? '<span class="delta-flat">—</span>' : change === 0 ? '<span class="delta-flat">0</span>' : `<span class="${change > 0 ? 'delta-up' : 'delta-down'}">${change > 0 ? '▲ +' : '▼ '}${change}</span>`;
+    const stale = it.real.date ? daysBetween(it.real.date, today) > 3 : true;
+    const checked = it.real.date ? `${it.real.manual ? 'вручную ' : it.real.exact ? '' : 'не менялась с '}${ddmm(it.real.date)}` : 'нет данных';
+    return `<tr>
+      <td class="muted">${esc(it.p.name.length > 26 ? it.p.name.slice(0, 25) + '…' : it.p.name)}</td>
+      <td>${kindLbl(it.kind)}</td>
+      <td style="color:var(--text);white-space:normal;min-width:160px">${esc(it.name)}</td>
+      <td class="num">${it.freq ? nf(it.freq) : '—'}</td>
+      <td class="num">${posStatus(now)}</td>
+      <td class="num">${ago || '—'}</td>
+      <td class="num">${chHtml}</td>
+      <td>${kwSparkline(it.hist)}</td>
+      <td><span class="${stale ? 'st st-warn' : 'muted'}" style="font-size:11px">${checked}${stale ? ' · устарело' : ''}</span></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="9" class="muted" style="padding:16px;text-align:center">Нет запросов и полок</td></tr>';
+
+  renderPosEntry(items);
+  renderKW();
+}
+
+// Форма «Внести позиции за день»
+function renderPosEntry(items) {
+  const box = document.getElementById('posEntryBody');
+  if (!box) return;
+  const date = document.getElementById('posDate').value || todayIso();
+  box.innerHTML = items.length ? items.map((it, idx) => {
+    const v = it.hist[date];
+    const prev = Object.keys(it.hist).filter(d => d < date && it.hist[d] > 0).sort().pop();
+    return `<tr>
+      <td class="muted">${esc(it.p.name.length > 26 ? it.p.name.slice(0, 25) + '…' : it.p.name)}</td>
+      <td>${it.kind === 'kw' ? '<span class="badge badge-blue">выдача</span>' : '<span class="badge badge-gray">полка</span>'}</td>
+      <td style="color:var(--text);white-space:normal;min-width:160px">${esc(it.name)}</td>
+      <td class="num muted">${prev ? `${it.hist[prev]} <span style="font-size:10px">(${ddmm(prev)})</span>` : '—'}</td>
+      <td class="num"><input class="inp-cell pos-inp" data-key="${esc(it.key)}" type="number" min="1" step="1" inputmode="numeric" value="${v || ''}" placeholder="место"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();const n=document.querySelectorAll('.pos-inp')[${idx + 1}];n?n.focus():savePositions();}"></td>
+      <td>${it.kind === 'shelf' ? `<button class="btn btn-ghost btn-sm" title="Удалить полку" onclick="shelfRemove('${it.p.nmId}', decodeURIComponent('${encodeURIComponent(it.name)}'))">✕</button>` : ''}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" class="muted" style="padding:16px;text-align:center">Добавь запросы (блок ниже) или полки</td></tr>';
+}
+
+function savePositions() {
+  const date = document.getElementById('posDate').value;
+  const msg = document.getElementById('posSaveMsg');
+  if (!date) { msg.className = 'st st-bad'; msg.textContent = 'Выбери дату'; return; }
+  const manual = LS.get(POS_MANUAL_KEY, {});
+  let n = 0;
+  document.querySelectorAll('.pos-inp').forEach(inp => {
+    const key = inp.dataset.key;
+    const v = parseInt(inp.value, 10);
+    manual[key] = manual[key] || {};
+    if (v > 0) { manual[key][date] = v; n++; }
+    else delete manual[key][date];   // пустое поле = убрать запись за этот день
+    if (!Object.keys(manual[key]).length) delete manual[key];
+  });
+  LS.set(POS_MANUAL_KEY, manual);
+  renderKwPage();
+  const m = document.getElementById('posSaveMsg');
+  m.className = 'st st-good'; m.textContent = `Сохранено позиций за ${ddmm(date)}: ${n}`;
+}
+
+function shelfAdd() {
+  const nm = document.getElementById('shelfProduct').value;
+  const el = document.getElementById('shelfName');
+  const name = el.value.trim();
+  if (!nm || !name) return;
+  const all = LS.get(SHELVES_KEY, {});
+  all[nm] = all[nm] || [];
+  if (!all[nm].some(s => s.toLowerCase() === name.toLowerCase())) all[nm].push(name);
+  LS.set(SHELVES_KEY, all);
+  el.value = '';
+  renderKwPage();
+}
+
+function shelfRemove(nm, name) {
+  if (!confirm(`Удалить полку «${name}» и все внесённые по ней позиции?`)) return;
+  const all = LS.get(SHELVES_KEY, {});
+  all[nm] = (all[nm] || []).filter(s => s !== name);
+  if (!all[nm].length) delete all[nm];
+  LS.set(SHELVES_KEY, all);
+  const manual = LS.get(POS_MANUAL_KEY, {}); delete manual[posKey(nm, 'shelf', name)]; LS.set(POS_MANUAL_KEY, manual);
+  renderKwPage();
+}
+
+// Товар, которого нет среди ТОП-товаров (например новинка)
+function posProductAdd() {
+  const nmEl = document.getElementById('posNewNm'), nameEl = document.getElementById('posNewName');
+  const nm = nmEl.value.replace(/\D/g, '');
+  if (!nm) return;
+  if (KW_PRODUCTS.some(p => String(p.nmId) === nm)) { alert('Этот товар уже есть'); return; }
+  const name = nameEl.value.trim() || (typeof productName === 'function' ? productName(nm) : 'Артикул ' + nm);
+  const list = LS.get(POS_PRODUCTS_KEY, []);
+  list.push({ nmId: +nm, name });
+  LS.set(POS_PRODUCTS_KEY, list);
+  KW_PRODUCTS.push({ key: 'nm' + nm, nmId: +nm, name, manual: true });
+  kwData['nm' + nm] = kwData['nm' + nm] || [];
+  nmEl.value = ''; nameEl.value = '';
+  renderKwPage();
+}
+
+// ════════════════════════════════════════════════════════════════
+// НАСТРОЙКИ: резервная копия всего, что введено в браузере
+// ════════════════════════════════════════════════════════════════
+function settingsKeys() {
+  const out = [];
+  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^likato|^novosti_notes/.test(k)) out.push(k); } } catch (e) {}
+  return out;
+}
+function openSettings() {
+  document.getElementById('settingsModal').style.display = 'block';
+  document.getElementById('settingsMsg').textContent = '';
+  const keys = settingsKeys();
+  document.getElementById('settingsStats').textContent = `Сейчас сохранено: ${rkMine().length} РК · юнит-экономика по ${Object.keys(LS.get(UNIT_KEY, {})).length} арт. · всего разделов: ${keys.length}`;
+}
+function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
+function exportSettings() {
+  const data = {};
+  settingsKeys().forEach(k => { try { data[k] = localStorage.getItem(k); } catch (e) {} });
+  const blob = new Blob([JSON.stringify({ app: 'likato-dashboard', version: 1, exported_at: new Date().toISOString(), data }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `likato-nastroyki-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  const msg = document.getElementById('settingsMsg'); msg.className = 'st st-good'; msg.textContent = 'Файл сохранён в «Загрузки»';
+}
+function importSettings(file) {
+  if (!file) return;
+  const msg = document.getElementById('settingsMsg');
+  file.text().then(txt => {
+    const obj = JSON.parse(txt);
+    if (obj.app !== 'likato-dashboard' || typeof obj.data !== 'object') throw new Error('это не файл настроек дашборда');
+    let n = 0;
+    Object.entries(obj.data).forEach(([k, v]) => { if (/^likato|^novosti_notes/.test(k) && typeof v === 'string') { localStorage.setItem(k, v); n++; } });
+    msg.className = 'st st-good'; msg.textContent = `Загружено разделов: ${n}. Обновляю…`;
+    setTimeout(() => location.reload(), 700);
+  }).catch(e => { msg.className = 'st st-bad'; msg.textContent = 'Не получилось: ' + e.message; });
 }
 
 // Загружаем data.json (без кэша)
@@ -3120,11 +4114,13 @@ function loadData() {
     }
     try { renderDashboard(data); } catch(e) { console.error('renderDashboard error:', e); }
     try { renderVyvody(data); } catch(e) { console.error('renderVyvody error:', e); }
-    try { renderStaticCharts(); } catch(e) { console.error('renderStaticCharts error:', e); }
+    try {
+      const want = (location.hash || '').slice(1) || LS.get('likato_tab', 'top');
+      switchTab(document.getElementById('page-' + want) ? want : 'top');
+    } catch(e) { console.error('tab restore error:', e); }
     loadNovinkaJson();
   })
   .catch(() => {
-    renderStaticCharts();
     loadNovinkaJson();
     console.warn('data.json не найден, используются демо-данные');
   });
