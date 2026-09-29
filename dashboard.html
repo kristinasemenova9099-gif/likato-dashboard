@@ -232,7 +232,7 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
       <div>
         <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Артикул (nm)</div>
-        <input id="calcArtikul" type="text" list="calcArtikulList" placeholder="напр. 955506932" oninput="calcArtikulChanged()"
+        <input id="calcArtikul" type="text" list="calcArtikulList" placeholder="напр. 1380341721" oninput="calcArtikulChanged()"
           style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:13px;box-sizing:border-box">
         <datalist id="calcArtikulList"></datalist>
       </div>
@@ -881,7 +881,7 @@
     <div class="page-head">
       <div>
         <div class="page-title">Юнит-экономика</div>
-        <div class="page-sub">Заполни пунктирные ячейки — остальное посчитается. Главный выход таблицы — <b style="color:var(--text)">допустимый CPO</b>: его использует светофор на вкладке «Рекламные кампании».</div>
+        <div class="page-sub">Серые значения подставлены автоматически: с/с, комиссия и логистика — из «Ежедневного трекинга», цена и % выкупа — из WB. Впиши своё, чтобы переопределить; пунктир — нужно заполнить. Главный выход таблицы — <b style="color:var(--text)">допустимый CPO</b>: его использует светофор на вкладке «Рекламные кампании».</div>
       </div>
       <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
         <div class="field"><label for="unitAddNm">Добавить артикул</label>
@@ -2421,11 +2421,10 @@ const DIST_KEY = 'likato_dist_data';
 
 // ── РАЗДАЧИ ──────────────────────────────────────────────────
 const DIST_PRODUCTS = [
-  {name:'Набор Daily кератин: шампунь+бальзам', nmId:955506932, plan:1000},
-  {name:'Крем-спрей с вишней 17в1',       nmId:933622167,  plan:1000},
-  {name:'Гель для душа OH MY CHERRY',     nmId:1007137390, plan:1000},
-  {name:'Термотушь для ресниц LAVANT MANIFEST', nmId:1221264210, plan:1000},
-  {name:'Гель для бровей KERABROW',       nmId:1113143990, plan:1000},
+  {name:'Крем для лица DAILY с салициловой кислотой', nmId:1380341721, plan:1000},
+  {name:'Термотушь для ресниц LAVANT MANIFEST',       nmId:1465859864, plan:1000},
+  {name:'Пенка для умывания DAILY',                   nmId:1334510163, plan:1000},
+  {name:'Крем-спрей Scalp:lex 17в1',                  nmId:1305768201, plan:1000},
 ];
 const DIST_DAYS = 14;
 
@@ -2542,34 +2541,14 @@ function renderDistSummary() {
 }
 // ── КЛЮЧЕВЫЕ ЗАПРОСЫ ПО ТОВАРАМ ─────────────────────────────
 const KW_PRODUCTS = [
-  { key: 'daily',    nmId: 955506932,  name: 'Набор Daily кератин: шампунь+бальзам' },
-  { key: 'cherry',   nmId: 933622167,  name: 'Крем-спрей с вишней 17в1' },
-  { key: 'gel',      nmId: 1007137390, name: 'Гель для душа OH MY CHERRY' },
-  { key: 'termo',    nmId: 1221264210, name: 'Термотушь для ресниц LAVANT MANIFEST' },
-  { key: 'brow',     nmId: 1113143990, name: 'Гель для бровей KERABROW' },
+  { key: 'dailycream', nmId: 1380341721, name: 'Крем для лица DAILY с салициловой кислотой' },
+  { key: 'lavant',     nmId: 1465859864, name: 'Термотушь для ресниц LAVANT MANIFEST' },
+  { key: 'penka',      nmId: 1334510163, name: 'Пенка для умывания DAILY' },
+  { key: 'scalplex',   nmId: 1305768201, name: 'Крем-спрей Scalp:lex 17в1' },
 ];
 // Товары, добавленные вручную на вкладке «Позиции» (например новинки)
 try { (JSON.parse(localStorage.getItem('likato_pos_products') || '[]')).forEach(x => KW_PRODUCTS.push({ key: 'nm' + x.nmId, nmId: x.nmId, name: x.name, manual: true })); } catch (e) {}
 
-const kwDefaults = {
-  keraglow: [
-    { q:'мист для волос',        type:'ВЧ', freq:0, pos:8,  delta:3  },
-    { q:'спрей для волос кератин',type:'ВЧ', freq:0, pos:11, delta:2  },
-    { q:'keraglow мист',          type:'СЧ', freq:0, pos:3,  delta:1  },
-  ],
-  cherry: [
-    { q:'крем спрей для волос',   type:'ВЧ', freq:0, pos:15, delta:-2 },
-    { q:'крем для волос 17 в 1',  type:'СЧ', freq:0, pos:7,  delta:4  },
-  ],
-  gel: [
-    { q:'гель для душа',          type:'ВЧ', freq:0, pos:17, delta:-5 },
-    { q:'гель для душа вишня',    type:'СЧ', freq:0, pos:5,  delta:2  },
-  ],
-  daily: [
-    { q:'набор кератин шампунь',  type:'ВЧ', freq:0, pos:9,  delta:1  },
-    { q:'кератиновый шампунь',    type:'ВЧ', freq:0, pos:14, delta:0  },
-  ],
-};
 
 // Ключи хранятся только на сервере (keywords.json через data.json)
 // localStorage для ключей больше не используется
@@ -3407,6 +3386,8 @@ function deltaHtml(ch, goodUp = true) {
 
 function productName(nm) {
   nm = String(nm);
+  const d = DIST_PRODUCTS.find(x => String(x.nmId) === nm);
+  if (d) return d.name;
   const p = (rawData?.products || []).find(x => String(x.nmId) === nm);
   if (p) return p.name;
   const n = (rawData?.novosti || []).find(x => String(x.nm) === nm);
@@ -3457,6 +3438,7 @@ function unitDefaults(nm) {
   const na = rawData?.nm_ads?.[String(nm)];
   const buy = p?.funnel?.redemption_pct || p?.funnel?.redemption_prev || null;
   let price = p?.current_price || null;
+  if (!price && sheetData?.unit?.[String(nm)]?.price) price = sheetData.unit[String(nm)].price;   // средний чек из трекинга
   if (!price) { const n = (rawData?.novosti || []).find(x => String(x.nm) === String(nm)); price = n?.price || null; }
   if (!price && na?.revenue && na?.orders) price = Math.round(na.revenue / na.orders);
   return { price, buyout: buy };
@@ -3464,7 +3446,7 @@ function unitDefaults(nm) {
 
 function unitNms() {
   const set = new Set();
-  (rawData?.products || []).forEach(p => set.add(String(p.nmId)));
+  DIST_PRODUCTS.forEach(p => set.add(String(p.nmId)));
   LS.get(UNIT_NMS_KEY, []).forEach(n => set.add(String(n)));
   rkMine().forEach(c => { const s = rkSource(c.id); if (s?.nms?.[0]) set.add(String(s.nms[0])); });
   Object.keys(LS.get(UNIT_KEY, {})).forEach(n => set.add(String(n)));
@@ -3477,9 +3459,10 @@ function unitCalc(nm) {
   const def = unitDefaults(nm);
   const num = (v, d) => { const n = parseFloat(String(v ?? '').replace(',', '.')); return isFinite(n) ? n : d; };
   const price  = num(inp.price, def.price);
-  const cost   = num(inp.cost, null);
-  const comm   = num(inp.comm, null);
-  const log    = num(inp.log, null);
+  const sh = sheetData?.unit?.[String(nm)] || {};   // из «Ежедневного трекинга»
+  const cost   = num(inp.cost, sh.cost ?? null);
+  const comm   = num(inp.comm, sh.comm ?? null);
+  const log    = num(inp.log, sh.log ?? null);
   const logRet = num(inp.logRet, 0);
   const storage = num(inp.storage, 0);
   const tax    = num(inp.tax, 0);
@@ -3534,14 +3517,17 @@ function renderUnit() {
     const def = unitDefaults(nm);
     const cells = UNIT_FIELDS.map(({ f, ph }) => {
       const v = inp[f] ?? '';
-      const autoVal = f === 'price' ? def.price : f === 'buyout' ? def.buyout : null;
-      const placeholder = autoVal ? String(Math.round(autoVal)) : ph;
-      const required = ['cost', 'comm', 'log'].includes(f) || (f === 'price' && !def.price);
+      const sh = sheetData?.unit?.[nm] || {};
+      const fromSheet = ['cost', 'comm', 'log'].includes(f) && sh[f] != null;
+      const autoVal = f === 'price' ? def.price : f === 'buyout' ? (def.buyout ?? 90) : fromSheet ? sh[f] : null;
+      const placeholder = autoVal != null ? String(Math.round(autoVal * 10) / 10).replace('.', ',') : ph;
+      const required = (['cost', 'comm', 'log'].includes(f) && !fromSheet) || (f === 'price' && !def.price);
+      const title = (f === 'price' && sh.price && def.price === sh.price) ? 'Средний чек за 7 дней из «Ежедневного трекинга». Можно переписать' : (f === 'buyout' && def.buyout == null) ? 'Нет данных WB — по умолчанию 90%. Впиши свой %' : fromSheet ? 'Из «Ежедневного трекинга» (логистика — среднее на заказ за 7 дней). Можно переписать' : autoVal ? 'Подставлено из данных WB — можно переписать' : '';
       return `<td class="num"><input class="inp-cell ${v === '' && required ? 'empty' : ''}" inputmode="decimal" value="${esc(v)}" placeholder="${esc(placeholder)}"
-        title="${autoVal ? 'Подставлено из данных WB — можно переписать' : ''}" onchange="unitSet('${nm}','${f}',this.value)"></td>`;
+        title="${title}" onchange="unitSet('${nm}','${f}',this.value)"></td>`;
     }).join('');
     const c = unitCalcCells(nm);
-    const canDel = manual.includes(nm) || !(rawData?.products || []).some(p => String(p.nmId) === nm);
+    const canDel = manual.includes(nm) || !DIST_PRODUCTS.some(p => String(p.nmId) === nm);
     return `<tr id="unit-row-${nm}">
       <td><div style="font-weight:600;color:var(--text)">${esc(shortName(nm, 38))}</div><div class="muted" style="font-size:11px">${nm}</div></td>
       ${cells}
@@ -3565,7 +3551,7 @@ function unitSet(nm, field, val) {
     const c = unitCalcCells(nm);
     Object.entries(c).forEach(([k, html]) => { const td = row.querySelector(`[data-c="${k}"]`); if (td) td.innerHTML = html; });
     const inp = row.querySelector(`input[onchange*="'${field}'"]`);
-    if (inp) inp.classList.toggle('empty', v === '' && ['cost', 'comm', 'log'].includes(field));
+    if (inp) inp.classList.toggle('empty', v === '' && ['cost', 'comm', 'log'].includes(field) && sheetData?.unit?.[nm]?.[field] == null);
   }
 }
 
@@ -3893,6 +3879,132 @@ function posStatus(p) {
   return `<span class="st ${p <= 10 ? 'st-good' : p <= 30 ? 'st-warn' : 'st-bad'}">${p}</span>`;
 }
 
+// ════════════════════════════════════════════════════════════════
+// GOOGLE-ТАБЛИЦА ТОП-ТОВАРОВ: «Выдача», «Полки», «Ежедневный трекинг»
+// Читается прямо из браузера при открытии дашборда — не зависит от токена WB
+// и утреннего сбора: внесла позицию в таблицу → обнови страницу.
+// ════════════════════════════════════════════════════════════════
+const TOP_SHEET_ID = '1uJr8o9j4OHZbU6I1iZxECdymHfiLQbDdLI4NM87f9zg';
+const TOP_SHEET_GIDS = { vydacha: '1517981741', polki: '28256479', tracking: '902691862' };
+const TOP_SHEET_URL = `https://docs.google.com/spreadsheets/d/${TOP_SHEET_ID}/edit`;
+let sheetData = null;   // {positions: {nm: {kw: {q: {name, hist, miss}}, shelf: {id: {name, hist, miss}}}}, unit: {nm: {...}}, loadedAt, error}
+
+function parseCsv(text) {
+  const rows = []; let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; }
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += c;
+  }
+  if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+async function fetchSheet(gid) {
+  const r = await fetch(`https://docs.google.com/spreadsheets/d/${TOP_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${gid}`, { cache: 'no-store' });
+  if (!r.ok) throw new Error('Google вернул ' + r.status);
+  return parseCsv(await r.text());
+}
+
+// "02.09.2026" или "02.09" → "2026-09-02"
+function sheetDate(s) {
+  const m = /^(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?$/.exec(String(s).trim());
+  if (!m) return null;
+  const y = m[3] || String(new Date().getFullYear());
+  return `${y}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+}
+const sheetNum = s => { const n = parseFloat(String(s ?? '').replace(/\s/g, '').replace('%', '').replace(',', '.')); return isFinite(n) ? n : null; };
+
+// Ячейка позиции → список [{label, pos} | {label, miss}]. В одной ячейке бывает несколько запросов
+// через перенос строки, «(нет до 205)» и опечатки вроде «47 место)».
+function parsePosCells(s) {
+  s = String(s || '').replace(/\s+/g, ' ').trim();
+  const out = [];
+  const re = /([^()]+?)\s*\(?\s*(?:(\d+)\s*мест[оа]?|нет до\s*(\d+)(?:\s*мест[оа]?)?)\s*\)/gi;
+  let m;
+  while ((m = re.exec(s))) {
+    const label = m[1].replace(/^[\s\-–—,;]+|[\s\-–—,;]+$/g, '');
+    if (!label) continue;
+    out.push(m[2] ? { label, pos: +m[2] } : { label, miss: +m[3] });
+  }
+  return out;   // «нет в наличии» и текст без позиции пропускаем
+}
+
+function addPos(bucket, key, name, date, p) {
+  const it = bucket[key] = bucket[key] || { name, hist: {}, miss: {} };
+  if (p.pos) { it.hist[date] = p.pos; delete it.miss[date]; }
+  else if (p.miss && !it.hist[date]) it.miss[date] = p.miss;
+}
+
+async function loadTopSheet() {
+  const res = { positions: {}, unit: {}, names: {}, loadedAt: new Date(), error: null };
+  const posOf = nm => res.positions[nm] = res.positions[nm] || { kw: {}, shelf: {} };
+  try {
+    const [vyd, pol, trk] = await Promise.all([fetchSheet(TOP_SHEET_GIDS.vydacha), fetchSheet(TOP_SHEET_GIDS.polki), fetchSheet(TOP_SHEET_GIDS.tracking)]);
+
+    // Выдача: Дата | Артикул | Название | Позиция — ключ 1 | Позиция — ключ 2 | …
+    const hv = vyd[0] || [];
+    const kwCols = hv.map((h, i) => /^позиция/i.test(h.trim()) ? i : -1).filter(i => i >= 0);
+    vyd.slice(1).forEach(r => {
+      const date = sheetDate(r[0]), nm = String(r[1] || '').trim();
+      if (!date || !/^\d+$/.test(nm)) return;
+      if (r[2]) res.names[nm] = r[2].trim();
+      kwCols.forEach(ci => parsePosCells(r[ci]).forEach(p => addPos(posOf(nm).kw, p.label.toLowerCase(), p.label, date, p)));
+    });
+
+    // Полки: Дата | Артикул | Название | Ключ | Позиция — полки 1..N ("154859673 (24 место)")
+    const hp = pol[0] || [];
+    const keyCol = hp.findIndex(h => /^ключ/i.test(h.trim()));
+    const shCols = hp.map((h, i) => /^позиция/i.test(h.trim()) ? i : -1).filter(i => i >= 0);
+    pol.slice(1).forEach(r => {
+      const date = sheetDate(r[0]), nm = String(r[1] || '').trim();
+      if (!date || !/^\d+$/.test(nm)) return;
+      if (r[2]) res.names[nm] = r[2].trim();
+      const kw = keyCol >= 0 ? String(r[keyCol] || '').trim() : '';
+      shCols.forEach(ci => {
+        parsePosCells(r[ci]).forEach(p => {
+          const id = p.label.split(' ')[0];
+          addPos(posOf(nm).shelf, id, `Полка ${id}${kw ? ' · ' + kw : ''}`, date, p);
+        });
+      });
+    });
+
+    // Трекинг: с/с, комиссия %, логистика на заказ — среднее за последние 7 дней по артикулу
+    const ht = (trk[0] || []).map(h => h.trim().toLowerCase());
+    const col = re => ht.findIndex(h => re.test(h));
+    const cDate = col(/^дата/), cSku = col(/^sku|артикул/), cCost = col(/^с\/с$/), cComm = col(/^комиссия, ?%/),
+          cLog = col(/^логистика/), cOrd = col(/^заказы в шт/), cRub = col(/^заказы, ?руб/);
+    const byNm = {};
+    trk.slice(1).forEach(r => {
+      const date = sheetDate(r[cDate]), nm = String(r[cSku] || '').trim();
+      if (!date || !/^\d+$/.test(nm)) return;
+      (byNm[nm] = byNm[nm] || []).push({ date, cost: sheetNum(r[cCost]), comm: sheetNum(r[cComm]), log: sheetNum(r[cLog]), orders: sheetNum(r[cOrd]), rub: sheetNum(r[cRub]) });
+    });
+    Object.entries(byNm).forEach(([nm, rows]) => {
+      rows.sort((a, b) => a.date < b.date ? -1 : 1);
+      const last = rows.slice(-7);
+      const lastVal = k => { for (let i = rows.length - 1; i >= 0; i--) if (rows[i][k] > 0) return rows[i][k]; return null; };
+      const lo = last.reduce((s, x) => s + (x.log || 0), 0), or = last.reduce((s, x) => s + (x.orders || 0), 0);
+      const rub = last.reduce((s, x) => s + (x.rub || 0), 0);
+      res.unit[nm] = { cost: lastVal('cost'), comm: lastVal('comm'), log: or ? Math.round(lo / or) : null, price: or ? Math.round(rub / or) : null, lastDate: rows[rows.length - 1].date };
+    });
+  } catch (e) {
+    res.error = e.message || String(e);
+    console.warn('Google-таблица ТОП-товаров:', e);
+  }
+  sheetData = res;
+  const active = document.querySelector('.tab.active')?.dataset.tab;
+  if (active === 'kw') renderKwPage();
+  if (active === 'unit') renderUnit();
+  if (active === 'rk') renderRK();
+  return res;
+}
+
 // ── Ручной ввод позиций: выдача (поисковые запросы) и полки (категории каталога) ──
 const POS_MANUAL_KEY = 'likato_pos_manual';   // {"nm|kw|запрос" | "nm|shelf|полка": {"YYYY-MM-DD": позиция}}
 const SHELVES_KEY = 'likato_shelves';         // {nm: ["Красота / Волосы / Шампуни", ...]}
@@ -3912,28 +4024,50 @@ function valueDaysAgo(hist, fromDate, n) {
   return d.length ? hist[d[d.length - 1]] : null;
 }
 
-// Все строки позиций: запросы (история скрипта + ручные записи) и полки (только ручные)
+// Все строки позиций: выдача (MPStats-история + Google-таблица + ручные записи)
+// и полки (Google-таблица + ручные). За один день ручная запись важнее таблицы, таблица — важнее MPStats.
 function posItems(filterKey) {
   const manual = LS.get(POS_MANUAL_KEY, {});
   const items = [];
   KW_PRODUCTS.filter(p => filterKey === 'all' || p.key === filterKey).forEach(p => {
+    const sp = sheetData?.positions?.[String(p.nmId)] || { kw: {}, shelf: {} };
+    const kw = new Map();
+    const take = (q, freq) => {
+      const k = String(q).toLowerCase().trim();
+      if (!kw.has(k)) kw.set(k, { name: String(q).trim(), freq: freq || 0, auto: {}, sheet: {}, miss: {} });
+      return kw.get(k);
+    };
     (kwData[p.key] || []).forEach(r => {
-      const man = manual[posKey(p.nmId, 'kw', r.q)] || {};
-      const auto = kwLastReal(r);
-      // ручная запись важнее автоматической за тот же день
-      const hist = { ...Object.fromEntries(Object.entries(r.history || {}).filter(([, v]) => v > 0)), ...man };
-      const lastMan = lastEntry(man);
-      let real = auto;
-      if (lastMan && (!auto.date || lastMan.date >= auto.date)) real = { date: lastMan.date, exact: true, manual: true };
-      items.push({ p, kind: 'kw', name: r.q, freq: r.freq, hist, real, key: posKey(p.nmId, 'kw', r.q) });
+      const it = take(r.q, r.freq);
+      it.autoReal = kwLastReal(r);
+      Object.entries(r.history || {}).forEach(([d, v]) => { if (v > 0) it.auto[d] = v; });
     });
-    shelvesOf(p.nmId).forEach(name => {
-      const hist = manual[posKey(p.nmId, 'shelf', name)] || {};
-      const le = lastEntry(hist);
-      items.push({ p, kind: 'shelf', name, freq: null, hist, real: le ? { date: le.date, exact: true, manual: true } : { date: null }, key: posKey(p.nmId, 'shelf', name) });
+    Object.values(sp.kw).forEach(x => { const it = take(x.name); Object.assign(it.sheet, x.hist); Object.assign(it.miss, x.miss); });
+    kw.forEach(it => {
+      const key = posKey(p.nmId, 'kw', it.name);
+      const man = manual[key] || {};
+      items.push({ p, kind: 'kw', name: it.name, freq: it.freq, hist: { ...it.auto, ...it.sheet, ...man }, miss: it.miss, key, src: posSource(it.autoReal, it.sheet, man) });
+    });
+    const shelves = new Map();
+    Object.entries(sp.shelf).forEach(([id, x]) => shelves.set('sheet:' + id, { name: x.name, sheet: x.hist, miss: x.miss }));
+    shelvesOf(p.nmId).forEach(name => { if (!shelves.has('man:' + name)) shelves.set('man:' + name, { name, sheet: {}, miss: {}, manualShelf: true }); });
+    shelves.forEach(x => {
+      const key = posKey(p.nmId, 'shelf', x.name);
+      const man = manual[key] || {};
+      items.push({ p, kind: 'shelf', name: x.name, freq: null, hist: { ...x.sheet, ...man }, miss: x.miss, key, manualShelf: !!x.manualShelf, src: posSource(null, x.sheet, man) });
     });
   });
   return items;
+}
+
+// Откуда последняя запись: вручную / из таблицы / автоматически (MPStats)
+function posSource(autoReal, sheetHist, man) {
+  const cands = [];
+  const lm = lastEntry(man); if (lm) cands.push({ date: lm.date, label: 'вручную' });
+  const ls = lastEntry(sheetHist); if (ls) cands.push({ date: ls.date, label: 'таблица' });
+  if (autoReal?.date) cands.push({ date: autoReal.date, label: autoReal.exact ? 'MPStats' : 'MPStats, не менялась с' });
+  cands.sort((a, b) => a.date < b.date ? 1 : -1);
+  return cands[0] || { date: null };
 }
 
 function renderKwPage() {
@@ -3950,26 +4084,32 @@ function renderKwPage() {
 
   const items = posItems(f);
   const today = todayIso();
-  const newestAuto = items.filter(x => x.kind === 'kw' && !x.real.manual).map(x => x.real.date).filter(Boolean).sort().pop();
-  const staleCnt = items.filter(x => !x.real.date || daysBetween(x.real.date, today) > 3).length;
-  document.getElementById('kwBanner').innerHTML = staleCnt
-    ? `<div class="banner"><span>⚠</span><div><b>Устарело позиций: ${staleCnt} из ${items.length}</b> (не обновлялись больше 3 дней). Автоматический сбор${newestAuto ? ' стоит с ' + ddmm(newestAuto) : ' не работает'} — MPStats отвечает ошибкой 403. Вноси позиции вручную в блоке «Внести позиции за день».</div></div>` : '';
+  const staleCnt = items.filter(x => !x.src.date || daysBetween(x.src.date, today) > 3).length;
+  const sheetErr = sheetData?.error ? `<div class="banner" style="margin-bottom:8px"><span>⚠</span><div><b>Не удалось прочитать Google-таблицу</b> (${esc(sheetData.error)}). Проверь, что доступ по ссылке открыт на просмотр, и обнови страницу.</div></div>` : '';
+  const sheetNote = sheetData && !sheetData.error
+    ? `<div class="muted" style="font-size:12px">Выдача и полки — из <a href="${TOP_SHEET_URL}" target="_blank" rel="noopener" style="color:var(--accent)">Google-таблицы ТОП-товаров</a>, прочитано в ${sheetData.loadedAt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}. Внесла новые позиции в таблицу — обнови страницу.</div>`
+    : (!sheetData ? '<div class="muted" style="font-size:12px">Читаю Google-таблицу…</div>' : '');
+  document.getElementById('kwBanner').innerHTML = sheetErr + sheetNote + (staleCnt
+    ? `<div class="banner" style="margin-top:8px"><span>⚠</span><div><b>Давно не обновлялись: ${staleCnt} из ${items.length}</b> (больше 3 дней без записи). Внеси свежие позиции в таблицу или в блок «Внести позиции за день».</div></div>` : '');
 
   const kindLbl = k => k === 'kw' ? '<span class="badge badge-blue">выдача</span>' : '<span class="badge badge-gray">полка</span>';
   body.innerHTML = items.length ? items.map(it => {
     const last = lastEntry(it.hist);
-    const now = last ? last.pos : null;
-    const ago = last ? valueDaysAgo(it.hist, last.date, 7) : null;
+    const lastMiss = Object.keys(it.miss || {}).sort().pop();
+    const missNow = lastMiss && (!last || lastMiss > last.date);
+    const now = missNow ? null : last ? last.pos : null;
+    const ago = last && !missNow ? valueDaysAgo(it.hist, last.date, 7) : null;
     const change = (ago && now) ? ago - now : null;
     const chHtml = change == null ? '<span class="delta-flat">—</span>' : change === 0 ? '<span class="delta-flat">0</span>' : `<span class="${change > 0 ? 'delta-up' : 'delta-down'}">${change > 0 ? '▲ +' : '▼ '}${change}</span>`;
-    const stale = it.real.date ? daysBetween(it.real.date, today) > 3 : true;
-    const checked = it.real.date ? `${it.real.manual ? 'вручную ' : it.real.exact ? '' : 'не менялась с '}${ddmm(it.real.date)}` : 'нет данных';
+    const src = it.src;
+    const stale = src.date ? daysBetween(src.date, today) > 3 : true;
+    const checked = src.date ? `${src.label} ${ddmm(src.date)}` : 'нет данных';
     return `<tr>
       <td class="muted">${esc(it.p.name.length > 26 ? it.p.name.slice(0, 25) + '…' : it.p.name)}</td>
       <td>${kindLbl(it.kind)}</td>
       <td style="color:var(--text);white-space:normal;min-width:160px">${esc(it.name)}</td>
       <td class="num">${it.freq ? nf(it.freq) : '—'}</td>
-      <td class="num">${posStatus(now)}</td>
+      <td class="num">${missNow ? `<span class="st st-bad">нет в топ-${it.miss[lastMiss]}</span>` : posStatus(now)}</td>
       <td class="num">${ago || '—'}</td>
       <td class="num">${chHtml}</td>
       <td>${kwSparkline(it.hist)}</td>
@@ -3996,7 +4136,7 @@ function renderPosEntry(items) {
       <td class="num muted">${prev ? `${it.hist[prev]} <span style="font-size:10px">(${ddmm(prev)})</span>` : '—'}</td>
       <td class="num"><input class="inp-cell pos-inp" data-key="${esc(it.key)}" type="number" min="1" step="1" inputmode="numeric" value="${v || ''}" placeholder="место"
           onkeydown="if(event.key==='Enter'){event.preventDefault();const n=document.querySelectorAll('.pos-inp')[${idx + 1}];n?n.focus():savePositions();}"></td>
-      <td>${it.kind === 'shelf' ? `<button class="btn btn-ghost btn-sm" title="Удалить полку" onclick="shelfRemove('${it.p.nmId}', decodeURIComponent('${encodeURIComponent(it.name)}'))">✕</button>` : ''}</td>
+      <td>${it.manualShelf ? `<button class="btn btn-ghost btn-sm" title="Удалить полку" onclick="shelfRemove('${it.p.nmId}', decodeURIComponent('${encodeURIComponent(it.name)}'))">✕</button>` : ''}</td>
     </tr>`;
   }).join('') : '<tr><td colspan="6" class="muted" style="padding:16px;text-align:center">Добавь запросы (блок ниже) или полки</td></tr>';
 }
@@ -4119,6 +4259,7 @@ function loadData() {
       switchTab(document.getElementById('page-' + want) ? want : 'top');
     } catch(e) { console.error('tab restore error:', e); }
     loadNovinkaJson();
+    loadTopSheet();
   })
   .catch(() => {
     loadNovinkaJson();
