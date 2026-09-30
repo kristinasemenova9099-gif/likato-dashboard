@@ -811,6 +811,8 @@
           <input id="launchStart" class="date-input" type="date" onchange="setLaunchSetting('start', this.value)"></div>
         <div class="field"><label for="launchTargets">Цели НЧ / СЧ / ВЧ</label>
           <input id="launchTargets" class="inp" style="width:100px" placeholder="10/15/30" onchange="setLaunchSetting('targets', this.value.split(/[^0-9]+/).filter(Boolean).map(Number).slice(0,3).concat([10,15,30]).slice(0,3))"></div>
+        <div class="field"><label for="launchCap">Лимит команды, шт/день</label>
+          <input id="launchCap" class="inp" type="number" min="10" max="2000" style="width:90px" onchange="setLaunchSetting('capacity', +this.value || 340)"></div>
         <div class="field"><label for="launchReserve">Резерв, %</label>
           <input id="launchReserve" class="inp" type="number" min="0" max="30" style="width:70px" onchange="setLaunchSetting('reserve', +this.value || 0)"></div>
       </div>
@@ -4114,7 +4116,7 @@ const LAUNCH_FALLBACK_FIT = { a: 3.104, b: -0.459, sigma: 0.316, n: 11, fallback
 const LAUNCH_HEADER = ['Артикул', 'Запрос', 'Целевая позиция', 'Дата старта', 'Дней', 'Частотность в неделю', 'Цена раздачи', 'Комментарий'];
 let calSheet = null, launchSheet = null;
 
-function launchSettings() { return { days: 14, phases: [3, 7, 4], reserve: 5, targets: [10, 15, 30], maxQ: 3, minFreq: 1000, start: '', ...LS.get(LAUNCH_SET_KEY, {}) }; }
+function launchSettings() { return { days: 14, phases: [3, 7, 4], reserve: 5, targets: [10, 15, 30], maxQ: 3, minFreq: 1000, start: '', capacity: 340, ...LS.get(LAUNCH_SET_KEY, {}) }; }
 const LAUNCH_SKIP_KEY = 'likato_launch_skip';   // артикулы, исключённые из плана
 function launchSkip() { return new Set(LS.get(LAUNCH_SKIP_KEY, [])); }
 function toggleLaunchAll(on) { LS.set(LAUNCH_SKIP_KEY, on ? [] : (window._launchAllPlans || []).map(p => p.nm)); renderLaunch(); }
@@ -4310,6 +4312,34 @@ function giveawayStatus(nm) {
   return { active: true, start, lastFact, perDay, until: planAhead[planAhead.length - 1] || null, qs };
 }
 
+// «В продаже с» — дата первого заказа по данным WB (скрипт хранит самую раннюю)
+function saleSinceHtml(nm) {
+  const d = rawData?.first_sale?.[String(nm)];
+  if (!rawData?.first_sale) return '';
+  if (!d) return ' · продаж ещё не было';
+  const edge = rawData.first_sale_window && d <= rawData.first_sale_window;
+  return ` · в продаже с ${ddmm(d)}${edge ? ' или раньше' : ''} (${daysBetween(d, todayIso())} дн.)`;
+}
+
+// Воронка за 7 дней по новинке (data.nov_funnel, WB Аналитика). Порог «корзина → заказ»: <15% красный, 15–20% жёлтый, ≥20% зелёный
+function novFunnelHtml(nm) {
+  const f = rawData?.nov_funnel?.[String(nm)];
+  if (!rawData?.nov_funnel) return '<span class="muted" style="font-size:11px">появится после утреннего сбора</span>';
+  if (!f) return '<span class="muted" style="font-size:11px">нет данных WB</span>';
+  const ch = chg(f.orders, f.orders_prev);
+  const co = f.conv_order;
+  const coCls = co == null ? 'st-na' : co < 15 ? 'st-bad' : co < 20 ? 'st-warn' : 'st-good';
+  const stock = (f.stock_wb || 0) + (f.stock_mp || 0);
+  const perDay = (f.orders || 0) / 7;
+  const days = perDay > 0 ? stock / perDay : null;
+  const stCls = stock === 0 ? 'st-bad' : days != null && days < 14 ? 'st-warn' : 'st-good';
+  return `<div style="font-size:12px;line-height:1.55">
+    <div><b style="color:var(--text)">${nf(f.orders)}</b> заказов ${f.orders_prev != null ? `<span class="${ch == null ? 'delta-flat' : ch >= 0 ? 'delta-up' : 'delta-down'}">(было ${nf(f.orders_prev)})</span>` : ''}</div>
+    <div class="muted">корзина ${f.conv_cart ?? '—'}% · <span class="st ${coCls}" title="Из корзины в заказ. Ниже 15% раздачи чаще всего не окупаются">заказ ${co ?? '—'}%</span> · выкуп ${f.redemption_pct ?? '—'}%</div>
+    <div><span class="st ${stCls}" title="Остаток на складе WB + у тебя (FBS)">остаток ${nf(stock)}${days != null ? ` ≈ ${Math.round(days)} дн.` : ''}</span> <span class="muted">(WB ${nf(f.stock_wb || 0)})</span></div>
+  </div>`;
+}
+
 function phaseOf(F) { return F < 5000 ? 0 : F < 20000 ? 1 : 2; }   // НЧ / СЧ / ВЧ по частотности в неделю
 const PHASE_NAMES = ['НЧ', 'СЧ', 'ВЧ'];
 
@@ -4358,6 +4388,7 @@ function renderLaunch() {
   const linkEl = document.getElementById('launchLink');
   if (linkEl && document.activeElement !== linkEl) linkEl.value = LS.get(LAUNCH_URL_KEY, LAUNCH_DEFAULT_URL);
   ['launchDays', 'launchReserve'].forEach(id => { const el = document.getElementById(id); if (el && document.activeElement !== el) el.value = id === 'launchDays' ? set.days : set.reserve; });
+  const capEl = document.getElementById('launchCap'); if (capEl && document.activeElement !== capEl) capEl.value = set.capacity;
   const stEl = document.getElementById('launchStart'); if (stEl && document.activeElement !== stEl) stEl.value = set.start || '';
   const tgEl = document.getElementById('launchTargets'); if (tgEl && document.activeElement !== tgEl) tgEl.value = set.targets.join(' / ');
   const note = document.getElementById('launchNote');
@@ -4383,7 +4414,7 @@ function renderLaunch() {
     p.auto = !rows.length; p.skip = skip.has(nm); p.tags = launchSheet.meta?.[nm]?.tags || [];
     return p;
   });
-  allPlans.sort((a, b) => (launchSheet.meta?.[b.nm]?.cardDate || '').localeCompare(launchSheet.meta?.[a.nm]?.cardDate || ''));
+  allPlans.sort((a, b) => (rawData?.first_sale?.[b.nm] || '9999').localeCompare(rawData?.first_sale?.[a.nm] || '9999'));
   const plans = allPlans.filter(p => !p.skip);
   window._launchPlans = plans; window._launchAllPlans = allPlans;
   setTimeout(() => { const a = document.getElementById('launchAll'); if (a) a.indeterminate = plans.length > 0 && plans.length < allPlans.length; }, 0);
@@ -4400,7 +4431,8 @@ function renderLaunch() {
     const nmName = launchSheet.meta?.[p.nm]?.name ? shortProductTitle(launchSheet.meta[p.nm].name) : shortName(p.nm, 36);
     return `<tr style="${p.skip ? 'opacity:.45' : ''}">
       <td><label class="chk-cell"><input type="checkbox" class="chk" ${p.skip ? '' : 'checked'} onchange="toggleLaunchSku('${p.nm}', this.checked)" title="Включить в план">
-        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm}${(cd => cd ? ` · карточка создана ${ddmm(cd)} (${daysBetween(cd, todayIso())} дн.)` : '')(launchSheet.meta?.[p.nm]?.cardDate)} · старт раздач ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}${(g => g?.active ? ` <span class="badge badge-yellow" style="margin-top:3px" title="${esc('Запросы: ' + g.qs.join(', '))}">уже в раздачах с ${ddmm(g.start)}${g.perDay != null ? ' · ~' + Math.round(g.perDay) + ' шт/день' : ''}${g.until ? ' · план до ' + ddmm(g.until) : ''}</span>` : g ? ` <span class="badge badge-gray" style="margin-top:3px">раздачи были, последние ${ddmm(g.lastFact)}</span>` : '')(giveawayStatus(p.nm))}</span></label></td>
+        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm}${saleSinceHtml(p.nm)} · старт раздач ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}${(g => g?.active ? ` <span class="badge badge-yellow" style="margin-top:3px" title="${esc('Запросы: ' + g.qs.join(', '))}">уже в раздачах с ${ddmm(g.start)}${g.perDay != null ? ' · ~' + Math.round(g.perDay) + ' шт/день' : ''}${g.until ? ' · план до ' + ddmm(g.until) : ''}</span>` : g ? ` <span class="badge badge-gray" style="margin-top:3px">раздачи были, последние ${ddmm(g.lastFact)}</span>` : '')(giveawayStatus(p.nm))}</span></label></td>
+      <td style="white-space:normal;min-width:190px">${novFunnelHtml(p.nm)}</td>
       <td style="white-space:normal;min-width:220px">${p.qs.map(q => `<div style="font-size:12px"><span class="badge badge-gray">${q.F ? PHASE_NAMES[phaseOf(q.F)] : '?'}</span> ${esc(q.q)} <span class="muted">· ${q.F ? nf(q.F) + '/нед' + (q.fromWB ? ' (WB)' : '') : 'нет частотности'} · ${q.cur ? 'сейчас ' + q.cur : 'позиции нет'} → цель ${q.T}${q.perDay ? ` · <b style="color:var(--text)">${q.perDay.mid}</b>/день` : ''}</span></div>`).join('')}
         ${warns.length ? `<div class="st-warn" style="font-size:11px;margin-top:4px">${warns.map(esc).join('<br>')}</div>` : ''}</td>
       <td class="num"><b>${nf(p.units.mid)}</b><div class="muted" style="font-size:10px">${nf(p.units.lo)}–${nf(p.units.hi)}</div></td>
@@ -4424,10 +4456,11 @@ function renderLaunch() {
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="section-note">Жирным — середина вилки; под ним — диапазон по разбросу истории</span>
         <button class="btn btn-ghost btn-sm" onclick="copyLaunchDraft(this)">Скопировать черновик плана</button></div></div>
       <div class="table-wrap"><table>
-        <thead><tr><th><label class="chk-cell" style="align-items:center"><input type="checkbox" class="chk" id="launchAll" onchange="toggleLaunchAll(this.checked)" ${plans.length === allPlans.length ? 'checked' : ''}> Выбрать все</label></th><th>Запросы: фаза · частотность · сейчас → цель · раздач/день</th><th class="num">Раздачи, шт</th><th class="num">Цена раздачи</th><th class="num">Раздачи, ₽</th><th class="num">Реклама, ₽</th><th class="num">Итого, ₽</th></tr></thead>
-        <tbody>${skuRows || '<tr><td colspan="7" class="muted" style="padding:14px;text-align:center">В листе нет строк</td></tr>'}</tbody>
+        <thead><tr><th><label class="chk-cell" style="align-items:center"><input type="checkbox" class="chk" id="launchAll" onchange="toggleLaunchAll(this.checked)" ${plans.length === allPlans.length ? 'checked' : ''}> Выбрать все</label></th><th>Воронка за 7 дней${rawData?.nov_funnel ? '' : ''}</th><th>Запросы: фаза · частотность · сейчас → цель · раздач/день</th><th class="num">Раздачи, шт</th><th class="num">Цена раздачи</th><th class="num">Раздачи, ₽</th><th class="num">Реклама, ₽</th><th class="num">Итого, ₽</th></tr></thead>
+        <tbody>${skuRows || '<tr><td colspan="8" class="muted" style="padding:14px;text-align:center">В листе нет строк</td></tr>'}</tbody>
       </table></div>
     </div>
+    ${launchLoadHtml(plans, set)}
     <div class="section">
       <div class="section-header"><div class="section-title">Расписание раздач по дням</div>
         <button class="btn btn-sm" onclick="copyLaunchSchedule(this)">Скопировать для «Календаря раздач»</button></div>
@@ -4454,6 +4487,34 @@ function copyLaunchDraft(btn) {
   const lines = [LAUNCH_HEADER.join('\t')];
   (window._launchPlans || []).forEach(p => p.qs.forEach(q => lines.push([p.nm, q.q, q.T, (p.start || '').split('-').reverse().join('.'), p.days, q.F || '', p.price.v || '', p.auto ? 'подобрано автоматически' : ''].join('\t'))));
   navigator.clipboard.writeText(lines.join('\n')).then(() => { btn.textContent = 'Скопировано — вставь в новый лист'; setTimeout(() => btn.textContent = 'Скопировать черновик плана', 2500); });
+}
+
+// Загрузка команды: сумма раздач по выбранным товарам в каждый день против лимита
+function launchLoadHtml(plans, set) {
+  const by = {};
+  plans.forEach(p => p.schedule.forEach(x => { const d = (by[x.date] = by[x.date] || { mid: 0, hi: 0 }); d.mid += x.mid; d.hi += x.hi; }));
+  const days = Object.keys(by).sort();
+  if (!days.length) return '';
+  const cap = set.capacity || 340;
+  const peak = Math.max(...days.map(d => by[d].mid)), peakHi = Math.max(...days.map(d => by[d].hi));
+  const over = days.filter(d => by[d].mid > cap);
+  const scale = Math.max(cap, peakHi) * 1.05;
+  return `<div class="section">
+    <div class="section-header"><div class="section-title">Загрузка команды раздач</div>
+      <div class="section-note">${over.length ? `<span class="st st-bad">выше лимита ${over.length} дн.: ${over.map(ddmm).join(', ')}</span>` : `<span class="st st-good">в пределах лимита ${cap} шт/день</span>`} · пик ${nf(peak)} шт (в худшем сценарии ${nf(peakHi)})</div></div>
+    <div class="section-body" style="display:flex;flex-direction:column;gap:5px">
+      ${days.map(d => { const v = by[d]; const bad = v.mid > cap, risky = !bad && v.hi > cap;
+        return `<div style="display:grid;grid-template-columns:48px 1fr 110px;gap:10px;align-items:center;font-size:12px">
+          <span class="muted">${ddmm(d)}</span>
+          <div style="position:relative;height:14px;background:var(--surface2);border-radius:3px" title="По плану ${v.mid} шт, в худшем сценарии ${v.hi} шт, лимит ${cap}">
+            <div style="position:absolute;inset:0 auto 0 0;width:${Math.min(100, v.hi / scale * 100)}%;background:var(--accent-soft);border-radius:3px"></div>
+            <div style="position:absolute;inset:0 auto 0 0;width:${Math.min(100, v.mid / scale * 100)}%;background:${bad ? 'var(--red)' : 'var(--accent)'};border-radius:3px"></div>
+            <div style="position:absolute;top:-3px;bottom:-3px;left:${cap / scale * 100}%;width:2px;background:var(--text2)"></div>
+          </div>
+          <span style="text-align:right;font-variant-numeric:tabular-nums"><b style="color:${bad ? 'var(--red-text)' : 'var(--text)'}">${v.mid}</b> <span class="muted">/ ${v.hi}</span>${risky ? ' <span class="st st-warn" title="В худшем сценарии выше лимита"></span>' : ''}</span>
+        </div>`; }).join('')}
+      <div class="legend" style="margin-top:6px"><span><i style="background:var(--accent)"></i>по плану</span><span><i style="background:var(--accent-soft)"></i>худший сценарий</span><span><i style="background:var(--text2);width:2px"></i>лимит ${cap} шт/день</span></div>
+    </div></div>`;
 }
 
 function copyLaunchSchedule(btn) {
