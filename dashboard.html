@@ -4284,6 +4284,27 @@ function autoQueries(nm, set) {
   return out;
 }
 
+// Идут ли уже раздачи по товару — по «Календарю раздач»:
+// факт > 0 за последние 3 дня или есть план на сегодня и дальше
+function giveawayStatus(nm) {
+  const rows = (calSheet?.rows || []).filter(r => r.nm === String(nm));
+  if (!rows.length) return null;
+  const today = todayIso();
+  const factDays = rows.filter(r => (r.fact || 0) > 0).map(r => r.date).sort();
+  const lastFact = factDays[factDays.length - 1];
+  const planAhead = rows.filter(r => r.date >= today && r.plans.reduce((a, b) => a + b, 0) > 0).map(r => r.date).sort();
+  const active = (lastFact && daysBetween(lastFact, today) <= 3) || planAhead.length > 0;
+  if (!active) return lastFact ? { active: false, lastFact } : null;
+  // начало текущей серии раздач: идём назад, пока нет разрыва больше 2 дней
+  const all = [...new Set(rows.filter(r => (r.fact || 0) > 0 || r.plans.some(x => x > 0)).map(r => r.date))].sort();
+  let start = all[all.length - 1];
+  for (let i = all.length - 1; i > 0 && daysBetween(all[i - 1], all[i]) <= 2; i--) start = all[i - 1];
+  const week = rows.filter(r => r.date > addDays(today, -8) && r.date < today && r.fact != null);
+  const perDay = week.length ? week.reduce((a, r) => a + r.fact, 0) / week.length : null;
+  const qs = [...new Set(rows.filter(r => r.date >= addDays(today, -7)).flatMap(r => r.qs))];
+  return { active: true, start, lastFact, perDay, until: planAhead[planAhead.length - 1] || null, qs };
+}
+
 function phaseOf(F) { return F < 5000 ? 0 : F < 20000 ? 1 : 2; }   // НЧ / СЧ / ВЧ по частотности в неделю
 const PHASE_NAMES = ['НЧ', 'СЧ', 'ВЧ'];
 
@@ -4372,7 +4393,7 @@ function renderLaunch() {
     const nmName = launchSheet.meta?.[p.nm]?.name ? shortProductTitle(launchSheet.meta[p.nm].name) : shortName(p.nm, 36);
     return `<tr style="${p.skip ? 'opacity:.45' : ''}">
       <td><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="checkbox" ${p.skip ? '' : 'checked'} onchange="toggleLaunchSku('${p.nm}', this.checked)" style="margin-top:3px" title="Включить в план">
-        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm} · старт ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}</span></label></td>
+        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm} · старт ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}${(g => g?.active ? ` <span class="badge badge-yellow" style="margin-top:3px" title="${esc('Запросы: ' + g.qs.join(', '))}">уже в раздачах с ${ddmm(g.start)}${g.perDay != null ? ' · ~' + Math.round(g.perDay) + ' шт/день' : ''}${g.until ? ' · план до ' + ddmm(g.until) : ''}</span>` : g ? ` <span class="badge badge-gray" style="margin-top:3px">раздачи были, последние ${ddmm(g.lastFact)}</span>` : '')(giveawayStatus(p.nm))}</span></label></td>
       <td style="white-space:normal;min-width:220px">${p.qs.map(q => `<div style="font-size:12px"><span class="badge badge-gray">${q.F ? PHASE_NAMES[phaseOf(q.F)] : '?'}</span> ${esc(q.q)} <span class="muted">· ${q.F ? nf(q.F) + '/нед' + (q.fromWB ? ' (WB)' : '') : 'нет частотности'} · ${q.cur ? 'сейчас ' + q.cur : 'позиции нет'} → цель ${q.T}${q.perDay ? ` · <b style="color:var(--text)">${q.perDay.mid}</b>/день` : ''}</span></div>`).join('')}
         ${warns.length ? `<div class="st-warn" style="font-size:11px;margin-top:4px">${warns.map(esc).join('<br>')}</div>` : ''}</td>
       <td class="num"><b>${nf(p.units.mid)}</b><div class="muted" style="font-size:10px">${nf(p.units.lo)}–${nf(p.units.hi)}</div></td>
@@ -4392,7 +4413,7 @@ function renderLaunch() {
       <div class="kpi-card flag-green"><div class="kpi-label">Бюджет запуска</div><div class="kpi-val">${nf(T.give + T.ads + reserve)} ₽</div><div class="kpi-sub">раздачи + реклама + резерв</div></div>
     </div>
     <div class="section">
-      <div class="section-header"><div class="section-title">План по артикулам · ${plans.length} из ${allPlans.length}</div>
+      <div class="section-header"><div class="section-title">План по артикулам · ${plans.length} из ${allPlans.length}${(n => n ? ` · <span class="badge badge-yellow">уже в раздачах: ${n}</span>` : '')(allPlans.filter(p => giveawayStatus(p.nm)?.active).length)}</div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="section-note">Жирным — середина вилки; под ним — диапазон по разбросу истории</span>
         <button class="btn btn-ghost btn-sm" onclick="copyLaunchDraft(this)">Скопировать черновик плана</button></div></div>
       <div class="table-wrap"><table>
