@@ -4151,18 +4151,19 @@ async function loadLaunchSheet() {
     const rows = await fetchSheetFrom(link.id, link.gid);
     const h = (rows[0] || []).map(x => x.trim().toLowerCase());
     const col = re => h.findIndex(x => re.test(x));
-    const c = { nm: col(/^артикул/), q: col(/^запрос/), target: col(/^целев/), start: col(/^дата/), days: col(/^дней|^срок/),
+    const c = { nm: col(/^артикул/), q: col(/^запрос/), target: col(/^целев/), start: col(/^дата старт|^старт/), days: col(/^дней|^срок/),
                 freq: col(/^частот/), price: col(/^цена/), comment: col(/^коммент/) };
     if (c.nm < 0) throw new Error('в первой строке нужен столбец «Артикул»');
     res.mode = c.q < 0 ? 'list' : 'plan';
     const cName = col(/^наименован|^товар|^название/);
+    const cCard = col(/карточк/);
     const tagCols = h.map((x, i) => /новинк|трафе|буст/.test(x) ? i : -1).filter(i => i >= 0);
     res.meta = {};
     rows.slice(1).forEach(r => {
       const nm = String(r[c.nm] || '').replace(/\D/g, '');
       if (!nm) return;
-      const tags = tagCols.filter(i => /^да/i.test(String(r[i] || '').trim())).map(i => rows[0][i].trim().replace(/^новинка\s*/i, ''));
-      res.meta[nm] = { name: cName >= 0 ? String(r[cName] || '').trim() : '', tags };
+      const tags = tagCols.filter(i => /^да/i.test(String(r[i] || '').trim())).map(i => { const hh = rows[0][i].trim(); return /не бустит/i.test(hh) ? 'WB уже не бустит' : /бустит/i.test(hh) ? 'WB ещё бустит' : /трафе/i.test(hh) ? hh.replace(/^новинка\s*/i, '') : hh; });
+      res.meta[nm] = { name: cName >= 0 ? String(r[cName] || '').trim() : '', tags, cardDate: cCard >= 0 ? sheetDate(String(r[cCard] || '')) : null };
       if (res.mode === 'list') { res.rows.push({ nm, q: null }); return; }
       const q = String(r[c.q] || '').trim();
       if (!q) return;
@@ -4382,6 +4383,7 @@ function renderLaunch() {
     p.auto = !rows.length; p.skip = skip.has(nm); p.tags = launchSheet.meta?.[nm]?.tags || [];
     return p;
   });
+  allPlans.sort((a, b) => (launchSheet.meta?.[b.nm]?.cardDate || '').localeCompare(launchSheet.meta?.[a.nm]?.cardDate || ''));
   const plans = allPlans.filter(p => !p.skip);
   window._launchPlans = plans; window._launchAllPlans = allPlans;
   setTimeout(() => { const a = document.getElementById('launchAll'); if (a) a.indeterminate = plans.length > 0 && plans.length < allPlans.length; }, 0);
@@ -4398,7 +4400,7 @@ function renderLaunch() {
     const nmName = launchSheet.meta?.[p.nm]?.name ? shortProductTitle(launchSheet.meta[p.nm].name) : shortName(p.nm, 36);
     return `<tr style="${p.skip ? 'opacity:.45' : ''}">
       <td><label class="chk-cell"><input type="checkbox" class="chk" ${p.skip ? '' : 'checked'} onchange="toggleLaunchSku('${p.nm}', this.checked)" title="Включить в план">
-        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm} · старт ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}${(g => g?.active ? ` <span class="badge badge-yellow" style="margin-top:3px" title="${esc('Запросы: ' + g.qs.join(', '))}">уже в раздачах с ${ddmm(g.start)}${g.perDay != null ? ' · ~' + Math.round(g.perDay) + ' шт/день' : ''}${g.until ? ' · план до ' + ddmm(g.until) : ''}</span>` : g ? ` <span class="badge badge-gray" style="margin-top:3px">раздачи были, последние ${ddmm(g.lastFact)}</span>` : '')(giveawayStatus(p.nm))}</span></label></td>
+        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm}${(cd => cd ? ` · карточка создана ${ddmm(cd)} (${daysBetween(cd, todayIso())} дн.)` : '')(launchSheet.meta?.[p.nm]?.cardDate)} · старт раздач ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}${(g => g?.active ? ` <span class="badge badge-yellow" style="margin-top:3px" title="${esc('Запросы: ' + g.qs.join(', '))}">уже в раздачах с ${ddmm(g.start)}${g.perDay != null ? ' · ~' + Math.round(g.perDay) + ' шт/день' : ''}${g.until ? ' · план до ' + ddmm(g.until) : ''}</span>` : g ? ` <span class="badge badge-gray" style="margin-top:3px">раздачи были, последние ${ddmm(g.lastFact)}</span>` : '')(giveawayStatus(p.nm))}</span></label></td>
       <td style="white-space:normal;min-width:220px">${p.qs.map(q => `<div style="font-size:12px"><span class="badge badge-gray">${q.F ? PHASE_NAMES[phaseOf(q.F)] : '?'}</span> ${esc(q.q)} <span class="muted">· ${q.F ? nf(q.F) + '/нед' + (q.fromWB ? ' (WB)' : '') : 'нет частотности'} · ${q.cur ? 'сейчас ' + q.cur : 'позиции нет'} → цель ${q.T}${q.perDay ? ` · <b style="color:var(--text)">${q.perDay.mid}</b>/день` : ''}</span></div>`).join('')}
         ${warns.length ? `<div class="st-warn" style="font-size:11px;margin-top:4px">${warns.map(esc).join('<br>')}</div>` : ''}</td>
       <td class="num"><b>${nf(p.units.mid)}</b><div class="muted" style="font-size:10px">${nf(p.units.lo)}–${nf(p.units.hi)}</div></td>
