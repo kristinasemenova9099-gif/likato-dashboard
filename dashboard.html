@@ -3603,10 +3603,13 @@ function rkVisible() {
   const f = rkFilter();
   const topSet = new Set(DIST_PRODUCTS.map(p => String(p.nmId)));
   return rkMine().filter(c => {
+    if (rkIsStopped(c)) return false;   // приостановленные и завершённые не показываем
     const nm = c.nm || String(rkSource(c.id)?.nms?.[0] || '');
     return f === 'all' ? true : f === 'top' ? topSet.has(nm) : nm === f;
   });
 }
+// Пауза (11) или завершена (7) по данным WB на момент утреннего сбора
+function rkIsStopped(c) { const st = rkSource(c.id)?.status; return st === 11 || st === 7; }
 function rkPeriod() { return LS.get(RK_PERIOD_KEY, 7); }
 function setRkPeriod(n) { LS.set(RK_PERIOD_KEY, n); renderRK(); }
 
@@ -3738,9 +3741,9 @@ function renderRK() {
   const all = rkMine();
   const sel = document.getElementById('rkFilterSel');
   if (sel) {
-    const nms = [...new Set(all.map(c => c.nm).filter(Boolean))];
+    const nms = [...new Set(all.filter(c => !rkIsStopped(c)).map(c => c.nm).filter(Boolean))];
     const cur = rkFilter();
-    sel.innerHTML = `<option value="top">ТОП-товары</option><option value="all">Все кампании из таблицы (${all.length})</option>` +
+    sel.innerHTML = `<option value="top">ТОП-товары</option><option value="all">Все активные из таблицы (${all.filter(c => !rkIsStopped(c)).length})</option>` +
       nms.map(nm => { const c = all.find(x => x.nm === nm); const top = DIST_PRODUCTS.find(p => String(p.nmId) === nm);
         return `<option value="${nm}">${esc(top ? top.name : shortProductTitle(c.name))} · ${nm}</option>`; }).join('');
     sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'top';
@@ -3748,7 +3751,7 @@ function renderRK() {
   const src = document.getElementById('rkSheetNote');
   if (src) src.innerHTML = rkSheet?.error
     ? `<span class="st st-bad">Не удалось прочитать таблицу РК: ${esc(rkSheet.error)}</span>`
-    : rkSheet ? `Кампании берутся из <a href="${RK_SHEET_URL}" target="_blank" rel="noopener" style="color:var(--accent)">таблицы РК</a>: ${(rkSheet.list || []).length} шт., прочитано в ${rkSheet.loadedAt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}. Добавила РК в таблицу — обнови страницу.` : 'Читаю таблицу РК…';
+    : rkSheet ? `Кампании берутся из <a href="${RK_SHEET_URL}" target="_blank" rel="noopener" style="color:var(--accent)">таблицы РК</a>: ${(rkSheet.list || []).length} шт.${all.filter(rkIsStopped).length ? `, из них на паузе или завершены — ${all.filter(rkIsStopped).length} (скрыты)` : ''}, прочитано в ${rkSheet.loadedAt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}. Добавила РК в таблицу — обнови страницу.` : 'Читаю таблицу РК…';
   const manualOnly = all.filter(c => !c.fromSheet);
   document.getElementById('rkChips').innerHTML = manualOnly.length ? '<span class="muted" style="font-size:11px;align-self:center">Добавлены вручную:</span>' + manualOnly.map(c => {
     const src = rkSource(c.id);
@@ -3794,7 +3797,7 @@ function renderRK() {
       <td class="num">${pctf(m.drr)}</td>
       <td class="verdict">${esc(r.verdict)}</td>
     </tr>`;
-  }).join('') : '<tr><td colspan="14" class="muted" style="padding:18px;text-align:center">Добавь свои кампании выше</td></tr>';
+  }).join('') : '<tr><td colspan="14" class="muted" style="padding:18px;text-align:center">Активных кампаний нет</td></tr>';
 
   if (rkSelected && rows.some(r => r.c.id === rkSelected)) renderRkDetail(rows.find(r => r.c.id === rkSelected));
   else document.getElementById('rkDetail').style.display = 'none';
