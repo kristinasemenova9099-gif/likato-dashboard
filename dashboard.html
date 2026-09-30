@@ -182,6 +182,9 @@
   .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--text2); }
   .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
   .muted { color: var(--muted); }
+  .chk { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; margin: 1px 0 0; }
+  .chk-cell { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+  .chk-cell:hover .chk { outline: 2px solid var(--accent-soft); outline-offset: 2px; }
 
   @media (max-width: 900px) {
     .chart-row { grid-template-columns: 1fr; }
@@ -4114,6 +4117,7 @@ let calSheet = null, launchSheet = null;
 function launchSettings() { return { days: 14, phases: [3, 7, 4], reserve: 5, targets: [10, 15, 30], maxQ: 3, minFreq: 1000, start: '', ...LS.get(LAUNCH_SET_KEY, {}) }; }
 const LAUNCH_SKIP_KEY = 'likato_launch_skip';   // артикулы, исключённые из плана
 function launchSkip() { return new Set(LS.get(LAUNCH_SKIP_KEY, [])); }
+function toggleLaunchAll(on) { LS.set(LAUNCH_SKIP_KEY, on ? [] : (window._launchAllPlans || []).map(p => p.nm)); renderLaunch(); }
 function toggleLaunchSku(nm, on) { const s = launchSkip(); on ? s.delete(nm) : s.add(nm); LS.set(LAUNCH_SKIP_KEY, [...s]); renderLaunch(); }
 function setLaunchSetting(k, v) { const s = launchSettings(); s[k] = v; LS.set(LAUNCH_SET_KEY, s); renderLaunch(); }
 
@@ -4380,6 +4384,7 @@ function renderLaunch() {
   });
   const plans = allPlans.filter(p => !p.skip);
   window._launchPlans = plans; window._launchAllPlans = allPlans;
+  setTimeout(() => { const a = document.getElementById('launchAll'); if (a) a.indeterminate = plans.length > 0 && plans.length < allPlans.length; }, 0);
 
   let T = { units: 0, lo: 0, hi: 0, give: 0, giveLo: 0, giveHi: 0, ads: 0 };
   const skuRows = allPlans.map(p => {
@@ -4392,7 +4397,7 @@ function renderLaunch() {
     const warns = p.qs.flatMap(q => q.warn.map(w => `«${q.q}»: ${w}`)).concat(p.noQueries ? ['нет подходящих запросов в отчёте WB — впиши запросы вручную'] : []);
     const nmName = launchSheet.meta?.[p.nm]?.name ? shortProductTitle(launchSheet.meta[p.nm].name) : shortName(p.nm, 36);
     return `<tr style="${p.skip ? 'opacity:.45' : ''}">
-      <td><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="checkbox" ${p.skip ? '' : 'checked'} onchange="toggleLaunchSku('${p.nm}', this.checked)" style="margin-top:3px" title="Включить в план">
+      <td><label class="chk-cell"><input type="checkbox" class="chk" ${p.skip ? '' : 'checked'} onchange="toggleLaunchSku('${p.nm}', this.checked)" title="Включить в план">
         <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm} · старт ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}${(g => g?.active ? ` <span class="badge badge-yellow" style="margin-top:3px" title="${esc('Запросы: ' + g.qs.join(', '))}">уже в раздачах с ${ddmm(g.start)}${g.perDay != null ? ' · ~' + Math.round(g.perDay) + ' шт/день' : ''}${g.until ? ' · план до ' + ddmm(g.until) : ''}</span>` : g ? ` <span class="badge badge-gray" style="margin-top:3px">раздачи были, последние ${ddmm(g.lastFact)}</span>` : '')(giveawayStatus(p.nm))}</span></label></td>
       <td style="white-space:normal;min-width:220px">${p.qs.map(q => `<div style="font-size:12px"><span class="badge badge-gray">${q.F ? PHASE_NAMES[phaseOf(q.F)] : '?'}</span> ${esc(q.q)} <span class="muted">· ${q.F ? nf(q.F) + '/нед' + (q.fromWB ? ' (WB)' : '') : 'нет частотности'} · ${q.cur ? 'сейчас ' + q.cur : 'позиции нет'} → цель ${q.T}${q.perDay ? ` · <b style="color:var(--text)">${q.perDay.mid}</b>/день` : ''}</span></div>`).join('')}
         ${warns.length ? `<div class="st-warn" style="font-size:11px;margin-top:4px">${warns.map(esc).join('<br>')}</div>` : ''}</td>
@@ -4417,7 +4422,7 @@ function renderLaunch() {
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="section-note">Жирным — середина вилки; под ним — диапазон по разбросу истории</span>
         <button class="btn btn-ghost btn-sm" onclick="copyLaunchDraft(this)">Скопировать черновик плана</button></div></div>
       <div class="table-wrap"><table>
-        <thead><tr><th>Товар</th><th>Запросы: фаза · частотность · сейчас → цель · раздач/день</th><th class="num">Раздачи, шт</th><th class="num">Цена раздачи</th><th class="num">Раздачи, ₽</th><th class="num">Реклама, ₽</th><th class="num">Итого, ₽</th></tr></thead>
+        <thead><tr><th><label class="chk-cell" style="align-items:center"><input type="checkbox" class="chk" id="launchAll" onchange="toggleLaunchAll(this.checked)" ${plans.length === allPlans.length ? 'checked' : ''}> Выбрать все</label></th><th>Запросы: фаза · частотность · сейчас → цель · раздач/день</th><th class="num">Раздачи, шт</th><th class="num">Цена раздачи</th><th class="num">Раздачи, ₽</th><th class="num">Реклама, ₽</th><th class="num">Итого, ₽</th></tr></thead>
         <tbody>${skuRows || '<tr><td colspan="7" class="muted" style="padding:14px;text-align:center">В листе нет строк</td></tr>'}</tbody>
       </table></div>
     </div>
