@@ -1860,6 +1860,14 @@ function renderAlerts(data) {
     }
   });
 
+  // --- Алерт: РК ТОП-товара вчера работала, сегодня остановлена ---
+  try {
+    rkJustStoppedTop().forEach(({ c }) => {
+      const top = DIST_PRODUCTS.find(p => String(p.nmId) === String(c.nm || rkSource(c.id)?.nms?.[0]));
+      alerts.push({ type: 'red', icon: '⛔', product: top ? top.name : c.label, msg: `РК ${c.id} (${c.type || 'кампания'}) вчера работала, сейчас остановлена — проверь бюджет и остатки` });
+    });
+  } catch (e) { /* таблица РК ещё не прочитана */ }
+
   const order = { red: 0, yellow: 1, green: 2 };
   alerts.sort((a, b) => order[a.type] - order[b.type]);
 
@@ -3609,7 +3617,28 @@ function rkVisible() {
   });
 }
 // Пауза (11) или завершена (7) по данным WB на момент утреннего сбора
-function rkIsStopped(c) { const st = rkSource(c.id)?.status; return st === 11 || st === 7; }
+function rkIsStopped(c) { const st = rkSource(c.id)?.status; return (st === 11 || st === 7) && !rkJustStopped(c); }
+// Была активна при прошлом сборе (или откручивалась в последний день статистики), а теперь стоит
+function rkJustStopped(c) {
+  const src = rkSource(c.id);
+  const st = src?.status;
+  if (st !== 11 && st !== 7) return null;
+  const h = rawData?.ads_status_hist?.[String(c.id)] || {};
+  const dates = Object.keys(h).sort();
+  if (dates.length >= 2) {
+    const last = dates[dates.length - 1], prev = dates[dates.length - 2];
+    return (h[last] === 11 || h[last] === 7) && h[prev] === 9 ? { since: last, how: 'status' } : null;
+  }
+  // истории статусов ещё нет (первый день): «работала» = потратила от 50 ₽ за последние 2 дня статистики
+  const end = rkEndDate();
+  if (!end) return null;
+  const recent = (src?.days || []).filter(r => r[0] >= addDays(end, -1)).reduce((a, r) => a + r[3], 0);
+  return recent >= 50 ? { since: end, how: 'spend' } : null;
+}
+function rkJustStoppedTop() {
+  const topSet = new Set(DIST_PRODUCTS.map(p => String(p.nmId)));
+  return rkMine().filter(c => topSet.has(c.nm || String(rkSource(c.id)?.nms?.[0] || ''))).map(c => ({ c, js: rkJustStopped(c) })).filter(x => x.js);
+}
 function rkPeriod() { return LS.get(RK_PERIOD_KEY, 7); }
 function setRkPeriod(n) { LS.set(RK_PERIOD_KEY, n); renderRK(); }
 
@@ -3706,10 +3735,12 @@ function rkCompute() {
     let cur = null, prev = null;
     if (src?.mode === 'daily' && end) { cur = rkMetrics(sumDays(src.days, from, end)); prev = rkMetrics(sumDays(src.days, pFrom, pTo)); }
     else if (src?.mode === 'total') cur = rkMetrics(src.tot);
-    const st = rkStatus(cur, target);
+    const js = rkJustStopped(c);
+    const st = js ? { cls: 'st-bad', label: c.pausedInSheet ? 'остановлена со вчера' : 'остановлена со вчера', rank: -1 } : rkStatus(cur, target);
     const diag = src?.mode === 'daily' ? rkDiagnose(cur, prev) : null;
     let verdict;
-    if (!src) verdict = 'Кампании нет в данных: проверь номер или дождись следующего сбора.';
+    if (js) verdict = `Вчера работала, сейчас ${src.status === 7 ? 'завершена' : 'на паузе'}. Проверь в кабинете: кончился бюджет, остаток или её остановили вручную?`;
+    else if (!src) verdict = 'Кампании нет в данных: проверь номер или дождись следующего сбора.';
     else if (src.mode === 'total') verdict = 'Пока только итог за 30 дней — разбивка по дням появится после сбора с рабочим токеном.';
     else if (!cur.spend) verdict = src.status === 11 ? 'На паузе.' : 'За период нет расхода.';
     else if (st.cls === 'st-na') verdict = `Меньше 100 кликов — CR ещё шум, подожди ${period < 7 ? 'или возьми период длиннее' : 'с выводами'}.`;
@@ -3735,6 +3766,11 @@ function renderRK() {
   document.getElementById('rkBanner').innerHTML = !hasDaily
     ? `<div class="banner"><span>ℹ</span><div><b>Разбивки РК по дням пока нет.</b> Её собирает обновлённый скрипт — появится после первого успешного сбора. До этого по каждой кампании показан итог за 30 дней до ${esc(rawData.updated_at || '—')} без сравнения периодов.</div></div>`
     : `<div class="muted" style="font-size:12px">Период: ${ddmm(addDays(end, -(period - 1)))} — ${ddmm(end)} · сравнение с ${ddmm(addDays(end, -(2 * period - 1)))} — ${ddmm(addDays(end, -period))}</div>`;
+
+  // Тревога: РК ТОП-товаров, которые вчера работали, а сейчас стоят
+  const stoppedTop = rkJustStoppedTop();
+  document.getElementById('rkBanner').insertAdjacentHTML('afterbegin', stoppedTop.length
+    ? `<div class="banner" style="border-color:rgba(208,59,59,.55);background:rgba(208,59,59,.10);color:#f8c4c4;margin-bottom:8px"><span>⛔</span><div><b>Остановились со вчера (ТОП-товары): ${stoppedTop.length}</b> — ${stoppedTop.map(x => `${esc(x.c.label)} · РК ${x.c.id}`).join('; ')}. Проверь бюджет и остатки в кабинете WB.</div></div>` : '');
 
   // Источник: таблица РК + добавленные вручную
   const mine = rkVisible();
@@ -4100,6 +4136,7 @@ async function loadRkSheet() {
     console.warn('Таблица РК:', e);
   }
   rkSheet = res;
+  try { renderAlerts(rawData); } catch (e) {}
   if (document.querySelector('.tab.active')?.dataset.tab === 'rk') renderRK();
   return res;
 }
