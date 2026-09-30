@@ -789,7 +789,7 @@
     <div class="page-head">
       <div>
         <div class="page-title">Рекламные кампании</div>
-        <div class="page-sub">Только твои РК: добавь номера кампаний ниже. Порядок чтения: сначала статус (окупается ли заказ), потом — какое звено воронки просело относительно прошлого такого же периода.</div>
+        <div class="page-sub">Кампании берутся из таблицы РК (артикул → ID). Порядок чтения: сначала статус (окупается ли заказ), потом — какое звено воронки просело относительно прошлого такого же периода.</div>
       </div>
       <div class="seg" id="rkPeriodSeg">
         <button data-days="1" onclick="setRkPeriod(1)">Вчера</button>
@@ -805,11 +805,12 @@
     <div class="section">
       <div class="section-header">
         <div class="section-title">Мои кампании</div>
-        <div class="section-note">Хранятся в этом браузере · резервная копия — «Мои настройки»</div>
+        <div style="display:flex;gap:8px;align-items:center"><label class="field-label" for="rkFilterSel">Показать</label>
+          <select id="rkFilterSel" onchange="setRkFilter(this.value)" style="max-width:320px"></select></div>
       </div>
       <div class="section-body" style="display:flex;flex-direction:column;gap:12px">
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
-          <div class="field"><label for="rkAddId">ID кампании (можно несколько через запятую)</label>
+          <div class="field"><label for="rkAddId">Добавить РК не из таблицы: ID (можно несколько через запятую)</label>
             <input id="rkAddId" class="inp" style="width:260px" placeholder="напр. 35734410, 35734429" onkeydown="if(event.key==='Enter')rkAdd()"></div>
           <div class="field"><label for="rkAddLabel">Подпись (необязательно)</label>
             <input id="rkAddLabel" class="inp" style="width:200px" placeholder="напр. Daily — поиск" onkeydown="if(event.key==='Enter')rkAdd()"></div>
@@ -820,6 +821,7 @@
           <button class="btn btn-ghost" onclick="rkAddByNm()">Найти и добавить</button>
           <span id="rkAddMsg" style="font-size:11px" class="muted"></span>
         </div>
+        <div id="rkSheetNote" class="muted" style="font-size:12px"></div>
         <div id="rkChips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
       </div>
     </div>
@@ -3437,7 +3439,8 @@ function unitDefaults(nm) {
   const p = (rawData?.products || []).find(x => String(x.nmId) === String(nm));
   const na = rawData?.nm_ads?.[String(nm)];
   const buy = p?.funnel?.redemption_pct || p?.funnel?.redemption_prev || null;
-  let price = p?.current_price || null;
+  // Цена продавца ДО СПП — от неё WB считает комиссию. current_price — цена покупателя после СПП, для юнитки не годится
+  let price = p?.funnel?.avg_price || null;                                                        // средняя цена из воронки WB
   if (!price && sheetData?.unit?.[String(nm)]?.price) price = sheetData.unit[String(nm)].price;   // средний чек из трекинга
   if (!price) { const n = (rawData?.novosti || []).find(x => String(x.nm) === String(nm)); price = n?.price || null; }
   if (!price && na?.revenue && na?.orders) price = Math.round(na.revenue / na.orders);
@@ -3448,7 +3451,7 @@ function unitNms() {
   const set = new Set();
   DIST_PRODUCTS.forEach(p => set.add(String(p.nmId)));
   LS.get(UNIT_NMS_KEY, []).forEach(n => set.add(String(n)));
-  rkMine().forEach(c => { const s = rkSource(c.id); if (s?.nms?.[0]) set.add(String(s.nms[0])); });
+  rkMine().filter(c => !c.fromSheet).forEach(c => { const s = rkSource(c.id); if (s?.nms?.[0]) set.add(String(s.nms[0])); });
   Object.keys(LS.get(UNIT_KEY, {})).forEach(n => set.add(String(n)));
   return [...set];
 }
@@ -3522,7 +3525,7 @@ function renderUnit() {
       const autoVal = f === 'price' ? def.price : f === 'buyout' ? (def.buyout ?? 90) : fromSheet ? sh[f] : null;
       const placeholder = autoVal != null ? String(Math.round(autoVal * 10) / 10).replace('.', ',') : ph;
       const required = (['cost', 'comm', 'log'].includes(f) && !fromSheet) || (f === 'price' && !def.price);
-      const title = (f === 'price' && sh.price && def.price === sh.price) ? 'Средний чек за 7 дней из «Ежедневного трекинга». Можно переписать' : (f === 'buyout' && def.buyout == null) ? 'Нет данных WB — по умолчанию 90%. Впиши свой %' : fromSheet ? 'Из «Ежедневного трекинга» (логистика — среднее на заказ за 7 дней). Можно переписать' : autoVal ? 'Подставлено из данных WB — можно переписать' : '';
+      const title = (f === 'price' && sh.price && def.price === sh.price) ? 'Средний чек за 7 дней из «Ежедневного трекинга». Можно переписать' : f === 'price' && def.price ? 'Средняя цена продавца до СПП за 7 дней (воронка WB) — от неё считается комиссия. Можно переписать' : (f === 'buyout' && def.buyout == null) ? 'Нет данных WB — по умолчанию 90%. Впиши свой %' : fromSheet ? 'Из «Ежедневного трекинга» (логистика — среднее на заказ за 7 дней). Можно переписать' : autoVal ? 'Подставлено из данных WB — можно переписать' : '';
       return `<td class="num"><input class="inp-cell ${v === '' && required ? 'empty' : ''}" inputmode="decimal" value="${esc(v)}" placeholder="${esc(placeholder)}"
         title="${title}" onchange="unitSet('${nm}','${f}',this.value)"></td>`;
     }).join('');
@@ -3580,7 +3583,30 @@ const RK_PERIOD_KEY = 'likato_rk_period';
 let rkSelected = null;
 let rkCharts = [];
 
-function rkMine() { return LS.get(RK_KEY, []); }
+function rkMine() {
+  const labels = LS.get(RK_LABELS_KEY, {});
+  const out = [], seen = new Set();
+  (rkSheet?.list || []).forEach(c => {
+    if (seen.has(c.id)) return; seen.add(c.id);
+    const top = DIST_PRODUCTS.find(p => String(p.nmId) === c.nm);
+    out.push({ ...c, fromSheet: true, label: labels[c.id] || `${top ? top.name : shortProductTitle(c.name)} · ${c.type}` });
+  });
+  LS.get(RK_KEY, []).forEach(c => {
+    if (seen.has(c.id)) return; seen.add(c.id);
+    out.push({ ...c, label: labels[c.id] ?? c.label });
+  });
+  return out;
+}
+function rkFilter() { return LS.get(RK_FILTER_KEY, 'top'); }
+function setRkFilter(v) { LS.set(RK_FILTER_KEY, v); renderRK(); }
+function rkVisible() {
+  const f = rkFilter();
+  const topSet = new Set(DIST_PRODUCTS.map(p => String(p.nmId)));
+  return rkMine().filter(c => {
+    const nm = c.nm || String(rkSource(c.id)?.nms?.[0] || '');
+    return f === 'all' ? true : f === 'top' ? topSet.has(nm) : nm === f;
+  });
+}
 function rkPeriod() { return LS.get(RK_PERIOD_KEY, 7); }
 function setRkPeriod(n) { LS.set(RK_PERIOD_KEY, n); renderRK(); }
 
@@ -3669,9 +3695,9 @@ function rkCompute() {
   const end = rkEndDate();
   const from = end ? addDays(end, -(period - 1)) : null;
   const pFrom = end ? addDays(end, -(2 * period - 1)) : null, pTo = end ? addDays(end, -period) : null;
-  return rkMine().map(c => {
+  return rkVisible().map(c => {
     const src = rkSource(c.id);
-    const nm = src?.nms?.[0] || null;
+    const nm = c.nm || src?.nms?.[0] || null;
     const unit = nm ? unitCalc(nm) : null;
     const target = unit?.complete ? unit.cpoMax : null;
     let cur = null, prev = null;
@@ -3690,7 +3716,7 @@ function rkCompute() {
     else verdict = 'В норме — не трогаем.';
     const stock = nm ? rkStockNote(nm) : '';
     if (stock) verdict += ' ' + stock;
-    return { c, src, nm, unit, target, cur, prev, st, diag, verdict, statusLbl: src?.status === 9 ? 'активна' : src?.status === 11 ? 'пауза' : '' };
+    return { c, src, nm, unit, target, cur, prev, st, diag, verdict, statusLbl: src?.status === 9 ? 'активна' : src?.status === 11 ? 'пауза' : src?.status === 7 ? 'завершена' : (c.pausedInSheet ? 'приост. (по таблице)' : '') };
   });
 }
 
@@ -3707,14 +3733,29 @@ function renderRK() {
     ? `<div class="banner"><span>ℹ</span><div><b>Разбивки РК по дням пока нет.</b> Её собирает обновлённый скрипт — появится после первого успешного сбора. До этого по каждой кампании показан итог за 30 дней до ${esc(rawData.updated_at || '—')} без сравнения периодов.</div></div>`
     : `<div class="muted" style="font-size:12px">Период: ${ddmm(addDays(end, -(period - 1)))} — ${ddmm(end)} · сравнение с ${ddmm(addDays(end, -(2 * period - 1)))} — ${ddmm(addDays(end, -period))}</div>`;
 
-  // Чипы кампаний
-  const mine = rkMine();
-  document.getElementById('rkChips').innerHTML = mine.length ? mine.map(c => {
+  // Источник: таблица РК + добавленные вручную
+  const mine = rkVisible();
+  const all = rkMine();
+  const sel = document.getElementById('rkFilterSel');
+  if (sel) {
+    const nms = [...new Set(all.map(c => c.nm).filter(Boolean))];
+    const cur = rkFilter();
+    sel.innerHTML = `<option value="top">ТОП-товары</option><option value="all">Все кампании из таблицы (${all.length})</option>` +
+      nms.map(nm => { const c = all.find(x => x.nm === nm); const top = DIST_PRODUCTS.find(p => String(p.nmId) === nm);
+        return `<option value="${nm}">${esc(top ? top.name : shortProductTitle(c.name))} · ${nm}</option>`; }).join('');
+    sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'top';
+  }
+  const src = document.getElementById('rkSheetNote');
+  if (src) src.innerHTML = rkSheet?.error
+    ? `<span class="st st-bad">Не удалось прочитать таблицу РК: ${esc(rkSheet.error)}</span>`
+    : rkSheet ? `Кампании берутся из <a href="${RK_SHEET_URL}" target="_blank" rel="noopener" style="color:var(--accent)">таблицы РК</a>: ${(rkSheet.list || []).length} шт., прочитано в ${rkSheet.loadedAt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}. Добавила РК в таблицу — обнови страницу.` : 'Читаю таблицу РК…';
+  const manualOnly = all.filter(c => !c.fromSheet);
+  document.getElementById('rkChips').innerHTML = manualOnly.length ? '<span class="muted" style="font-size:11px;align-self:center">Добавлены вручную:</span>' + manualOnly.map(c => {
     const src = rkSource(c.id);
     const nm = src?.nms?.[0];
     const title = c.label || (nm ? shortName(nm, 26) : 'нет в данных');
     return `<span class="chip"><b style="cursor:pointer" title="Переименовать" onclick="rkRename('${c.id}')">${esc(title)}</b> ${c.id}<button onclick="rkRemove('${c.id}')" aria-label="Удалить" title="Убрать">✕</button></span>`;
-  }).join('') : '<span class="muted" style="font-size:12px">Пока пусто — добавь номера своих кампаний (кабинет WB → Продвижение → номер РК) или найди все РК по артикулу.</span>';
+  }).join('') : '';
 
   const rows = rkCompute();
   // KPI по всем моим РК
@@ -3738,7 +3779,7 @@ function renderRK() {
     const d = (k, up) => r.prev ? `<div style="font-size:10px">${deltaHtml(chg(m[k], r.prev[k]), up)}</div>` : '';
     const name = r.c.label || (r.nm ? shortName(r.nm, 30) : '—');
     return `<tr class="rk-row ${rkSelected === r.c.id ? 'sel' : ''}" onclick="rkSelect('${r.c.id}')">
-      <td><div style="font-weight:600;color:var(--text)">${esc(name)}</div><div class="muted" style="font-size:11px">РК ${r.c.id}${r.statusLbl ? ' · ' + r.statusLbl : ''}${r.nm ? ' · ' + r.nm : ''}</div></td>
+      <td><div style="font-weight:600;color:var(--text)">${esc(name)}</div><div class="muted" style="font-size:11px">РК ${r.c.id}${r.statusLbl ? ' · ' + r.statusLbl : ''}${r.nm ? ' · ' + r.nm : ''} · <span style="cursor:pointer;text-decoration:underline dotted" onclick="event.stopPropagation();rkRename('${r.c.id}')">подпись</span></div></td>
       <td><span class="st ${r.st.cls}">${r.st.label}</span></td>
       <td class="num">${nf(m.spend)}${d('spend', null)}</td>
       <td class="num">${nf(m.shows)}${d('shows', true)}</td>
@@ -3763,9 +3804,10 @@ function rkAdd() {
   const idEl = document.getElementById('rkAddId'), lbEl = document.getElementById('rkAddLabel');
   const ids = idEl.value.split(/[\s,;]+/).map(x => x.replace(/\D/g, '')).filter(Boolean);
   if (!ids.length) return;
-  const list = rkMine();
+  const list = LS.get(RK_KEY, []);
+  const known = new Set(rkMine().map(c => c.id));
   let added = 0;
-  ids.forEach(id => { if (!list.some(c => c.id === id)) { list.push({ id, label: lbEl.value.trim() }); added++; } });
+  ids.forEach(id => { if (!known.has(id)) { list.push({ id, label: lbEl.value.trim() }); known.add(id); added++; } });
   LS.set(RK_KEY, list);
   const missing = ids.filter(id => !rkSource(id));
   document.getElementById('rkAddMsg').textContent = `Добавлено: ${added}` + (missing.length ? ` · нет в данных: ${missing.join(', ')} (появятся после сбора)` : '');
@@ -3781,20 +3823,23 @@ function rkAddByNm() {
   Object.entries(rawData?.ads_daily || {}).forEach(([id, c]) => { if ((c.nms || []).map(String).includes(nm)) found.add(id); });
   (rawData?.ads || []).forEach(a => { if (String(a.nmId) === nm) found.add(String(a.id)); });
   (rawData?.products || []).forEach(p => { if (String(p.nmId) === nm) (p.ad_campaigns || []).forEach(id => found.add(String(id))); });
-  const list = rkMine();
+  const list = LS.get(RK_KEY, []);
+  const known = new Set(rkMine().map(c => c.id));
   let added = 0;
-  found.forEach(id => { if (!list.some(c => c.id === id)) { list.push({ id, label: '' }); added++; } });
+  found.forEach(id => { if (!known.has(id)) { list.push({ id, label: '' }); known.add(id); added++; } });
   LS.set(RK_KEY, list);
   document.getElementById('rkAddMsg').textContent = found.size ? `По артикулу ${nm} найдено РК: ${found.size}, добавлено новых: ${added}` : `По артикулу ${nm} кампаний с расходом не найдено`;
   el.value = '';
   renderRK();
 }
 
-function rkRemove(id) { LS.set(RK_KEY, rkMine().filter(c => c.id !== id)); if (rkSelected === id) rkSelected = null; renderRK(); }
+function rkRemove(id) { LS.set(RK_KEY, LS.get(RK_KEY, []).filter(c => c.id !== id)); if (rkSelected === id) rkSelected = null; renderRK(); }
 function rkRename(id) {
-  const list = rkMine(); const c = list.find(x => x.id === id); if (!c) return;
-  const v = prompt('Подпись кампании', c.label || ''); if (v == null) return;
-  c.label = v.trim(); LS.set(RK_KEY, list); renderRK();
+  const c = rkMine().find(x => x.id === id); if (!c) return;
+  const v = prompt('Подпись кампании (пусто — по умолчанию)', c.label || ''); if (v == null) return;
+  const labels = LS.get(RK_LABELS_KEY, {});
+  if (v.trim()) labels[id] = v.trim(); else delete labels[id];
+  LS.set(RK_LABELS_KEY, labels); renderRK();
 }
 function rkSelect(id) { rkSelected = rkSelected === id ? null : id; renderRK(); if (rkSelected) document.getElementById('rkDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
 
@@ -3905,11 +3950,13 @@ function parseCsv(text) {
   return rows;
 }
 
-async function fetchSheet(gid) {
-  const r = await fetch(`https://docs.google.com/spreadsheets/d/${TOP_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${gid}`, { cache: 'no-store' });
+async function fetchSheetFrom(sheetId, gid) {
+  // export?format=csv отдаёт ячейки как есть (gviz выкидывал текст в «числовых» столбцах)
+  const r = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`, { cache: 'no-store' });
   if (!r.ok) throw new Error('Google вернул ' + r.status);
   return parseCsv(await r.text());
 }
+function fetchSheet(gid) { return fetchSheetFrom(TOP_SHEET_ID, gid); }
 
 // "02.09.2026" или "02.09" → "2026-09-02"
 function sheetDate(s) {
@@ -4002,6 +4049,55 @@ async function loadTopSheet() {
   if (active === 'kw') renderKwPage();
   if (active === 'unit') renderUnit();
   if (active === 'rk') renderRK();
+  return res;
+}
+
+// ── Таблица рекламных кампаний: артикул → ID кампаний (ручная / единая) ──
+const RK_SHEET_ID = '1CoKAYKbJJhZ11moE0e1N3MlHdhYir4LPEAWULPeCYbg';
+const RK_SHEET_GID = '176079888';
+const RK_SHEET_URL = `https://docs.google.com/spreadsheets/d/${RK_SHEET_ID}/edit#gid=${RK_SHEET_GID}`;
+const RK_LABELS_KEY = 'likato_rk_labels';     // свои подписи к кампаниям {id: label}
+const RK_FILTER_KEY = 'likato_rk_filter';     // 'all' | 'top' | nmId
+let rkSheet = null;   // {list: [{id, nm, name, type, pausedInSheet, launch}], error, loadedAt}
+
+function shortProductTitle(s) {
+  s = String(s || '').replace(/^\s*(LIKATO|LAVANT)( laboratory| professional)?\s+/i, '').replace(/\s+/g, ' ').trim();
+  return s.length > 42 ? s.slice(0, 41) + '…' : s;
+}
+
+async function loadRkSheet() {
+  const res = { list: [], error: null, loadedAt: new Date() };
+  try {
+    const rows = await fetchSheetFrom(RK_SHEET_ID, RK_SHEET_GID);
+    const h = (rows[0] || []).map(x => x.trim().toLowerCase());
+    const cNm = h.findIndex(x => x.startsWith('артикул'));
+    const cName = h.findIndex(x => x.startsWith('наименование'));
+    const cMan = h.findIndex(x => x.includes('кампании') && x.includes('ручн'));
+    const cUni = h.findIndex(x => x.includes('кампании') && x.includes('един'));
+    const cLaunch = h.findIndex(x => x.startsWith('дата запуска рк'));
+    if (cNm < 0 || (cMan < 0 && cUni < 0)) throw new Error('не найдены столбцы «Артикул» и «ID кампании»');
+    const seen = new Set();
+    rows.slice(1).forEach(r => {
+      const nm = String(r[cNm] || '').trim();
+      if (!/^\d+$/.test(nm)) return;
+      [[cMan, 'ручная'], [cUni, 'единая']].forEach(([ci, type]) => {
+        if (ci < 0) return;
+        // в ячейке может быть несколько ID, каждый со своей пометкой: "40524856 (приост)\n40524855"
+        String(r[ci] || '').split(/[\n,;]+/).forEach(seg => {
+          const m = /(\d{6,})/.exec(seg);
+          if (!m || seen.has(m[1])) return;
+          seen.add(m[1]);
+          res.list.push({ id: m[1], nm, name: String(r[cName] || '').trim(), type,
+                          pausedInSheet: /прио/i.test(seg), launch: cLaunch >= 0 ? String(r[cLaunch] || '').trim() : '' });
+        });
+      });
+    });
+  } catch (e) {
+    res.error = e.message || String(e);
+    console.warn('Таблица РК:', e);
+  }
+  rkSheet = res;
+  if (document.querySelector('.tab.active')?.dataset.tab === 'rk') renderRK();
   return res;
 }
 
@@ -4260,6 +4356,7 @@ function loadData() {
     } catch(e) { console.error('tab restore error:', e); }
     loadNovinkaJson();
     loadTopSheet();
+    loadRkSheet();
   })
   .catch(() => {
     loadNovinkaJson();
