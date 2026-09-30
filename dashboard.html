@@ -883,7 +883,46 @@
     <div class="page-head">
       <div>
         <div class="page-title">Юнит-экономика</div>
-        <div class="page-sub">Серые значения подставлены автоматически: с/с, комиссия и логистика — из «Ежедневного трекинга», цена и % выкупа — из WB. Впиши своё, чтобы переопределить; пунктир — нужно заполнить. Главный выход таблицы — <b style="color:var(--text)">допустимый CPO</b>: его использует светофор на вкладке «Рекламные кампании».</div>
+        <div class="page-sub">Как в «Ежедневном трекинге»: М1 = заказы − с/с; М2 = М1 − комиссия − логистика − хранение; М3 = М2 − реклама − раздачи. Под суммой — % от заказов в рублях. Клик по товару — разбивка по дням.</div>
+      </div>
+      <div class="seg" id="pnlPeriodSeg">
+        <button data-days="1" onclick="setPnlPeriod(1)">День</button>
+        <button data-days="7" onclick="setPnlPeriod(7)">7 дней</button>
+        <button data-days="14" onclick="setPnlPeriod(14)">14 дней</button>
+        <button data-days="30" onclick="setPnlPeriod(30)">30 дней</button>
+        <button data-days="0" onclick="setPnlPeriod(0)">Весь период</button>
+      </div>
+    </div>
+    <div id="pnlNote" class="muted" style="font-size:12px"></div>
+    <div id="pnlCheck"></div>
+    <div class="section">
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Товар</th><th class="num">Заказы, шт</th><th class="num">Заказы, ₽</th><th class="num">Раздачи, шт</th>
+            <th class="num">С/с, ₽</th><th class="num">М1, ₽</th>
+            <th class="num">Комиссия WB, ₽</th><th class="num">Логистика, ₽</th><th class="num">Хранение, ₽</th><th class="num">М2, ₽</th>
+            <th class="num">Расход на РК, ₽</th><th class="num">Раздачи, ₽</th><th class="num">М3, ₽</th><th class="num">М3 к прошл. периоду</th>
+          </tr></thead>
+          <tbody id="pnlBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section" id="pnlDays" style="display:none">
+      <div class="section-header"><div class="section-title" id="pnlDaysTitle">По дням</div><div class="section-note">Жёлтым — где комиссия в таблице другая</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Дата</th><th class="num">Заказы, шт</th><th class="num">Заказы, ₽</th><th class="num">Раздачи, шт</th><th class="num">С/с, ₽</th><th class="num">М1, ₽</th>
+            <th class="num">Комиссия, ₽</th><th class="num">Логистика, ₽</th><th class="num">Хранение, ₽</th><th class="num">М2, ₽</th><th class="num">РК, ₽</th><th class="num">Раздачи, ₽</th><th class="num">М3, ₽</th></tr></thead>
+          <tbody id="pnlDaysBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page-head" style="margin-top:8px">
+      <div>
+        <div class="page-title" style="font-size:16px">Допустимый CPO — порог для светофора РК</div>
+        <div class="page-sub">Сколько можно заплатить рекламе за один заказ и остаться в нуле. Серые значения подставлены автоматически: с/с, комиссия и логистика — из «Ежедневного трекинга», цена — из WB. Впиши своё, чтобы переопределить.</div>
       </div>
       <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
         <div class="field"><label for="unitAddNm">Добавить артикул</label>
@@ -3364,7 +3403,7 @@ function switchTab(tab, el) {
   LS.set('likato_tab', tab);
   try { history.replaceState(null, '', '#' + tab); } catch (e) {}
   if (tab === 'rk') renderRK();
-  if (tab === 'unit') renderUnit();
+  if (tab === 'unit') { renderPnl(); renderUnit(); }
   if (tab === 'kw') renderKwPage();
 }
 
@@ -4064,11 +4103,17 @@ async function loadTopSheet() {
     const ht = (trk[0] || []).map(h => h.trim().toLowerCase());
     const col = re => ht.findIndex(h => re.test(h));
     const cDate = col(/^дата/), cSku = col(/^sku|артикул/), cCost = col(/^с\/с$/), cComm = col(/^комиссия, ?%/),
-          cLog = col(/^логистика/), cOrd = col(/^заказы в шт/), cRub = col(/^заказы, ?руб/);
+          cLog = col(/^логистика/), cOrd = col(/^заказы в шт/), cRub = col(/^заказы, ?руб/),
+          cSsr = col(/^с\/с, ?руб/), cCommRub = col(/^комиссия wb, ?руб/), cStor = col(/^хранение/), cRk = col(/^расход на рк/),
+          cRzQ = col(/^раздачи, ?шт/), cRzR = col(/^раздачи, ?в руб/);
+    res.tracking = [];
     const byNm = {};
     trk.slice(1).forEach(r => {
       const date = sheetDate(r[cDate]), nm = String(r[cSku] || '').trim();
       if (!date || !/^\d+$/.test(nm)) return;
+      const g = c => c >= 0 ? sheetNum(r[c]) : null;
+      res.tracking.push({ date, nm, q: g(cOrd), rub: g(cRub), ss: g(cCost), ssr: g(cSsr), commPct: g(cComm), commRub: g(cCommRub),
+        log: g(cLog), stor: g(cStor), rk: g(cRk), razdQ: g(cRzQ), razdRub: g(cRzR) });
       (byNm[nm] = byNm[nm] || []).push({ date, cost: sheetNum(r[cCost]), comm: sheetNum(r[cComm]), log: sheetNum(r[cLog]), orders: sheetNum(r[cOrd]), rub: sheetNum(r[cRub]) });
     });
     Object.entries(byNm).forEach(([nm, rows]) => {
@@ -4086,9 +4131,117 @@ async function loadTopSheet() {
   sheetData = res;
   const active = document.querySelector('.tab.active')?.dataset.tab;
   if (active === 'kw') renderKwPage();
-  if (active === 'unit') renderUnit();
+  if (active === 'unit') { renderPnl(); renderUnit(); }
   if (active === 'rk') renderRK();
   return res;
+}
+
+// ════════════════════════════════════════════════════════════════
+// ЮНИТ-ЭКОНОМИКА ПО «ЕЖЕДНЕВНОМУ ТРЕКИНГУ» — та же логика, что в таблице:
+//   М1 = Заказы, руб − С/с, руб
+//   М2 = М1 − Комиссия WB − Логистика − Хранение
+//   М3 = М2 − Расход на РК − Раздачи, руб
+// Комиссия = Комиссия % × Заказы, руб (как в таблице до 22.09; см. сверку ниже).
+// ════════════════════════════════════════════════════════════════
+const PNL_PERIOD_KEY = 'likato_pnl_period';
+const PNL_PRODUCT_KEY = 'likato_pnl_product';
+let pnlSelected = null;
+
+function pnlRows() { return sheetData?.tracking || []; }
+function pnlPeriod() { return LS.get(PNL_PERIOD_KEY, 7); }
+function setPnlPeriod(n) { LS.set(PNL_PERIOD_KEY, n); renderPnl(); }
+
+function pnlCalc(rows) {
+  const t = { q: 0, rub: 0, razdQ: 0, ssr: 0, comm: 0, commSheet: 0, log: 0, stor: 0, rk: 0, razdRub: 0, days: 0 };
+  rows.forEach(r => {
+    t.q += r.q || 0; t.rub += r.rub || 0; t.razdQ += r.razdQ || 0;
+    t.ssr += r.ssr != null ? r.ssr : (r.ss || 0) * (r.q || 0);
+    t.comm += (r.commPct || 0) / 100 * (r.rub || 0);
+    t.commSheet += r.commRub || 0;
+    t.log += r.log || 0; t.stor += r.stor || 0; t.rk += r.rk || 0; t.razdRub += r.razdRub || 0; t.days++;
+  });
+  t.m1 = t.rub - t.ssr;
+  t.m2 = t.m1 - t.comm - t.log - t.stor;
+  t.m3 = t.m2 - t.rk - t.razdRub;
+  t.drr = t.rub ? t.rk / t.rub * 100 : null;
+  t.promo = t.rub ? (t.rk + t.razdRub) / t.rub * 100 : null;   // вся реклама + раздачи к выручке
+  return t;
+}
+
+function pnlRange() {
+  const dates = [...new Set(pnlRows().map(r => r.date))].sort();
+  if (!dates.length) return null;
+  const end = dates[dates.length - 1];
+  const n = pnlPeriod();
+  const from = n === 0 ? dates[0] : addDays(end, -(n - 1));
+  return { from, end, prevFrom: n ? addDays(from, -n) : null, prevTo: n ? addDays(from, -1) : null };
+}
+
+const pctOf = (v, base) => base ? pctf(v / base * 100) : '—';
+const moneyCell = (v, base) => `<td class="num"><b style="color:${v < 0 ? '#f59a9a' : 'var(--text)'}">${nf(v)}</b><div style="font-size:10px" class="muted">${pctOf(v, base)}</div></td>`;
+
+function renderPnl() {
+  const body = document.getElementById('pnlBody');
+  if (!body) return;
+  document.querySelectorAll('#pnlPeriodSeg button').forEach(b => b.classList.toggle('on', +b.dataset.days === pnlPeriod()));
+  const note = document.getElementById('pnlNote');
+  if (!sheetData) { note.textContent = 'Читаю «Ежедневный трекинг»…'; return; }
+  if (sheetData.error) { note.innerHTML = `<span class="st st-bad">Не удалось прочитать таблицу: ${esc(sheetData.error)}</span>`; return; }
+  const rg = pnlRange();
+  if (!rg) { note.textContent = 'В «Ежедневном трекинге» нет строк'; body.innerHTML = ''; return; }
+  note.innerHTML = `Данные из <a href="${TOP_SHEET_URL}#gid=${TOP_SHEET_GIDS.tracking}" target="_blank" rel="noopener" style="color:var(--accent)">«Ежедневного трекинга»</a> · период ${ddmm(rg.from)} — ${ddmm(rg.end)}${rg.prevFrom ? ` · сравнение М3 с ${ddmm(rg.prevFrom)} — ${ddmm(rg.prevTo)}` : ''}`;
+
+  const all = pnlRows();
+  const inRange = (r, a, b) => r.date >= a && r.date <= b;
+  const nms = [...new Set(all.filter(r => inRange(r, rg.from, rg.end)).map(r => r.nm))];
+  const topOrder = DIST_PRODUCTS.map(p => String(p.nmId));
+  nms.sort((a, b) => (topOrder.indexOf(a) + 1 || 99) - (topOrder.indexOf(b) + 1 || 99));
+
+  const row = (label, sub, t, prevM3, nm) => `<tr class="${nm ? 'rk-row' : ''} ${nm && pnlSelected === nm ? 'sel' : ''}" ${nm ? `onclick="pnlSelect('${nm}')"` : ''}>
+      <td><div style="font-weight:600;color:var(--text)">${esc(label)}</div><div class="muted" style="font-size:11px">${sub}</div></td>
+      <td class="num">${nf(t.q)}</td><td class="num">${nf(t.rub)}</td><td class="num">${nf(t.razdQ)}</td>
+      <td class="num">${nf(t.ssr)}</td>${moneyCell(t.m1, t.rub)}
+      <td class="num">${nf(t.comm)}</td><td class="num">${nf(t.log)}</td><td class="num">${nf(t.stor)}</td>${moneyCell(t.m2, t.rub)}
+      <td class="num">${nf(t.rk)}<div style="font-size:10px" class="muted">ДРР ${pctf(t.drr)}</div></td><td class="num">${nf(t.razdRub)}</td>
+      ${moneyCell(t.m3, t.rub)}
+      <td class="num">${prevM3 == null ? '—' : (d => `<span class="${Math.abs(d) < 1 ? 'delta-flat' : d > 0 ? 'delta-up' : 'delta-down'}">${d > 0 ? '▲ +' : d < 0 ? '▼ ' : ''}${nf(d)} ₽</span>`)(t.m3 - prevM3)}</td>
+    </tr>`;
+
+  let tot = [], prevTot = [];
+  body.innerHTML = nms.map(nm => {
+    const cur = all.filter(r => r.nm === nm && inRange(r, rg.from, rg.end));
+    const prev = rg.prevFrom ? all.filter(r => r.nm === nm && inRange(r, rg.prevFrom, rg.prevTo)) : [];
+    tot = tot.concat(cur); prevTot = prevTot.concat(prev);
+    const top = DIST_PRODUCTS.find(p => String(p.nmId) === nm);
+    const name = top ? top.name : shortProductTitle(sheetData.names?.[nm] || 'Артикул ' + nm);
+    return row(name, `${nm} · ${cur.length} дн.`, pnlCalc(cur), prev.length ? pnlCalc(prev).m3 : null, nm);
+  }).join('') + (nms.length > 1 ? row('Итого', `${nms.length} товара`, pnlCalc(tot), prevTot.length ? pnlCalc(prevTot).m3 : null, null).replace('<tr class=" "', '<tr style="border-top:2px solid var(--border-strong)"') : '');
+
+  // Сверка комиссии с таблицей
+  const diff = all.filter(r => inRange(r, rg.from, rg.end) && r.commRub != null && r.rub)
+    .filter(r => Math.abs((r.commPct || 0) / 100 * r.rub - r.commRub) > 1);
+  document.getElementById('pnlCheck').innerHTML = diff.length
+    ? `<div class="banner"><span>⚠</span><div><b>Комиссия в таблице расходится с формулой в ${diff.length} строках за период.</b> Дашборд считает «Комиссия % × Заказы, руб» (как в таблице до 22.09). В таблице с 22.09 комиссия = ${[...new Set(diff.map(r => Math.round(r.commRub / r.q)))].slice(0, 3).join(', ')} ₽ × штуки у всех товаров — похоже, в формуле закрепилась ссылка на одну ячейку. По таблице М2 и М3 за период выше на ${nf(diff.reduce((s, r) => s + (r.commPct / 100 * r.rub - r.commRub), 0))} ₽.</div></div>`
+    : '';
+  renderPnlDays();
+}
+
+function pnlSelect(nm) { pnlSelected = pnlSelected === nm ? null : nm; renderPnl(); if (pnlSelected) document.getElementById('pnlDays').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+function renderPnlDays() {
+  const box = document.getElementById('pnlDays');
+  const rg = pnlRange();
+  if (!pnlSelected || !rg) { box.style.display = 'none'; return; }
+  box.style.display = '';
+  const top = DIST_PRODUCTS.find(p => String(p.nmId) === pnlSelected);
+  document.getElementById('pnlDaysTitle').textContent = `По дням · ${top ? top.name : shortProductTitle(sheetData.names?.[pnlSelected] || pnlSelected)}`;
+  const rows = pnlRows().filter(r => r.nm === pnlSelected && r.date >= rg.from && r.date <= rg.end).sort((a, b) => a.date < b.date ? 1 : -1);
+  document.getElementById('pnlDaysBody').innerHTML = rows.map(r => {
+    const t = pnlCalc([r]);
+    return `<tr><td>${ddmm(r.date)}</td><td class="num">${nf(t.q)}</td><td class="num">${nf(t.rub)}</td><td class="num">${nf(t.razdQ)}</td>
+      <td class="num">${nf(t.ssr)}</td>${moneyCell(t.m1, t.rub)}<td class="num">${nf(t.comm)}${r.commRub != null && Math.abs(t.comm - r.commRub) > 1 ? `<div style="font-size:10px" class="st-warn">в табл. ${nf(r.commRub)}</div>` : ''}</td>
+      <td class="num">${nf(t.log)}</td><td class="num">${nf(t.stor)}</td>${moneyCell(t.m2, t.rub)}<td class="num">${nf(t.rk)}</td><td class="num">${nf(t.razdRub)}</td>${moneyCell(t.m3, t.rub)}</tr>`;
+  }).join('') || '<tr><td colspan="13" class="muted" style="padding:14px;text-align:center">Нет строк за период</td></tr>';
 }
 
 // ── Таблица рекламных кампаний: артикул → ID кампаний (ручная / единая) ──
