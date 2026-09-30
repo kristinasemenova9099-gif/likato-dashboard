@@ -416,9 +416,6 @@
   <div class="tab" data-tab="launch" onclick="switchTab('launch', this)">Запуск новинок</div>
   <div class="tab" data-tab="kw" onclick="switchTab('kw', this)">Позиции: выдача и полки</div>
   <div class="tab-sep"></div>
-  <div class="tab" data-tab="novinka" onclick="switchTab('novinka', this)">Новинки</div>
-  <div class="tab" data-tab="advisor" onclick="switchTab('advisor', this)">Советник по раздачам</div>
-  <div class="tab" data-tab="archive" onclick="switchTab('archive', this)">Архив раздач</div>
   <div class="tab" data-tab="vyvody" onclick="switchTab('vyvody', this)">Выводы</div>
 </div>
 
@@ -560,177 +557,7 @@
 
   </div><!-- /page-top -->
 
-  <!-- === NOVINKA PAGE === -->
-  <div class="page" id="page-novinka">
 
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-      <button class="btn" onclick="openBestCards(20)" style="background:linear-gradient(135deg,#22c55e,#16a34a);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        &#11088; ДРР ≤ 20%
-      </button>
-      <button class="btn" onclick="openBestCards(21,30)" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        ДРР 21–30%
-      </button>
-      <button class="btn" onclick="openBestCards(31,40)" style="background:linear-gradient(135deg,#f59e0b,#d97706);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        ДРР 31–40%
-      </button>
-      <button class="btn" onclick="openBestCards(41,50)" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        ДРР 41–50%
-      </button>
-      <button class="btn" onclick="openBestCards(51,9999)" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;padding:10px 20px;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#fff;display:flex;align-items:center;gap:8px">
-        ДРР &gt; 50%
-      </button>
-    </div>
-
-    <!-- MODAL: Лучшие карточки -->
-    <div id="bestCardsModal" onclick="if(event.target===this)closeBestCards()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;overflow-y:auto;padding:40px 20px">
-      <div style="max-width:1100px;margin:0 auto;background:var(--surface);border-radius:16px;padding:28px;position:relative">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-          <div>
-            <div style="font-size:18px;font-weight:700" id="bestCardsTitle">&#11088; Лучшие карточки</div>
-            <div style="font-size:12px;color:var(--text2);margin-top:4px" id="bestCardsSubtitle">Новинки с ДРР ≤ 20% — эффективные рекламные кампании</div>
-          </div>
-          <button onclick="closeBestCards()" style="background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;padding:4px 8px">✕</button>
-        </div>
-        <div id="bestCardsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px"></div>
-        <div id="bestCardsEmpty" style="display:none;text-align:center;padding:40px;color:var(--text2)">
-          Нет кампаний с ДРР ≤ 20% — данные обновятся после следующего запуска скрипта
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div class="section-title">&#128230; Плановые новинки к поставке</div>
-        <div style="display:flex;align-items:center;gap:14px">
-          <select id="novostiAdFilter" onchange="novostiAdFilter=this.value;renderNovosti(window.rawData)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;cursor:pointer">
-            <option value="all">Все товары</option>
-            <option value="with">Только с РК</option>
-            <option value="without">Только без РК</option>
-          </select>
-          <div id="novosti-count" style="font-size:12px;color:var(--text2)"></div>
-        </div>
-      </div>
-      <div class="section-body"><div id="novosti-table"></div></div>
-    </div>
-
-    <!-- === PRICE MONITOR === -->
-    <div class="section">
-      <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div class="section-title">&#128178; Мониторинг цен на новинки</div>
-        <div id="priceStats" style="font-size:12px;color:var(--text2)"></div>
-      </div>
-      <div style="display:flex;gap:10px;padding:10px 16px 0;flex-wrap:wrap">
-        <select id="pfMonthFilter" onchange="pfFilterMonth=this.value;renderPriceTable()" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;cursor:pointer">
-          <option value="all">Все месяцы</option>
-        </select>
-        <input id="pfSearchInput" placeholder="🔍 Поиск по названию или артикулу..." oninput="pfSearch=this.value;renderPriceTable()" style="flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px">
-      </div>
-      <div class="section-body">
-        <!-- Форма добавления/редактирования -->
-        <div id="priceForm" style="display:none;background:var(--surface2);border-radius:8px;padding:16px;margin-bottom:14px">
-          <div style="font-size:13px;font-weight:600;margin-bottom:12px" id="priceFormTitle">Новый товар</div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
-            <div>
-              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Название товара</div>
-              <input id="pf_name" placeholder="Сыворотка Keratin Pro" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
-            </div>
-            <div>
-              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Артикул WB</div>
-              <input id="pf_nm" placeholder="1009001122" type="number" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
-            </div>
-            <div>
-              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">РРЦ, ₽ <span style="color:var(--accent);font-size:10px">← из листа</span></div>
-              <div id="pf_rrc_display" style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text2);font-size:12px">—</div>
-              <input id="pf_rrc" type="hidden">
-            </div>
-            <div>
-              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">МРЦ, ₽ <span style="color:var(--accent);font-size:10px">← из листа</span></div>
-              <div id="pf_mrc_display" style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text2);font-size:12px">—</div>
-              <input id="pf_mrc" type="hidden">
-            </div>
-            <div>
-              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Текущая цена, ₽</div>
-              <input id="pf_price" placeholder="1390" type="number" oninput="pfUpdateStatus()" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
-            </div>
-            <div>
-              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Дата запуска</div>
-              <input id="pf_date" type="date" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
-            </div>
-            <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:4px">
-              <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Статус цены</div>
-              <div id="pf_status_preview" style="font-size:12px;padding:5px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--border);color:var(--text2)">—</div>
-            </div>
-          </div>
-          <div style="margin-top:10px">
-            <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Заметка</div>
-            <input id="pf_note" placeholder="Любая заметка..." style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px">
-          </div>
-          <div style="display:flex;gap:8px;margin-top:14px">
-            <button onclick="pfSave()" style="background:var(--accent);border:none;padding:8px 20px;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;color:#fff">Сохранить</button>
-            <button onclick="closePriceForm()" style="background:var(--surface);border:1px solid var(--border);padding:8px 16px;font-size:12px;border-radius:6px;cursor:pointer;color:var(--text2)">Отмена</button>
-          </div>
-        </div>
-
-        <!-- Таблица товаров -->
-        <div class="table-wrap">
-          <table id="priceTable">
-            <thead>
-              <tr>
-                <th>Товар / Артикул</th>
-                <th style="text-align:right">РРЦ, ₽</th>
-                <th style="text-align:right">МРЦ, ₽</th>
-                <th style="text-align:right">Текущая цена, ₽</th>
-                <th style="text-align:center">Статус</th>
-                <th style="text-align:center">До РРЦ</th>
-                <th>Заметка</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="priceTableBody">
-              <tr><td colspan="9" style="text-align:center;color:var(--text2);padding:30px">Нажмите «+ Добавить товар» чтобы начать</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div style="margin-top:8px;font-size:11px;color:var(--text2)">
-          🟢 OK — цена в диапазоне МРЦ–РРЦ &nbsp;|&nbsp; 🟡 На МРЦ — цена равна или ниже МРЦ на ≤5% &nbsp;|&nbsp; 🔴 Нарушение — цена ниже МРЦ &nbsp;|&nbsp; ⬆️ Выше РРЦ
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /page-novinka -->
-
-  <!-- === ADVISOR PAGE (Советник по раздачам) === -->
-  <div class="page" id="page-advisor">
-    <div style="margin-bottom:14px">
-      <div style="font-size:18px;font-weight:700;color:var(--text)">🎯 Советник по раздачам</div>
-      <div style="font-size:12px;color:var(--text2);margin-top:4px">Автоматический анализ обновляется каждый день вместе с данными. Показывает, что сейчас происходит с раздачами и что улучшить.</div>
-    </div>
-    <!-- Сводка "что мы видим" -->
-    <div id="advisorSummary" class="kpi-grid" style="margin-bottom:16px"></div>
-    <!-- Карточки-советы по товарам -->
-    <div id="advisorContent" style="display:flex;flex-direction:column;gap:12px"></div>
-  </div><!-- /page-advisor -->
-
-  <!-- === ARCHIVE PAGE (Архив раздач) === -->
-  <div class="page" id="page-archive">
-    <div style="margin-bottom:14px">
-      <div style="font-size:18px;font-weight:700;color:var(--text)">📒 Архив раздач</div>
-      <div style="font-size:12px;color:var(--text2);margin-top:4px">Все товары, по которым велись раздачи (из дневника). Потрачено = раздачи × РРЦ. Заказы и позиции по запросам, на которых раздавались.</div>
-    </div>
-    <div id="archiveSummary" class="kpi-grid" style="margin-bottom:16px"></div>
-    <div class="table-wrap">
-      <table style="font-size:12px;width:100%">
-        <thead><tr>
-          <th style="min-width:180px">Товар</th>
-          <th style="text-align:right">Раздачи, шт</th>
-          <th style="text-align:right">Потрачено, ₽</th>
-          <th style="text-align:right">Заказы</th>
-          <th style="min-width:240px">Запросы и позиции (было → стало)</th>
-        </tr></thead>
-        <tbody id="archiveTable"><tr><td colspan="5" style="color:var(--text2);padding:12px">Загрузка...</td></tr></tbody>
-      </table>
-    </div>
-  </div><!-- /page-archive -->
 
   <!-- === ВЫВОДЫ (сводка для руководителя) === -->
   <div class="page" id="page-vyvody">
@@ -1457,10 +1284,7 @@ function renderDashboard(data) {
   renderPlanForecast(data);
   renderFunnel(data);
   renderStocks(data);
-  renderNovosti(data);
   renderDistEfficiency(data);
-  try { renderDistAdvisor(data); } catch(e) { console.error('renderDistAdvisor error:', e); }
-  try { renderRazdachiArchive(data); } catch(e) { console.error('renderRazdachiArchive error:', e); }
 }
 
 const NOVOSTI_NOTES_KEY = 'novosti_notes_v1';
@@ -1477,7 +1301,6 @@ function saveNovostiNote(key, field, val) {
 // Сохранить проставленную вручную цену и пересчитать статус (перерисовать таблицу)
 function saveNovostiPrice(key, val) {
   saveNovostiNote(key, 'price', val === '—' ? '' : val);
-  if (window.rawData) renderNovosti(window.rawData);
 }
 
 function openBestCards(minDrr, maxDrr) {
@@ -4924,14 +4747,12 @@ function loadData() {
       const want = (location.hash || '').slice(1) || LS.get('likato_tab', 'top');
       switchTab(document.getElementById('page-' + want) ? want : 'top');
     } catch(e) { console.error('tab restore error:', e); }
-    loadNovinkaJson();
     loadTopSheet();
     loadRkSheet();
     loadCalendarSheet();
     loadLaunchSheet();
   })
   .catch(() => {
-    loadNovinkaJson();
     console.warn('data.json не найден, используются демо-данные');
   });
 }
