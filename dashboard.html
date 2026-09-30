@@ -413,6 +413,7 @@
   <div class="tab active" data-tab="top" onclick="switchTab('top', this)">ТОП-товары</div>
   <div class="tab" data-tab="rk" onclick="switchTab('rk', this)">Рекламные кампании</div>
   <div class="tab" data-tab="unit" onclick="switchTab('unit', this)">Юнит-экономика</div>
+  <div class="tab" data-tab="launch" onclick="switchTab('launch', this)">Запуск новинок</div>
   <div class="tab" data-tab="kw" onclick="switchTab('kw', this)">Позиции: выдача и полки</div>
   <div class="tab-sep"></div>
   <div class="tab" data-tab="novinka" onclick="switchTab('novinka', this)">Новинки</div>
@@ -959,6 +960,34 @@
       </div>
     </details>
   </div><!-- /page-unit -->
+
+  <!-- === ЗАПУСК НОВИНОК === -->
+  <div class="page" id="page-launch">
+    <div class="page-head">
+      <div>
+        <div class="page-title">Запуск новинок</div>
+        <div class="page-sub">Ссылка на лист со списком новинок → план раздач по дням и бюджет. Если в листе только артикулы — запросы и цели подбираются по отчёту WB (их можно выгрузить черновиком, поправить и загрузить обратно). Расчёт откалиброван на твоих прошлых запусках.</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-body" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+        <div class="field" style="flex:1;min-width:280px"><label for="launchLink">Ссылка на лист: список новинок или «План запуска»</label>
+          <input id="launchLink" class="inp" placeholder="https://docs.google.com/spreadsheets/d/…/edit#gid=…" onkeydown="if(event.key==='Enter')saveLaunchLink()"></div>
+        <button class="btn" onclick="saveLaunchLink()">Загрузить</button>
+        <button class="btn btn-ghost" onclick="copyLaunchTemplate(this)">Скопировать шапку листа</button>
+        <div class="field"><label for="launchDays">Дней по умолчанию</label>
+          <input id="launchDays" class="inp" type="number" min="3" max="60" style="width:80px" onchange="setLaunchSetting('days', +this.value || 14)"></div>
+        <div class="field"><label for="launchStart">Старт раздач</label>
+          <input id="launchStart" class="date-input" type="date" onchange="setLaunchSetting('start', this.value)"></div>
+        <div class="field"><label for="launchTargets">Цели НЧ / СЧ / ВЧ</label>
+          <input id="launchTargets" class="inp" style="width:100px" placeholder="10/15/30" onchange="setLaunchSetting('targets', this.value.split(/[^0-9]+/).filter(Boolean).map(Number).slice(0,3).concat([10,15,30]).slice(0,3))"></div>
+        <div class="field"><label for="launchReserve">Резерв, %</label>
+          <input id="launchReserve" class="inp" type="number" min="0" max="30" style="width:70px" onchange="setLaunchSetting('reserve', +this.value || 0)"></div>
+      </div>
+      <div id="launchNote" class="muted" style="font-size:12px;padding:0 16px 12px"></div>
+    </div>
+    <div id="launchBody" style="display:flex;flex-direction:column;gap:16px"></div>
+  </div><!-- /page-launch -->
 
   <!-- === ПОЗИЦИИ ПО КЛЮЧАМ === -->
   <div class="page" id="page-kw">
@@ -3405,6 +3434,7 @@ function switchTab(tab, el) {
   if (tab === 'rk') renderRK();
   if (tab === 'unit') { renderPnl(); renderUnit(); }
   if (tab === 'kw') renderKwPage();
+  if (tab === 'launch') renderLaunch();
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -4131,6 +4161,7 @@ async function loadTopSheet() {
   sheetData = res;
   const active = document.querySelector('.tab.active')?.dataset.tab;
   if (active === 'kw') renderKwPage();
+  if (active === 'launch') renderLaunch();
   if (active === 'unit') { renderPnl(); renderUnit(); }
   if (active === 'rk') renderRK();
   return res;
@@ -4244,6 +4275,347 @@ function renderPnlDays() {
   }).join('') || '<tr><td colspan="13" class="muted" style="padding:14px;text-align:center">Нет строк за период</td></tr>';
 }
 
+// ════════════════════════════════════════════════════════════════
+// ЗАПУСК НОВИНОК: план раздач и рекламы по списку из Google-таблицы
+// Модель откалибрована на твоей истории: «Календарь раздач» (сколько раздавали по запросу)
+// × «Выдача» (куда поднялись) × частотность WB. Зависимость: log(позиция) = a + b·log(раздач в день на 1000 частотности/нед).
+// ════════════════════════════════════════════════════════════════
+const CAL_SHEET_ID = '1EdgTjdgDSTfZ3ImkZofoG3iK17rdFtOLVLcH4nvEN9k', CAL_SHEET_GID = '285042301';
+const LAUNCH_URL_KEY = 'likato_launch_sheet';
+const LAUNCH_DEFAULT_URL = 'https://docs.google.com/spreadsheets/d/19W8kewX2hNIgKGhZGpsGLoMDd3cL9LlKGl30EUbmi4Y/edit#gid=0';   // список новинок
+const LAUNCH_SET_KEY = 'likato_launch_settings';
+const LAUNCH_FALLBACK_FIT = { a: 3.104, b: -0.459, sigma: 0.316, n: 11, fallback: true };   // на 30.09.2026
+const LAUNCH_HEADER = ['Артикул', 'Запрос', 'Целевая позиция', 'Дата старта', 'Дней', 'Частотность в неделю', 'Цена раздачи', 'Комментарий'];
+let calSheet = null, launchSheet = null;
+
+function launchSettings() { return { days: 14, phases: [3, 7, 4], reserve: 5, targets: [10, 15, 30], maxQ: 3, minFreq: 1000, start: '', ...LS.get(LAUNCH_SET_KEY, {}) }; }
+const LAUNCH_SKIP_KEY = 'likato_launch_skip';   // артикулы, исключённые из плана
+function launchSkip() { return new Set(LS.get(LAUNCH_SKIP_KEY, [])); }
+function toggleLaunchSku(nm, on) { const s = launchSkip(); on ? s.delete(nm) : s.add(nm); LS.set(LAUNCH_SKIP_KEY, [...s]); renderLaunch(); }
+function setLaunchSetting(k, v) { const s = launchSettings(); s[k] = v; LS.set(LAUNCH_SET_KEY, s); renderLaunch(); }
+
+function parseSheetLink(url) {
+  const id = /\/d\/([a-zA-Z0-9_-]{20,})/.exec(url || '')?.[1];
+  const gid = /[#&?]gid=(\d+)/.exec(url || '')?.[1] || '0';
+  return id ? { id, gid } : null;
+}
+
+async function loadCalendarSheet() {
+  const res = { rows: [], error: null };
+  try {
+    const rows = await fetchSheetFrom(CAL_SHEET_ID, CAL_SHEET_GID);
+    rows.slice(1).forEach(r => {
+      const date = sheetDate(r[0]); const nm = String(r[1] || '').trim();
+      if (!date || !/^\d+$/.test(nm)) return;
+      const qs = String(r[3] || '').split('\n').map(q => q.trim().replace(/^\(|\)$/g, '').trim().toLowerCase()).filter(Boolean);
+      const plans = (String(r[5] || '').match(/\d+/g) || []).map(Number);
+      res.rows.push({ date, nm, name: String(r[2] || '').trim(), qs, plans, fact: /^\d+$/.test(String(r[6] || '').trim()) ? +r[6] : null, rrc: sheetNum(r[7]) });
+    });
+  } catch (e) { res.error = e.message; }
+  calSheet = res;
+  if (document.querySelector('.tab.active')?.dataset.tab === 'launch') renderLaunch();
+}
+
+async function loadLaunchSheet() {
+  const link = parseSheetLink(LS.get(LAUNCH_URL_KEY, LAUNCH_DEFAULT_URL));
+  if (!link) { launchSheet = { rows: [], error: null, empty: true }; return renderLaunch(); }
+  const res = { rows: [], error: null, loadedAt: new Date() };
+  try {
+    const rows = await fetchSheetFrom(link.id, link.gid);
+    const h = (rows[0] || []).map(x => x.trim().toLowerCase());
+    const col = re => h.findIndex(x => re.test(x));
+    const c = { nm: col(/^артикул/), q: col(/^запрос/), target: col(/^целев/), start: col(/^дата/), days: col(/^дней|^срок/),
+                freq: col(/^частот/), price: col(/^цена/), comment: col(/^коммент/) };
+    if (c.nm < 0) throw new Error('в первой строке нужен столбец «Артикул»');
+    res.mode = c.q < 0 ? 'list' : 'plan';
+    const cName = col(/^наименован|^товар|^название/);
+    const tagCols = h.map((x, i) => /новинк|трафе|буст/.test(x) ? i : -1).filter(i => i >= 0);
+    res.meta = {};
+    rows.slice(1).forEach(r => {
+      const nm = String(r[c.nm] || '').replace(/\D/g, '');
+      if (!nm) return;
+      const tags = tagCols.filter(i => /^да/i.test(String(r[i] || '').trim())).map(i => rows[0][i].trim().replace(/^новинка\s*/i, ''));
+      res.meta[nm] = { name: cName >= 0 ? String(r[cName] || '').trim() : '', tags };
+      if (res.mode === 'list') { res.rows.push({ nm, q: null }); return; }
+      const q = String(r[c.q] || '').trim();
+      if (!q) return;
+      const g = k => c[k] >= 0 ? String(r[c[k]] || '').trim() : '';
+      res.rows.push({ nm, q, target: sheetNum(g('target')), start: sheetDate(g('start')), days: sheetNum(g('days')),
+                      freq: sheetNum(g('freq')), price: sheetNum(g('price')), comment: g('comment') });
+    });
+  } catch (e) { res.error = e.message; }
+  launchSheet = res;
+  renderLaunch();
+}
+function saveLaunchLink() {
+  const v = document.getElementById('launchLink').value.trim();
+  if (v && !parseSheetLink(v)) { alert('Это не ссылка на Google-таблицу'); return; }
+  LS.set(LAUNCH_URL_KEY, v); loadLaunchSheet();
+}
+function copyLaunchTemplate(btn) {
+  const tsv = [LAUNCH_HEADER.join('\t'),
+    ['1305768201', 'термозащита', '10', addDays(todayIso(), 1).split('-').reverse().join('.'), '14', '', '', 'пример — удалить'].join('\t'),
+    ['1305768201', 'термозащита для волос', '20', '', '', '', '', ''].join('\t')].join('\n');
+  navigator.clipboard.writeText(tsv).then(() => { btn.textContent = 'Скопировано — вставь в A1 нового листа'; setTimeout(() => btn.textContent = 'Скопировать шапку листа', 2500); });
+}
+
+// Частотность и текущая позиция запроса — из отчёта WB по поисковым запросам
+function searchInfo(nm, q) {
+  const list = rawData?.search_texts?.[String(nm)] || [];
+  const row = list.find(x => String(x[0]).toLowerCase().trim() === String(q).toLowerCase().trim());
+  return row ? { freq: row[1], avgPos: row[2], medPos: row[3], opens: row[4], orders: row[5] } : null;
+}
+function anyFreq(q) {   // частотность запроса по любому артикулу (для новой карточки своих данных ещё нет)
+  let best = null;
+  Object.values(rawData?.search_texts || {}).forEach(list => list.forEach(x => {
+    if (String(x[0]).toLowerCase().trim() === String(q).toLowerCase().trim() && (!best || x[1] > best)) best = x[1];
+  }));
+  return best;
+}
+
+// ── Калибровка по истории ──
+function launchCalibration() {
+  const pts = [];
+  if (!calSheet?.rows?.length) return { ...LAUNCH_FALLBACK_FIT, pts };
+  const give = {};   // "nm|q" -> {date: шт}
+  calSheet.rows.forEach(r => {
+    if (!r.qs.length || !r.plans.length || r.fact == null) return;
+    const plans = r.plans.length === r.qs.length ? r.plans : r.qs.map(() => r.plans.reduce((a, b) => a + b, 0) / r.qs.length);
+    const tot = plans.reduce((a, b) => a + b, 0) || 1;
+    r.qs.forEach((q, i) => { if (q === 'полки') return; const k = r.nm + '|' + q; (give[k] = give[k] || {})[r.date] = ((give[k] || {})[r.date] || 0) + r.fact * plans[i] / tot; });
+  });
+  Object.entries(give).forEach(([k, byDay]) => {
+    const [nm, q] = k.split('|');
+    const days = Object.keys(byDay).filter(d => byDay[d] > 0).sort();
+    if (days.length < 3) return;
+    const F = searchInfo(nm, q)?.freq || anyFreq(q);
+    const hist = sheetData?.positions?.[nm]?.kw?.[q]?.hist || {};
+    const pd = Object.keys(hist).sort();
+    if (!F || !pd.length) return;
+    const before = pd.filter(d => d <= days[0]);
+    const start = hist[before.length ? before[before.length - 1] : pd[0]];
+    const best = Math.min(...pd.filter(d => d >= days[0]).map(d => hist[d]));
+    if (!isFinite(best)) return;
+    const total = days.reduce((s, d) => s + byDay[d], 0);
+    const perDay = total / days.length;
+    pts.push({ nm, q, F, days: days.length, total, perDay, intensity: perDay / F * 1000, start, best });
+  });
+  if (pts.length < 5) return { ...LAUNCH_FALLBACK_FIT, pts };
+  const xs = pts.map(p => Math.log(p.intensity)), ys = pts.map(p => Math.log(p.best));
+  const n = xs.length, mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n;
+  const b = xs.reduce((s, x, i) => s + (x - mx) * (ys[i] - my), 0) / xs.reduce((s, x) => s + (x - mx) ** 2, 0);
+  const a = my - b * mx;
+  const sigma = Math.sqrt(ys.reduce((s, y, i) => s + (y - (a + b * xs[i])) ** 2, 0) / Math.max(n - 2, 1));
+  if (!(b < 0)) return { ...LAUNCH_FALLBACK_FIT, pts };   // зависимость сломалась — берём базовую
+  return { a, b, sigma, n, pts, maxIntensity: Math.max(...pts.map(p => p.intensity)), bestSeen: Math.min(...pts.map(p => p.best)) };
+}
+// Сколько раздач в день на 1000 частотности/нед нужно для позиции T: {mid, lo, hi}
+function intensityFor(T, fit) {
+  const f = x => Math.exp((Math.log(T) + x - fit.a) / fit.b);
+  return { mid: f(0), lo: f(fit.sigma), hi: f(-fit.sigma) };
+}
+
+// Реклама при запуске — по фактам новинок: средний расход в день за первые 14 дней РК
+function launchAdBenchmark() {
+  const byNm = {};
+  Object.entries(rawData?.ads_daily || {}).forEach(([cid, c]) => {
+    const nm = String((rkSheet?.list || []).find(x => x.id === cid)?.nm || '');
+    if (!nm) return;   // только кампании новинок из таблицы РК
+    (c.days || []).forEach(d => { const m = (byNm[nm] = byNm[nm] || {}); m[d[0]] = m[d[0]] || [0, 0]; m[d[0]][0] += d[3]; m[d[0]][1] += d[5]; });
+  });
+  // эталон — товары, которые запускали с раздачами: их расход рекламы в дни раздач
+  const giveDays = {};
+  (calSheet?.rows || []).forEach(r => { if ((r.fact || 0) > 0) (giveDays[r.nm] = giveDays[r.nm] || new Set()).add(r.date); });
+  const withGive = Object.keys(byNm).filter(nm => giveDays[nm]);
+  const pool = withGive.length >= 2 ? withGive : Object.keys(byNm);
+  const per = pool.map(nm => [nm, byNm[nm]]).map(([nm, m]) => {
+    const days = Object.keys(m).filter(d => m[d][0] > 50 && (!giveDays[nm] || withGive.length < 2 || giveDays[nm].has(d))).sort().slice(0, 14);
+    if (days.length < 5) return null;
+    const spend = days.reduce((s, d) => s + m[d][0], 0), orders = days.reduce((s, d) => s + m[d][1], 0);
+    return { nm, days: days.length, perDay: spend / days.length, cpo: orders ? spend / orders : null };
+  }).filter(Boolean);
+  const med = arr => { const v = arr.filter(x => x != null).sort((a, b) => a - b); return v.length ? v[Math.floor(v.length / 2)] : null; };
+  return { n: per.length, perDay: med(per.map(p => p.perDay)), cpo: med(per.map(p => p.cpo)), per, withGive: withGive.length >= 2 };
+}
+
+function giveawayPrice(nm, row) {
+  if (row?.price) return { v: row.price, src: 'из плана' };
+  const cal = (calSheet?.rows || []).filter(r => r.nm === String(nm) && r.rrc > 0).sort((a, b) => a.date < b.date ? 1 : -1)[0];
+  if (cal) return { v: cal.rrc, src: 'РРЦ из календаря' };
+  const rk = rkSheet?.prices?.[String(nm)];
+  if (rk?.rrc) return { v: rk.rrc, src: 'РРЦ из таблицы РК' };
+  const top = (rawData?.products || []).find(p => String(p.nmId) === String(nm));
+  if (top?.rrc) return { v: top.rrc, src: 'РРЦ' };
+  const nov = (rawData?.novosti || []).find(x => String(x.nm) === String(nm));
+  if (nov?.rrc) return { v: sheetNum(nov.rrc), src: 'РРЦ из новинок' };
+  return { v: null, src: 'нет цены' };
+}
+
+const BRAND_RE = /likato|ликато|lavant|лавант|лават/i;
+function autoQueries(nm, set) {
+  const list = (rawData?.search_texts?.[String(nm)] || [])
+    .filter(x => !BRAND_RE.test(x[0]) && !/^\d+$/.test(String(x[0]).trim()) && x[1] >= set.minFreq)
+    .sort((a, b) => b[4] - a[4] || b[1] - a[1]);          // где товар уже получает переходы — самые релевантные
+  const out = [];
+  list.forEach(x => { if (out.length < set.maxQ && !out.some(o => o.q.toLowerCase() === x[0].toLowerCase())) out.push({ nm: String(nm), q: x[0], freq: x[1], target: set.targets[phaseOf(x[1])], auto: true }); });
+  return out;
+}
+
+function phaseOf(F) { return F < 5000 ? 0 : F < 20000 ? 1 : 2; }   // НЧ / СЧ / ВЧ по частотности в неделю
+const PHASE_NAMES = ['НЧ', 'СЧ', 'ВЧ'];
+
+// План по одному артикулу
+function planForSku(nm, rows, fit, set) {
+  const days = rows.find(r => r.days)?.days || set.days;
+  const start = rows.find(r => r.start)?.start || addDays(todayIso(), 1);
+  const w = set.phases, ws = w.reduce((a, b) => a + b, 0);
+  let lens = w.map(x => Math.max(1, Math.round(days * x / ws)));
+  lens[2] = Math.max(1, days - lens[0] - lens[1]);
+  const qs = rows.map(r => {
+    const si = searchInfo(nm, r.q);
+    const F = r.freq || si?.freq || anyFreq(r.q);
+    const cur = si?.avgPos || null;
+    const T = r.target || 10;
+    const out = { q: r.q, F, cur, T, fromWB: !r.freq && !!F, warn: [] };
+    if (!F) { out.warn.push('нет частотности — впиши в столбец «Частотность в неделю»'); return out; }
+    if (cur && cur <= T) { out.done = true; out.perDay = { mid: 0, lo: 0, hi: 0 }; out.warn.push(`уже на ${cur} месте`); return out; }
+    const it = intensityFor(T, fit);
+    out.perDay = { mid: Math.ceil(it.mid * F / 1000), lo: Math.ceil(it.lo * F / 1000), hi: Math.ceil(it.hi * F / 1000) };
+    if (fit.maxIntensity && it.mid > fit.maxIntensity * 1.2) out.warn.push('цель выше, чем удавалось в истории — прогноз ненадёжен');
+    if (out.perDay.mid > 150) out.warn.push('больше 150 раздач в день — проверь цель или начни с более низкочастотного запроса');
+    out.phase = phaseOf(F);
+    return out;
+  });
+  // фазы: пустые пропускаем, их дни отдаём соседним
+  const active = [0, 1, 2].filter(ph => qs.some(q => q.phase === ph && !q.done && q.perDay));
+  const L = {}; let rest = days;
+  active.forEach((ph, i) => { L[ph] = i === active.length - 1 ? rest : Math.max(1, Math.round(days * w[ph] / active.reduce((s, p) => s + w[p], 0))); rest -= L[ph]; });
+  const schedule = []; let dayIdx = 0;
+  active.forEach(ph => {
+    for (let d = 0; d < L[ph]; d++, dayIdx++) {
+      const date = addDays(start, dayIdx);
+      qs.filter(q => q.phase === ph && !q.done && q.perDay).forEach(q => schedule.push({ date, nm, q: q.q, phase: PHASE_NAMES[ph], mid: q.perDay.mid, lo: q.perDay.lo, hi: q.perDay.hi }));
+    }
+  });
+  const price = giveawayPrice(nm, rows.find(r => r.price));
+  const sum = k => schedule.reduce((s, x) => s + x[k], 0);
+  return { nm, days, start, qs, schedule, units: { mid: sum('mid'), lo: sum('lo'), hi: sum('hi') }, price, phaseLens: L };
+}
+
+function renderLaunch() {
+  const box = document.getElementById('launchBody');
+  if (!box) return;
+  const set = launchSettings();
+  const linkEl = document.getElementById('launchLink');
+  if (linkEl && document.activeElement !== linkEl) linkEl.value = LS.get(LAUNCH_URL_KEY, LAUNCH_DEFAULT_URL);
+  ['launchDays', 'launchReserve'].forEach(id => { const el = document.getElementById(id); if (el && document.activeElement !== el) el.value = id === 'launchDays' ? set.days : set.reserve; });
+  const stEl = document.getElementById('launchStart'); if (stEl && document.activeElement !== stEl) stEl.value = set.start || '';
+  const tgEl = document.getElementById('launchTargets'); if (tgEl && document.activeElement !== tgEl) tgEl.value = set.targets.join(' / ');
+  const note = document.getElementById('launchNote');
+  if (!launchSheet) { note.textContent = 'Читаю список новинок из Google-таблицы…'; box.innerHTML = ''; return; }
+  if (launchSheet.empty) {
+    note.innerHTML = '';
+    box.innerHTML = `<div class="section"><div class="section-body help">
+      <p><b>Как начать.</b> 1) Создай в Google-таблице лист «План запуска». 2) Нажми «Скопировать шапку листа» и вставь в ячейку A1. 3) Одна строка = один артикул + один запрос: артикул, запрос, целевая позиция (по умолчанию 10), дата старта и дней (по умолчанию завтра и ${set.days}). Частотность и цену можно не заполнять — подтянутся из WB и календаря. 4) Открой доступ «по ссылке — читатель» и вставь ссылку на лист сюда.</p></div></div>`;
+    return;
+  }
+  if (launchSheet.error) { note.innerHTML = `<span class="st st-bad">Не удалось прочитать лист: ${esc(launchSheet.error)}</span>`; box.innerHTML = ''; return; }
+  const fit = launchCalibration();
+  const ad = launchAdBenchmark();
+  note.innerHTML = `${launchSheet.mode === 'list' ? 'Список артикулов' : 'План с запросами'}: ${Object.keys(launchSheet.meta || {}).length || launchSheet.rows.length} строк · ${launchSheet.loadedAt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })} · модель: ${fit.fallback ? 'базовая (история ещё не загрузилась)' : `по ${fit.n} твоим запускам`} · реклама: ${ad.n ? `медиана ${nf(ad.perDay)} ₽/день по ${ad.n} ${ad.withGive ? 'запускам с раздачами (в дни раздач)' : 'новинкам'}` : 'нет данных'}`;
+
+  const bySku = {};
+  launchSheet.rows.forEach(r => { bySku[r.nm] = bySku[r.nm] || []; if (r.q) bySku[r.nm].push(r); });
+  const skip = launchSkip();
+  const allPlans = Object.entries(bySku).map(([nm, rows]) => {
+    const rr = rows.length ? rows : autoQueries(nm, set);
+    if (set.start) rr.forEach(r => { if (!r.start) r.start = set.start; });
+    const p = rr.length ? planForSku(nm, rr, fit, set) : { nm, days: set.days, start: set.start || addDays(todayIso(), 1), qs: [], schedule: [], units: { mid: 0, lo: 0, hi: 0 }, price: giveawayPrice(nm), noQueries: true };
+    p.auto = !rows.length; p.skip = skip.has(nm); p.tags = launchSheet.meta?.[nm]?.tags || [];
+    return p;
+  });
+  const plans = allPlans.filter(p => !p.skip);
+  window._launchPlans = plans; window._launchAllPlans = allPlans;
+
+  let T = { units: 0, lo: 0, hi: 0, give: 0, giveLo: 0, giveHi: 0, ads: 0 };
+  const skuRows = allPlans.map(p => {
+    const pr = p.price.v || 0;
+    const ads = p.noQueries ? 0 : (ad.perDay || 0) * p.days;
+    if (!p.skip) {
+    T.units += p.units.mid; T.lo += p.units.lo; T.hi += p.units.hi;
+    T.give += p.units.mid * pr; T.giveLo += p.units.lo * pr; T.giveHi += p.units.hi * pr; T.ads += ads;
+    }
+    const warns = p.qs.flatMap(q => q.warn.map(w => `«${q.q}»: ${w}`)).concat(p.noQueries ? ['нет подходящих запросов в отчёте WB — впиши запросы вручную'] : []);
+    const nmName = launchSheet.meta?.[p.nm]?.name ? shortProductTitle(launchSheet.meta[p.nm].name) : shortName(p.nm, 36);
+    return `<tr style="${p.skip ? 'opacity:.45' : ''}">
+      <td><label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer"><input type="checkbox" ${p.skip ? '' : 'checked'} onchange="toggleLaunchSku('${p.nm}', this.checked)" style="margin-top:3px" title="Включить в план">
+        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm} · старт ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}</span></label></td>
+      <td style="white-space:normal;min-width:220px">${p.qs.map(q => `<div style="font-size:12px"><span class="badge badge-gray">${q.F ? PHASE_NAMES[phaseOf(q.F)] : '?'}</span> ${esc(q.q)} <span class="muted">· ${q.F ? nf(q.F) + '/нед' + (q.fromWB ? ' (WB)' : '') : 'нет частотности'} · ${q.cur ? 'сейчас ' + q.cur : 'позиции нет'} → цель ${q.T}${q.perDay ? ` · <b style="color:var(--text)">${q.perDay.mid}</b>/день` : ''}</span></div>`).join('')}
+        ${warns.length ? `<div class="st-warn" style="font-size:11px;margin-top:4px">${warns.map(esc).join('<br>')}</div>` : ''}</td>
+      <td class="num"><b>${nf(p.units.mid)}</b><div class="muted" style="font-size:10px">${nf(p.units.lo)}–${nf(p.units.hi)}</div></td>
+      <td class="num">${pr ? nf(pr) : '<span class="st st-bad">нет</span>'}<div class="muted" style="font-size:10px">${esc(p.price.src)}</div></td>
+      <td class="num"><b>${pr ? nf(p.units.mid * pr) : '—'}</b><div class="muted" style="font-size:10px">${pr ? nf(p.units.lo * pr) + '–' + nf(p.units.hi * pr) : ''}</div></td>
+      <td class="num">${ad.perDay ? nf(ads) : '—'}<div class="muted" style="font-size:10px">${ad.perDay ? nf(ad.perDay) + ' ₽ × ' + p.days + ' дн.' : ''}</div></td>
+      <td class="num"><b>${p.skip ? '—' : nf(p.units.mid * pr + ads)}</b></td>
+    </tr>`;
+  }).join('');
+  const reserve = (T.give + T.ads) * set.reserve / 100;
+  box.innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Раздачи, шт</div><div class="kpi-val">${nf(T.units)}</div><div class="kpi-sub">вилка ${nf(T.lo)}–${nf(T.hi)}</div></div>
+      <div class="kpi-card"><div class="kpi-label">Раздачи, ₽</div><div class="kpi-val">${nf(T.give)}</div><div class="kpi-sub">вилка ${nf(T.giveLo)}–${nf(T.giveHi)}</div></div>
+      <div class="kpi-card"><div class="kpi-label">Реклама, ₽</div><div class="kpi-val">${nf(T.ads)}</div><div class="kpi-sub">по фактам твоих новинок</div></div>
+      <div class="kpi-card"><div class="kpi-label">Резерв ${set.reserve}%</div><div class="kpi-val">${nf(reserve)}</div><div class="kpi-sub">отдельной строкой</div></div>
+      <div class="kpi-card flag-green"><div class="kpi-label">Бюджет запуска</div><div class="kpi-val">${nf(T.give + T.ads + reserve)} ₽</div><div class="kpi-sub">раздачи + реклама + резерв</div></div>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-title">План по артикулам · ${plans.length} из ${allPlans.length}</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="section-note">Жирным — середина вилки; под ним — диапазон по разбросу истории</span>
+        <button class="btn btn-ghost btn-sm" onclick="copyLaunchDraft(this)">Скопировать черновик плана</button></div></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Товар</th><th>Запросы: фаза · частотность · сейчас → цель · раздач/день</th><th class="num">Раздачи, шт</th><th class="num">Цена раздачи</th><th class="num">Раздачи, ₽</th><th class="num">Реклама, ₽</th><th class="num">Итого, ₽</th></tr></thead>
+        <tbody>${skuRows || '<tr><td colspan="7" class="muted" style="padding:14px;text-align:center">В листе нет строк</td></tr>'}</tbody>
+      </table></div>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-title">Расписание раздач по дням</div>
+        <button class="btn btn-sm" onclick="copyLaunchSchedule(this)">Скопировать для «Календаря раздач»</button></div>
+      <div class="table-wrap" style="max-height:420px;overflow:auto"><table>
+        <thead><tr><th>Дата</th><th>Товар</th><th>Фаза</th><th>Запрос</th><th class="num">План, шт</th></tr></thead>
+        <tbody>${plans.flatMap(p => p.schedule).sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0).map(s => `<tr><td>${ddmm(s.date)}</td><td class="muted">${esc(shortName(s.nm, 30))}</td><td>${s.phase}</td><td>${esc(s.q)}</td><td class="num">${s.mid}</td></tr>`).join('') || '<tr><td colspan="5" class="muted" style="padding:14px;text-align:center">Нет раздач</td></tr>'}</tbody>
+      </table></div>
+    </div>
+    <details class="section">
+      <summary class="section-header" style="cursor:pointer;list-style:none"><div class="section-title">На чём основан расчёт</div><span class="section-note">развернуть</span></summary>
+      <div class="section-body help">
+        <p><b>Раздачи.</b> По твоей истории: сколько раздач в день на 1000 недельной частотности понадобилось и куда это подняло товар. Зависимость: позиция ≈ e<sup>${fit.a.toFixed(2)}</sup> × (раздач/1000)<sup>${fit.b.toFixed(2)}</sup>. Для цели топ-10 это ${intensityFor(10, fit).mid.toFixed(1)} раздачи в день на 1000 частотности (вилка ${intensityFor(10, fit).lo.toFixed(1)}–${intensityFor(10, fit).hi.toFixed(1)}), для топ-20 — ${intensityFor(20, fit).mid.toFixed(1)}. Запросы раскладываются по твоей схеме: НЧ (до 5 тыс./нед) → СЧ (5–20 тыс.) → ВЧ (от 20 тыс.), длина фаз ${set.phases.join(' : ')}. Не учтены: сезонность, рейтинг карточки и сила конкурентов — поэтому вилка.</p>
+        <p style="margin-top:8px"><b>Реклама.</b> Медиана среднего расхода в день ${ad.withGive ? 'в дни раздач по товарам, которые запускали с раздачами' : 'за первые 14 дней РК по новинкам из таблицы РК'} (${ad.per.map(x => esc(shortName(x.nm, 18)) + ' ' + nf(x.perDay) + ' ₽').join(', ')})${ad.cpo ? `, медианный CPO ${nf(ad.cpo)} ₽` : ''}.</p>
+        <p style="margin-top:8px"><b>Точность растёт с каждым запуском:</b> заноси факт в «Календарь раздач» и позиции в «Выдачу» — модель пересчитывается сама.</p>
+        ${fit.pts?.length ? `<div class="table-wrap" style="margin-top:10px"><table><thead><tr><th>Товар</th><th>Запрос</th><th class="num">Частотность/нед</th><th class="num">Дней</th><th class="num">Раздач в день</th><th class="num">На 1000 частотности</th><th class="num">Старт → лучшая позиция</th></tr></thead><tbody>${
+          fit.pts.sort((a, b) => a.intensity - b.intensity).map(p => `<tr><td class="muted">${esc(shortName(p.nm, 26))}</td><td>${esc(p.q)}</td><td class="num">${nf(p.F)}</td><td class="num">${p.days}</td><td class="num">${nf1(p.perDay)}</td><td class="num">${p.intensity.toFixed(2)}</td><td class="num">${p.start} → <b>${p.best}</b></td></tr>`).join('')}</tbody></table></div>` : ''}
+      </div>
+    </details>`;
+}
+
+// Черновик в полном формате листа «План запуска» — чтобы поправить запросы и цели в таблице
+function copyLaunchDraft(btn) {
+  const set = launchSettings();
+  const lines = [LAUNCH_HEADER.join('\t')];
+  (window._launchPlans || []).forEach(p => p.qs.forEach(q => lines.push([p.nm, q.q, q.T, (p.start || '').split('-').reverse().join('.'), p.days, q.F || '', p.price.v || '', p.auto ? 'подобрано автоматически' : ''].join('\t'))));
+  navigator.clipboard.writeText(lines.join('\n')).then(() => { btn.textContent = 'Скопировано — вставь в новый лист'; setTimeout(() => btn.textContent = 'Скопировать черновик плана', 2500); });
+}
+
+function copyLaunchSchedule(btn) {
+  const rows = (window._launchPlans || []).flatMap(p => p.schedule.map(s => ({ ...s, price: p.price.v })));
+  // формат «Календаря раздач»: Дата | Артикул | Товар | Запрос | Ответственный | План | Факт | РРЦ
+  const byDaySku = {};
+  rows.forEach(s => { const k = s.date + '|' + s.nm; (byDaySku[k] = byDaySku[k] || { date: s.date, nm: s.nm, qs: [], plans: [], price: s.price }); byDaySku[k].qs.push(s.q); byDaySku[k].plans.push(s.mid); });
+  const q = v => /[\n\t"]/.test(v) ? '"' + String(v).replace(/"/g, '""') + '"' : v;
+  const tsv = Object.values(byDaySku).sort((a, b) => a.date < b.date ? -1 : 1).map(r =>
+    [r.date.split('-').reverse().join('.'), r.nm, productName(r.nm), q(r.qs.join('\n')), '', q(r.plans.join('\n')), '', r.price || ''].join('\t')).join('\n');
+  navigator.clipboard.writeText(tsv).then(() => { btn.textContent = 'Скопировано — вставь в «Календарь раздач»'; setTimeout(() => btn.textContent = 'Скопировать для «Календаря раздач»', 2500); });
+}
+
 // ── Таблица рекламных кампаний: артикул → ID кампаний (ручная / единая) ──
 const RK_SHEET_ID = '1CoKAYKbJJhZ11moE0e1N3MlHdhYir4LPEAWULPeCYbg';
 const RK_SHEET_GID = '176079888';
@@ -4267,11 +4639,15 @@ async function loadRkSheet() {
     const cMan = h.findIndex(x => x.includes('кампании') && x.includes('ручн'));
     const cUni = h.findIndex(x => x.includes('кампании') && x.includes('един'));
     const cLaunch = h.findIndex(x => x.startsWith('дата запуска рк'));
+    const cMrc = h.indexOf('мрц'), cRrc = h.indexOf('ррц');
+    res.prices = {};
     if (cNm < 0 || (cMan < 0 && cUni < 0)) throw new Error('не найдены столбцы «Артикул» и «ID кампании»');
     const seen = new Set();
     rows.slice(1).forEach(r => {
       const nm = String(r[cNm] || '').trim();
       if (!/^\d+$/.test(nm)) return;
+      const m1 = cMrc >= 0 ? sheetNum(r[cMrc]) : null, m2 = cRrc >= 0 ? sheetNum(r[cRrc]) : null;
+      if (m1 || m2) res.prices[nm] = { rrc: Math.max(m1 || 0, m2 || 0), mrc: Math.min(m1 || Infinity, m2 || Infinity) };   // в части строк МРЦ/РРЦ переставлены
       [[cMan, 'ручная'], [cUni, 'единая']].forEach(([ci, type]) => {
         if (ci < 0) return;
         // в ячейке может быть несколько ID, каждый со своей пометкой: "40524856 (приост)\n40524855"
@@ -4290,6 +4666,7 @@ async function loadRkSheet() {
   }
   rkSheet = res;
   try { renderAlerts(rawData); } catch (e) {}
+  if (document.querySelector('.tab.active')?.dataset.tab === 'launch') renderLaunch();
   if (document.querySelector('.tab.active')?.dataset.tab === 'rk') renderRK();
   return res;
 }
@@ -4550,6 +4927,8 @@ function loadData() {
     loadNovinkaJson();
     loadTopSheet();
     loadRkSheet();
+    loadCalendarSheet();
+    loadLaunchSheet();
   })
   .catch(() => {
     loadNovinkaJson();
