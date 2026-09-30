@@ -807,8 +807,8 @@
         <button class="btn btn-ghost" onclick="copyLaunchTemplate(this)">Скопировать шапку листа</button>
         <div class="field"><label for="launchDays">Дней по умолчанию</label>
           <input id="launchDays" class="inp" type="number" min="3" max="60" style="width:80px" onchange="setLaunchSetting('days', +this.value || 14)"></div>
-        <div class="field"><label for="launchStart">Старт раздач</label>
-          <input id="launchStart" class="date-input" type="date" onchange="setLaunchSetting('start', this.value)"></div>
+        <div class="field"><label for="launchWaveStarts">Старт волн 1 / 2 / 3 / 4</label>
+          <input id="launchWaveStarts" class="inp" style="width:200px" placeholder="01.10, 08.10, 15.10, 22.10" onchange="setLaunchSetting('waveStarts', this.value.split(/[,;\s]+/).map(x => sheetDate(x.trim())).filter(Boolean))"></div>
         <div class="field"><label for="launchTargets">Цели НЧ / СЧ / ВЧ</label>
           <input id="launchTargets" class="inp" style="width:100px" placeholder="10/15/30" onchange="setLaunchSetting('targets', this.value.split(/[^0-9]+/).filter(Boolean).map(Number).slice(0,3).concat([10,15,30]).slice(0,3))"></div>
         <div class="field"><label for="launchCap">Лимит команды, шт/день</label>
@@ -4116,11 +4116,23 @@ const LAUNCH_FALLBACK_FIT = { a: 3.104, b: -0.459, sigma: 0.316, n: 11, fallback
 const LAUNCH_HEADER = ['Артикул', 'Запрос', 'Целевая позиция', 'Дата старта', 'Дней', 'Частотность в неделю', 'Цена раздачи', 'Комментарий'];
 let calSheet = null, launchSheet = null;
 
-function launchSettings() { return { days: 14, phases: [3, 7, 4], reserve: 5, targets: [10, 15, 30], maxQ: 3, minFreq: 1000, start: '', capacity: 340, ...LS.get(LAUNCH_SET_KEY, {}) }; }
+function launchSettings() { return { days: 14, phases: [3, 7, 4], reserve: 5, targets: [10, 15, 30], maxQ: 3, minFreq: 1000, start: '', capacity: 300, waveStarts: ['2026-10-01', '2026-10-08', '2026-10-15', '2026-10-22'], ...LS.get(LAUNCH_SET_KEY, {}) }; }
+const LAUNCH_WAVES_KEY = 'likato_launch_waves';   // {nm: номер волны 1..4}; нет в списке — не в плане
+const LAUNCH_WAVES_DEFAULT = {   // согласовано 30.09.2026: 15 новинок, 4 волны
+  '1380341721': 1, '1465859864': 1, '1305768201': 1, '1334510163': 1, '1536780339': 1, '1477645367': 1,
+  '1477789355': 2, '1580199889': 2, '1541676207': 2,
+  '1580167713': 3, '1465408656': 3, '1465902371': 3, '1469563790': 3,
+  '1334598429': 4, '1345627148': 4,
+};
+const LAUNCH_FIXED = {   // раздачи не по запросам, а фиксированным объёмом
+  '1477645367': { perDay: 15, days: 10, q: 'первые отзывы (контрольная точка на 10-й день)' },
+};
+function launchWaves() { return LS.get(LAUNCH_WAVES_KEY, LAUNCH_WAVES_DEFAULT); }
+function setLaunchWave(nm, w) { const m = launchWaves(); if (+w) m[nm] = +w; else delete m[nm]; LS.set(LAUNCH_WAVES_KEY, m); renderLaunch(); }
 const LAUNCH_SKIP_KEY = 'likato_launch_skip';   // артикулы, исключённые из плана
-function launchSkip() { return new Set(LS.get(LAUNCH_SKIP_KEY, [])); }
-function toggleLaunchAll(on) { LS.set(LAUNCH_SKIP_KEY, on ? [] : (window._launchAllPlans || []).map(p => p.nm)); renderLaunch(); }
-function toggleLaunchSku(nm, on) { const s = launchSkip(); on ? s.delete(nm) : s.add(nm); LS.set(LAUNCH_SKIP_KEY, [...s]); renderLaunch(); }
+function launchSkip() { const w = launchWaves(); return new Set(Object.keys(launchSheet?.meta || {}).filter(nm => !w[nm])); }
+function toggleLaunchAll(on) { const m = launchWaves(); (window._launchAllPlans || []).forEach(p => { if (on && !m[p.nm]) m[p.nm] = 4; if (!on) delete m[p.nm]; }); LS.set(LAUNCH_WAVES_KEY, m); renderLaunch(); }
+function toggleLaunchSku(nm, on) { const m = launchWaves(); if (on) m[nm] = m[nm] || 1; else delete m[nm]; LS.set(LAUNCH_WAVES_KEY, m); renderLaunch(); return; const s = launchSkip(); on ? s.delete(nm) : s.add(nm); LS.set(LAUNCH_SKIP_KEY, [...s]); renderLaunch(); }
 function setLaunchSetting(k, v) { const s = launchSettings(); s[k] = v; LS.set(LAUNCH_SET_KEY, s); renderLaunch(); }
 
 function parseSheetLink(url) {
@@ -4389,7 +4401,7 @@ function renderLaunch() {
   if (linkEl && document.activeElement !== linkEl) linkEl.value = LS.get(LAUNCH_URL_KEY, LAUNCH_DEFAULT_URL);
   ['launchDays', 'launchReserve'].forEach(id => { const el = document.getElementById(id); if (el && document.activeElement !== el) el.value = id === 'launchDays' ? set.days : set.reserve; });
   const capEl = document.getElementById('launchCap'); if (capEl && document.activeElement !== capEl) capEl.value = set.capacity;
-  const stEl = document.getElementById('launchStart'); if (stEl && document.activeElement !== stEl) stEl.value = set.start || '';
+  const wsEl = document.getElementById('launchWaveStarts'); if (wsEl && document.activeElement !== wsEl) wsEl.value = (set.waveStarts || []).map(ddmm).join(', ');
   const tgEl = document.getElementById('launchTargets'); if (tgEl && document.activeElement !== tgEl) tgEl.value = set.targets.join(' / ');
   const note = document.getElementById('launchNote');
   if (!launchSheet) { note.textContent = 'Читаю список новинок из Google-таблицы…'; box.innerHTML = ''; return; }
@@ -4409,15 +4421,23 @@ function renderLaunch() {
   const skip = launchSkip();
   const allPlans = Object.entries(bySku).map(([nm, rows]) => {
     const rr = rows.length ? rows : autoQueries(nm, set);
-    if (set.start) rr.forEach(r => { if (!r.start) r.start = set.start; });
+    const wave = launchWaves()[nm];
+    const wStart = wave ? (set.waveStarts || [])[wave - 1] : null;
+    rr.forEach(r => { if (!r.start) r.start = wStart || set.start || r.start; });
+    if (LAUNCH_FIXED[nm]) {
+      const fx = LAUNCH_FIXED[nm], st = wStart || set.start || addDays(todayIso(), 1);
+      const schedule = Array.from({ length: fx.days }, (_, i) => ({ date: addDays(st, i), nm, q: fx.q, phase: 'фикс', mid: fx.perDay, lo: fx.perDay, hi: fx.perDay }));
+      const pf = { nm, days: fx.days, start: st, qs: [{ q: fx.q, F: null, cur: null, T: null, perDay: { mid: fx.perDay, lo: fx.perDay, hi: fx.perDay }, warn: [], fixed: true }], schedule,
+        units: { mid: fx.perDay * fx.days, lo: fx.perDay * fx.days, hi: fx.perDay * fx.days }, price: giveawayPrice(nm), auto: false, skip: skip.has(nm), tags: launchSheet.meta?.[nm]?.tags || [], wave };
+      return pf;
+    }
     const p = rr.length ? planForSku(nm, rr, fit, set) : { nm, days: set.days, start: set.start || addDays(todayIso(), 1), qs: [], schedule: [], units: { mid: 0, lo: 0, hi: 0 }, price: giveawayPrice(nm), noQueries: true };
-    p.auto = !rows.length; p.skip = skip.has(nm); p.tags = launchSheet.meta?.[nm]?.tags || [];
+    p.auto = !rows.length; p.skip = skip.has(nm); p.tags = launchSheet.meta?.[nm]?.tags || []; p.wave = wave;
     return p;
   });
-  allPlans.sort((a, b) => (rawData?.first_sale?.[b.nm] || '9999').localeCompare(rawData?.first_sale?.[a.nm] || '9999'));
+  allPlans.sort((a, b) => (a.wave || 9) - (b.wave || 9) || (rawData?.first_sale?.[b.nm] || '9999').localeCompare(rawData?.first_sale?.[a.nm] || '9999'));
   const plans = allPlans.filter(p => !p.skip);
   window._launchPlans = plans; window._launchAllPlans = allPlans;
-  setTimeout(() => { const a = document.getElementById('launchAll'); if (a) a.indeterminate = plans.length > 0 && plans.length < allPlans.length; }, 0);
 
   let T = { units: 0, lo: 0, hi: 0, give: 0, giveLo: 0, giveHi: 0, ads: 0 };
   const skuRows = allPlans.map(p => {
@@ -4430,10 +4450,10 @@ function renderLaunch() {
     const warns = p.qs.flatMap(q => q.warn.map(w => `«${q.q}»: ${w}`)).concat(p.noQueries ? ['нет подходящих запросов в отчёте WB — впиши запросы вручную'] : []);
     const nmName = launchSheet.meta?.[p.nm]?.name ? shortProductTitle(launchSheet.meta[p.nm].name) : shortName(p.nm, 36);
     return `<tr style="${p.skip ? 'opacity:.45' : ''}">
-      <td><label class="chk-cell"><input type="checkbox" class="chk" ${p.skip ? '' : 'checked'} onchange="toggleLaunchSku('${p.nm}', this.checked)" title="Включить в план">
-        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm}${saleSinceHtml(p.nm)} · старт раздач ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}${(g => g?.active ? ` <span class="badge badge-yellow" style="margin-top:3px" title="${esc('Запросы: ' + g.qs.join(', '))}">уже в раздачах с ${ddmm(g.start)}${g.perDay != null ? ' · ~' + Math.round(g.perDay) + ' шт/день' : ''}${g.until ? ' · план до ' + ddmm(g.until) : ''}</span>` : g ? ` <span class="badge badge-gray" style="margin-top:3px">раздачи были, последние ${ddmm(g.lastFact)}</span>` : '')(giveawayStatus(p.nm))}</span></label></td>
+      <td><div class="chk-cell"><select onchange="setLaunchWave('${p.nm}', this.value)" title="Волна запуска" style="padding:3px 6px;font-size:11px;${p.wave ? 'border-color:var(--accent);color:var(--text)' : ''}"><option value="0">—</option>${[1, 2, 3, 4].map(w => `<option value="${w}" ${p.wave === w ? 'selected' : ''}>Волна ${w}</option>`).join('')}</select>
+        <span><div style="font-weight:600;color:var(--text)">${esc(nmName)}</div><div class="muted" style="font-size:11px">${p.nm}${saleSinceHtml(p.nm)} · старт раздач ${ddmm(p.start)} · ${p.days} дн.${p.auto ? ' · запросы подобраны автоматически' : ''}</div>${p.tags.map(t => `<span class="badge badge-blue" style="margin-top:3px">${esc(t)}</span>`).join(' ')}${(g => g?.active ? ` <span class="badge badge-yellow" style="margin-top:3px" title="${esc('Запросы: ' + g.qs.join(', '))}">уже в раздачах с ${ddmm(g.start)}${g.perDay != null ? ' · ~' + Math.round(g.perDay) + ' шт/день' : ''}${g.until ? ' · план до ' + ddmm(g.until) : ''}</span>` : g ? ` <span class="badge badge-gray" style="margin-top:3px">раздачи были, последние ${ddmm(g.lastFact)}</span>` : '')(giveawayStatus(p.nm))}</span></div></td>
       <td style="white-space:normal;min-width:190px">${novFunnelHtml(p.nm)}</td>
-      <td style="white-space:normal;min-width:220px">${p.qs.map(q => `<div style="font-size:12px"><span class="badge badge-gray">${q.F ? PHASE_NAMES[phaseOf(q.F)] : '?'}</span> ${esc(q.q)} <span class="muted">· ${q.F ? nf(q.F) + '/нед' + (q.fromWB ? ' (WB)' : '') : 'нет частотности'} · ${q.cur ? 'сейчас ' + q.cur : 'позиции нет'} → цель ${q.T}${q.perDay ? ` · <b style="color:var(--text)">${q.perDay.mid}</b>/день` : ''}</span></div>`).join('')}
+      <td style="white-space:normal;min-width:220px">${p.qs.map(q => q.fixed ? `<div style="font-size:12px"><span class="badge badge-gray">фикс</span> ${esc(q.q)} · <b style="color:var(--text)">${q.perDay.mid}</b>/день × ${p.days} дн.</div>` : `<div style="font-size:12px"><span class="badge badge-gray">${q.F ? PHASE_NAMES[phaseOf(q.F)] : '?'}</span> ${esc(q.q)} <span class="muted">· ${q.F ? nf(q.F) + '/нед' + (q.fromWB ? ' (WB)' : '') : 'нет частотности'} · ${q.cur ? 'сейчас ' + q.cur : 'позиции нет'} → цель ${q.T}${q.perDay ? ` · <b style="color:var(--text)">${q.perDay.mid}</b>/день` : ''}</span></div>`).join('')}
         ${warns.length ? `<div class="st-warn" style="font-size:11px;margin-top:4px">${warns.map(esc).join('<br>')}</div>` : ''}</td>
       <td class="num"><b>${nf(p.units.mid)}</b><div class="muted" style="font-size:10px">${nf(p.units.lo)}–${nf(p.units.hi)}</div></td>
       <td class="num">${pr ? nf(pr) : '<span class="st st-bad">нет</span>'}<div class="muted" style="font-size:10px">${esc(p.price.src)}</div></td>
@@ -4452,11 +4472,11 @@ function renderLaunch() {
       <div class="kpi-card flag-green"><div class="kpi-label">Бюджет запуска</div><div class="kpi-val">${nf(T.give + T.ads + reserve)} ₽</div><div class="kpi-sub">раздачи + реклама + резерв</div></div>
     </div>
     <div class="section">
-      <div class="section-header"><div class="section-title">План по артикулам · ${plans.length} из ${allPlans.length}${(n => n ? ` · <span class="badge badge-yellow">уже в раздачах: ${n}</span>` : '')(allPlans.filter(p => giveawayStatus(p.nm)?.active).length)}</div>
+      <div class="section-header"><div class="section-title">В волнах ${plans.length} из ${allPlans.length}${[1, 2, 3, 4].map(w => (n => n ? ` · В${w}: ${n}` : '')(plans.filter(p => p.wave === w).length)).join('')}${(n => n ? ` · <span class="badge badge-yellow">уже в раздачах: ${n}</span>` : '')(allPlans.filter(p => giveawayStatus(p.nm)?.active).length)}</div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="section-note">Жирным — середина вилки; под ним — диапазон по разбросу истории</span>
         <button class="btn btn-ghost btn-sm" onclick="copyLaunchDraft(this)">Скопировать черновик плана</button></div></div>
       <div class="table-wrap"><table>
-        <thead><tr><th><label class="chk-cell" style="align-items:center"><input type="checkbox" class="chk" id="launchAll" onchange="toggleLaunchAll(this.checked)" ${plans.length === allPlans.length ? 'checked' : ''}> Выбрать все</label></th><th>Воронка за 7 дней${rawData?.nov_funnel ? '' : ''}</th><th>Запросы: фаза · частотность · сейчас → цель · раздач/день</th><th class="num">Раздачи, шт</th><th class="num">Цена раздачи</th><th class="num">Раздачи, ₽</th><th class="num">Реклама, ₽</th><th class="num">Итого, ₽</th></tr></thead>
+        <thead><tr><th>Волна · товар</th><th>Воронка за 7 дней${rawData?.nov_funnel ? '' : ''}</th><th>Запросы: фаза · частотность · сейчас → цель · раздач/день</th><th class="num">Раздачи, шт</th><th class="num">Цена раздачи</th><th class="num">Раздачи, ₽</th><th class="num">Реклама, ₽</th><th class="num">Итого, ₽</th></tr></thead>
         <tbody>${skuRows || '<tr><td colspan="8" class="muted" style="padding:14px;text-align:center">В листе нет строк</td></tr>'}</tbody>
       </table></div>
     </div>
